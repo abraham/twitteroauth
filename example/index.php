@@ -92,7 +92,7 @@ switch ($state) {/*{{{*/
     <p>
       Get the code powering this at <a href='http://github.com/poseurtech/twitteroauth'>http://github.com/poseurtech/twitteroauth</a>
       <br />
-      Read the documentation at ...
+      Read the documentation at <a href='https://docs.google.com/View?docID=dcf2dzzs_2339fzbfsf4'>https://docs.google.com/View?docID=dcf2dzzs_2339fzbfsf4</a> 
     </p>
 
     <p><pre><?php print_r($content); ?><pre></p>
