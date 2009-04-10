@@ -74,7 +74,7 @@ switch ($state) {/*{{{*/
     /* Create TwitterOAuth with app key/secret and user access key/secret */
     $to = new TwitterOAuth($consumer_key, $consumer_secret, $_SESSION['oauth_access_token'], $_SESSION['oauth_access_token_secret']);
     /* Run request on twitter API as user. */
-    $content = $to->OAuthRequest('https://twitter.com/account/verify_credentials.xml', array(), 'POST');
+    $content = $to->OAuthRequest('https://twitter.com/account/verify_credentials.xml', array(), 'GET');
     //$content = $to->OAuthRequest('https://twitter.com/statuses/update.xml', array('status' => 'Test OAuth update. #testoauth'), 'POST');
     //$content = $to->OAuthRequest('https://twitter.com/statuses/replies.xml', array(), 'POST');
     break;
@@ -90,7 +90,7 @@ switch ($state) {/*{{{*/
     <p>This site is a basic showcase of Twitters new OAuth authentication method. Everything is saved in sessions. If you want to start over <a href='<?php echo $_SERVER['PHP_SELF']; ?>?test=clear'>clear sessions</a>.</p>
 
     <p>
-      Get the code powering this at <a href='http://github.com/poseurtech/twitteroauth'>http://github.com/poseurtech/twitteroauth</a>
+      Get the code powering this at <a href='http://github.com/abraham/twitteroauth'>http://github.com/abraham/twitteroauth</a>
       <br />
       Read the documentation at <a href='https://docs.google.com/View?docID=dcf2dzzs_2339fzbfsf4'>https://docs.google.com/View?docID=dcf2dzzs_2339fzbfsf4</a> 
     </p>
