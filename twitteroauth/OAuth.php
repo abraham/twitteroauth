@@ -11,10 +11,9 @@ class OAuthConsumer {
   public $key;
   public $secret;
 
-  function __construct($key, $secret, $callback_url=NULL) {
+  function __construct($key, $secret) {
     $this->key = $key;
     $this->secret = $secret;
-    $this->callback_url = $callback_url;
   }
 
   function __toString() {
@@ -173,7 +172,7 @@ class OAuthRequest {
   private $http_url;
   // for debug purposes
   public $base_string;
-  public static $version = '1.0';
+  public static $version = '1.0a';
   public static $POST_INPUT = 'php://input';
 
   function __construct($http_method, $http_url, $parameters=NULL) {
