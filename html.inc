@@ -30,7 +30,9 @@
       <?php echo '<h3>'.$status_text.'</h3>'; ?>
     <?php } ?>
     <p>
-        <?php echo $content; ?>
+      <pre>
+        <?php print_r($content); ?>
+      </pre>
     </p>
 
   </body>

@@ -119,21 +119,33 @@ class TwitterOAuth {
    * GET wrappwer for oAuthRequest.
    */
   function get($url, $parameters = NULL) {
-    return $this->oAuthRequest($url, 'GET', $parameters);
+    $response = $this->oAuthRequest($url, 'GET', $parameters);
+    if ($this->format === 'json' && $this->decode_json) {
+      return json_decode($response);
+    }
+    return $response;
   }
   
   /**
    * POST wreapper for oAuthRequest.
    */
   function post($url, $parameters) {
-    return $this->oAuthRequest($url, 'POST', $parameters);
+    $response = $this->oAuthRequest($url, 'POST', $parameters);
+    if ($this->format === 'json' && $this->decode_json) {
+      return json_decode($response);
+    }
+    return $response;
   }
 
   /**
    * DELTE wrapper for oAuthReqeust.
    */
   function delete($url, $parameters) {
-    return $this->oAuthRequest($url, 'DELETE', $parameters);
+    $response = $this->oAuthRequest($url, 'DELETE', $parameters);
+    if ($this->format === 'json' && $this->decode_json) {
+      return json_decode($response);
+    }
+    return $response;
   }
 
   /**
@@ -185,9 +197,6 @@ class TwitterOAuth {
     $this->http_code = curl_getinfo($ci, CURLINFO_HTTP_CODE);
     $this->last_api_call = $url;
     curl_close ($ci);
-    //if ($this->format === 'json' && $this->decode_json) {
-    //  return json_decode($response);
-    //}
     return $response;
   }
 }
