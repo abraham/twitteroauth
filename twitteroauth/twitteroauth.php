@@ -152,10 +152,6 @@ class TwitterOAuth {
    * Format and sign an OAuth / API request
    */
   function oAuthRequest($url, $method, $parameters = array()) {
-    if (isset($parameters['id'])) {
-      $url = "{$url}/{$parameters['id']}";
-      unset($parameters['id']);
-    }
     if (strrpos($url, 'https://') !== 0 && strrpos($url, 'http://') !== 0) {
       $url = "{$this->host}{$url}.{$this->format}";
     }
@@ -182,17 +178,22 @@ class TwitterOAuth {
     curl_setopt($ci, CURLOPT_RETURNTRANSFER, TRUE);
     curl_setopt($ci, CURLOPT_HTTPHEADER, array('Expect:'));
     curl_setopt($ci, CURLOPT_SSL_VERIFYPEER, $this->ssl_verifypeer);
-    curl_setopt($ci, CURLOPT_URL, $url);
+
     switch ($method) {
       case 'POST':
         curl_setopt($ci, CURLOPT_POST, TRUE);
+        if (!empty($postfields)) {
+          curl_setopt($ci, CURLOPT_POSTFIELDS, $postfields);
+        }
         break;
       case 'DELETE':
         curl_setopt($ci, CURLOPT_CUSTOMREQUEST, 'DELETE');
+        if (!empty($postfields)) {
+          $url = "{$url}?{$postfields}";
+        }
     }
-    if (isset($postfields)) {
-      curl_setopt($ci, CURLOPT_POSTFIELDS, $postfields);
-    }
+
+    curl_setopt($ci, CURLOPT_URL, $url);
     $response = curl_exec($ci);
     $this->http_code = curl_getinfo($ci, CURLINFO_HTTP_CODE);
     $this->last_api_call = $url;
