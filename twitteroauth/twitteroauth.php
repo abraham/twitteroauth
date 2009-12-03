@@ -32,7 +32,9 @@ class TwitterOAuth {
   /* Respons format */
   public $format = 'json';
   /* Decode returne json data */
-  public $decode_json = 'TRUE';
+  public $decode_json = TRUE;
+  /* Immediately retry the API call if the response was not successful. */
+  //public $retry = TRUE;
 
 
 
@@ -118,7 +120,7 @@ class TwitterOAuth {
   /**
    * GET wrappwer for oAuthRequest.
    */
-  function get($url, $parameters = NULL) {
+  function get($url, $parameters = array()) {
     $response = $this->oAuthRequest($url, 'GET', $parameters);
     if ($this->format === 'json' && $this->decode_json) {
       return json_decode($response);
@@ -129,7 +131,7 @@ class TwitterOAuth {
   /**
    * POST wreapper for oAuthRequest.
    */
-  function post($url, $parameters) {
+  function post($url, $parameters = array()) {
     $response = $this->oAuthRequest($url, 'POST', $parameters);
     if ($this->format === 'json' && $this->decode_json) {
       return json_decode($response);
@@ -140,7 +142,7 @@ class TwitterOAuth {
   /**
    * DELTE wrapper for oAuthReqeust.
    */
-  function delete($url, $parameters) {
+  function delete($url, $parameters = array()) {
     $response = $this->oAuthRequest($url, 'DELETE', $parameters);
     if ($this->format === 'json' && $this->decode_json) {
       return json_decode($response);
@@ -151,7 +153,7 @@ class TwitterOAuth {
   /**
    * Format and sign an OAuth / API request
    */
-  function oAuthRequest($url, $method, $parameters = array()) {
+  function oAuthRequest($url, $method, $parameters) {
     if (strrpos($url, 'https://') !== 0 && strrpos($url, 'http://') !== 0) {
       $url = "{$this->host}{$url}.{$this->format}";
     }
