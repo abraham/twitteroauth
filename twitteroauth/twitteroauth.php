@@ -1,13 +1,9 @@
 <?php
+
 /*
  * Abraham Williams (abraham@abrah.am) http://abrah.am
  *
- * Basic lib to work with Twitter's OAuth beta. This is untested and should not
- * be used in production code. Twitter's beta could change at anytime.
- *
- * Code based on:
- * Fire Eagle code - http://github.com/myelin/fireeagle-php-lib
- * twitterlibphp - http://github.com/jdp/twitterlibphp
+ * The first PHP Library to support OAuth for Twitter's REST API.
  */
 
 /* Load OAuth lib. You can find it at http://oauth.net */
@@ -46,10 +42,10 @@ class TwitterOAuth {
   /**
    * Set API URLS
    */
-  function accessTokenURL()  { return 'https://twitter.com/oauth/access_token'; }
+  function accessTokenURL()  { return 'https://api.twitter.com/oauth/access_token'; }
   function authenticateURL() { return 'https://twitter.com/oauth/authenticate'; }
   function authorizeURL()    { return 'https://twitter.com/oauth/authorize'; }
-  function requestTokenURL() { return 'https://twitter.com/oauth/request_token'; }
+  function requestTokenURL() { return 'https://api.twitter.com/oauth/request_token'; }
 
   /**
    * Debug helpers
@@ -104,11 +100,13 @@ class TwitterOAuth {
   }
 
   /**
-   * Exchange the request token and secret for an access token and
+   * Exchange request token and secret for an access token and
    * secret, to sign API calls.
    *
-   * @returns array("oauth_token" => the access token,
-   *                "oauth_token_secret" => the access secret)
+   * @returns array("oauth_token" => "the-access-token",
+   *                "oauth_token_secret" => "the-access-secret",
+   *                "user_id" => "9436992",
+   *                "screen_name" => "abraham")
    */
   function getAccessToken($oauth_verifier = FALSE) {
     $parameters = array();
@@ -122,7 +120,27 @@ class TwitterOAuth {
   }
 
   /**
-   * GET wrappwer for oAuthRequest.
+   * One time exchange of username and password for access token and secret.
+   *
+   * @returns array("oauth_token" => "the-access-token",
+   *                "oauth_token_secret" => "the-access-secret",
+   *                "user_id" => "9436992",
+   *                "screen_name" => "abraham",
+   *                "x_auth_expires" => "0")
+   */  
+  function getXAuthToken($username, $password) {
+    $parameters = array();
+    $parameters['x_auth_username'] = $username;
+    $parameters['x_auth_password'] = $password;
+    $parameters['x_auth_mode'] = 'client_auth';
+    $request = $this->oAuthRequest($this->accessTokenURL(), 'POST', $parameters);
+    $token = OAuthUtil::parse_parameters($request);
+    $this->token = new OAuthConsumer($token['oauth_token'], $token['oauth_token_secret']);
+    return $token;
+  }
+
+  /**
+   * GET wrapper for oAuthRequest.
    */
   function get($url, $parameters = array()) {
     $response = $this->oAuthRequest($url, 'GET', $parameters);
@@ -133,7 +151,7 @@ class TwitterOAuth {
   }
   
   /**
-   * POST wreapper for oAuthRequest.
+   * POST wrapper for oAuthRequest.
    */
   function post($url, $parameters = array()) {
     $response = $this->oAuthRequest($url, 'POST', $parameters);
@@ -144,7 +162,7 @@ class TwitterOAuth {
   }
 
   /**
-   * DELTE wrapper for oAuthReqeust.
+   * DELETE wrapper for oAuthReqeust.
    */
   function delete($url, $parameters = array()) {
     $response = $this->oAuthRequest($url, 'DELETE', $parameters);
