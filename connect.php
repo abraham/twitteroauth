@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Get a request token from twitter and present authorization URL to user
+ * Check if consumer token is set and if so send user to get a request token.
  */
 
 /**
@@ -17,5 +17,5 @@ if (CONSUMER_KEY === '' || CONSUMER_SECRET === '') {
 /* Build an image link to start the redirect process. */
 $content = '<a href="./redirect.php"><img src="./images/lighter.png" alt="Sign in with Twitter"/></a>';
  
-/* Include HTML to display on the page */
+/* Include HTML to display on the page. */
 include('html.inc');
