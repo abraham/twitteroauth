@@ -150,8 +150,8 @@ class TwitterOAuth {
   /**
    * POST wrapper for oAuthRequest.
    */
-  function post($url, $parameters = array()) {
-    $response = $this->oAuthRequest($url, 'POST', $parameters);
+  function post($url, $parameters = array(), $files = NULL) {
+    $response = $this->oAuthRequest($url, 'POST', $parameters, $files);
     if ($this->format === 'json' && $this->decode_json) {
       return json_decode($response);
     }
@@ -172,7 +172,7 @@ class TwitterOAuth {
   /**
    * Format and sign an OAuth / API request
    */
-  function oAuthRequest($url, $method, $parameters) {
+  function oAuthRequest($url, $method, $parameters, $files ) {
     if (strrpos($url, 'https://') !== 0 && strrpos($url, 'http://') !== 0) {
       $url = "{$this->host}{$url}.{$this->format}";
     }
@@ -182,7 +182,7 @@ class TwitterOAuth {
     case 'GET':
       return $this->http($request->to_url(), 'GET');
     default:
-      return $this->http($request->get_normalized_http_url(), $method, $request->to_postdata());
+      return $this->http($request->get_normalized_http_url(), $method, $request->to_postdata(), $files);
     }
   }
 
@@ -191,7 +191,7 @@ class TwitterOAuth {
    *
    * @return API results
    */
-  function http($url, $method, $postfields = NULL) {
+  function http($url, $method, $postfields = NULL, $files) {
     $this->http_info = array();
     $ci = curl_init();
     /* Curl settings */
@@ -207,7 +207,18 @@ class TwitterOAuth {
     switch ($method) {
       case 'POST':
         curl_setopt($ci, CURLOPT_POST, TRUE);
-        if (!empty($postfields)) {
+        if(is_array($files)){
+          $post_file_array = array();
+          foreach($files as $key=>$value){
+             $post_file_array[$key] = "@{$value}";
+          }
+          curl_setopt($ci, CURLOPT_POSTFIELDS, $post_file_array);
+          if (!empty($postfields)) {
+            $url = "{$url}?{$postfields}";
+          }
+
+        }
+        else if (!empty($postfields)) {
           curl_setopt($ci, CURLOPT_POSTFIELDS, $postfields);
         }
         break;
