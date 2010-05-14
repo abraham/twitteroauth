@@ -35,6 +35,8 @@ class TwitterOAuth {
   public $useragent = 'TwitterOAuth v0.2.0-beta2';
   /* Immediately retry the API call if the response was not successful. */
   //public $retry = TRUE;
+  /* The IP of the interface to return calls from the API to */
+  public $ip = '';
 
 
 
@@ -206,6 +208,10 @@ class TwitterOAuth {
     curl_setopt($ci, CURLOPT_SSL_VERIFYPEER, $this->ssl_verifypeer);
     curl_setopt($ci, CURLOPT_HEADERFUNCTION, array($this, 'getHeader'));
     curl_setopt($ci, CURLOPT_HEADER, FALSE);
+    
+    if (!empty($this->ip)) {
+	curl_setopt($ci, CURLOPT_INTERFACE, $this->ip);
+}
 
     switch ($method) {
       case 'POST':
