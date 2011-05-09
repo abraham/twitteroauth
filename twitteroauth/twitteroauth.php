@@ -120,6 +120,22 @@ class TwitterOAuth {
   }
 
   /**
+   * Pass in PIN number for an access token and
+   * secret, to sign API calls.
+   *
+   * @returns array("oauth_token" => "the-access-token",
+   *                "oauth_token_secret" => "the-access-secret",
+   *                "user_id" => "9436992",
+   *                "screen_name" => "abraham")
+   */
+  function getAccessTokenFromPin($pin) {
+    $request = $this->oAuthRequest($this->accessTokenURL(), 'POST', array('oauth_verifier' => $pin));
+    $token = OAuthUtil::parse_parameters($request);
+    $this->token = new OAuthConsumer($token['oauth_token'], $token['oauth_token_secret']);
+    return $token;
+  }
+
+  /**
    * One time exchange of username and password for access token and secret.
    *
    * @returns array("oauth_token" => "the-access-token",
