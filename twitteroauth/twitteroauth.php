@@ -7,7 +7,7 @@
  */
 
 /* Load OAuth lib. You can find it at http://oauth.net */
-require_once('OAuth.php');
+require_once(dirname(__FILE__).'/OAuth.php');
 
 /**
  * Twitter OAuth class
@@ -43,8 +43,8 @@ class TwitterOAuth {
    * Set API URLS
    */
   function accessTokenURL()  { return 'https://api.twitter.com/oauth/access_token'; }
-  function authenticateURL() { return 'https://api.twitter.com/oauth/authenticate'; }
-  function authorizeURL()    { return 'https://api.twitter.com/oauth/authorize'; }
+  function authenticateURL() { return 'https://twitter.com/oauth/authenticate'; }
+  function authorizeURL()    { return 'https://twitter.com/oauth/authorize'; }
   function requestTokenURL() { return 'https://api.twitter.com/oauth/request_token'; }
 
   /**
@@ -78,9 +78,8 @@ class TwitterOAuth {
       $parameters['oauth_callback'] = $oauth_callback;
     } 
     $request = $this->oAuthRequest($this->requestTokenURL(), 'GET', $parameters);
-    $token = OAuthUtil::parse_parameters($request);
-    $this->token = new OAuthConsumer($token['oauth_token'], $token['oauth_token_secret']);
-    return $token;
+    
+    return $this->getToken($request);
   }
 
   /**
@@ -114,9 +113,8 @@ class TwitterOAuth {
       $parameters['oauth_verifier'] = $oauth_verifier;
     }
     $request = $this->oAuthRequest($this->accessTokenURL(), 'GET', $parameters);
-    $token = OAuthUtil::parse_parameters($request);
-    $this->token = new OAuthConsumer($token['oauth_token'], $token['oauth_token_secret']);
-    return $token;
+
+    return $this->getToken($request);
   }
 
   /**
@@ -134,9 +132,8 @@ class TwitterOAuth {
     $parameters['x_auth_password'] = $password;
     $parameters['x_auth_mode'] = 'client_auth';
     $request = $this->oAuthRequest($this->accessTokenURL(), 'POST', $parameters);
-    $token = OAuthUtil::parse_parameters($request);
-    $this->token = new OAuthConsumer($token['oauth_token'], $token['oauth_token_secret']);
-    return $token;
+
+    return $this->getToken($request);
   }
 
   /**
@@ -241,5 +238,29 @@ class TwitterOAuth {
       $this->http_header[$key] = $value;
     }
     return strlen($header);
+  }
+
+  /**
+   * Added to go well with the Symfony2 DIC
+   * @param  $oauth_token
+   * @param  $oauth_token_secret
+   * @return void
+   */
+  function setOAuthToken($oauth_token, $oauth_token_secret) {
+      $this->token = new OAuthConsumer($oauth_token, $oauth_token_secret);
+  }
+
+  /**
+   * Avoid the notices if the token is not set
+   * @param  $request
+   * @return array
+   */
+  function getToken($request) {
+    $token = OAuthUtil::parse_parameters($request);
+    if (isset($token['oauth_token'], $token['oauth_token_secret'])) {
+        $this->token = new OAuthConsumer($token['oauth_token'], $token['oauth_token_secret']);
+    }
+
+    return $token;
   }
 }
