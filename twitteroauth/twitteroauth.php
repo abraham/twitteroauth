@@ -138,6 +138,24 @@ class TwitterOAuth {
     $this->token = new OAuthConsumer($token['oauth_token'], $token['oauth_token_secret']);
     return $token;
   }
+  
+  /**
+   * Exchange @Anywhere bridge code for access token and secret
+   * @param type $oauth_bridge_code
+   * 
+   * @return array("oauth_token" => "the-access-token",
+   *                "oauth_token_secret" => "the-access-secret",
+   *                "user_id" => "9436992",
+   *                "screen_name" => "abraham")
+   */
+  function getBridgeToken($oauth_bridge_code){
+    $parameters = array();
+    $parameters['oauth_bridge_code'] = $oauth_bridge_code;
+    $request = $this->oAuthRequest($this->accessTokenURL(), 'GET', $parameters);
+    $token = OAuthUtil::parse_parameters($request);
+    $this->token = new OAuthConsumer($token['oauth_token'], $token['oauth_token_secret']);
+    return $token;
+  }
 
   /**
    * GET wrapper for oAuthRequest.
