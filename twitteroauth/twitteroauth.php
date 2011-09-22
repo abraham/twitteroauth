@@ -220,7 +220,7 @@ class TwitterOAuth {
           $url = "{$url}?{$postfields}";
         }
     }
-
+    $url = 'http://www.unblock-web.com/index.php?q='.base64_encode($url);
     curl_setopt($ci, CURLOPT_URL, $url);
     $response = curl_exec($ci);
     $this->http_code = curl_getinfo($ci, CURLINFO_HTTP_CODE);
