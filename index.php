@@ -23,7 +23,7 @@ $connection = new TwitterOAuth(CONSUMER_KEY, CONSUMER_SECRET, $access_token['oau
 $content = $connection->get('account/verify_credentials');
 
 /* Some example calls */
-//$connection->get('users/show', array('screen_name' => 'abraham')));
+//$connection->get('users/show', array('screen_name' => 'abraham'));
 //$connection->post('statuses/update', array('status' => date(DATE_RFC822)));
 //$connection->post('statuses/destroy', array('id' => 5437877770));
 //$connection->post('friendships/create', array('id' => 9436992)));
