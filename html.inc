@@ -18,7 +18,7 @@
       <p>
         Links:
         <a href='http://github.com/abraham/twitteroauth'>Source Code</a> &amp;
-        <a href='http://wiki.github.com/abraham/twitteroauth/documentation'>Documentation</a> |
+        <a href='http://wiki.github.com/abraham/twitteroauth/DOCUMENTATION.md'>Documentation</a> |
         Contact @<a href='http://twitter.com/abraham'>abraham</a>
       </p>
       <hr />
