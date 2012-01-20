@@ -19,6 +19,8 @@ class TwitterOAuth {
   public $url;
   /* Set up the API root URL. */
   public $host = "https://api.twitter.com/1/";
+  /* Set up the Search API root URL. */
+  public $search_host = "http://search.twitter.com/search";
   /* Set timeout default. */
   public $timeout = 30;
   /* Set connect timeout. */
@@ -166,6 +168,17 @@ class TwitterOAuth {
    */
   function delete($url, $parameters = array(), $output_type = 0) {
     $response = $this->oAuthRequest($url, 'DELETE', $parameters);
+    if ($this->format === 'json' && $this->decode_json) {
+      return json_decode($response, $output_type);
+    }
+    return $response;
+  }
+
+  /**
+   * SEARCH wrapper for oAuthReqeust.
+   */
+  function search($parameters = array(), $output_type = 1) {
+    $response = $this->oAuthRequest($this->search_host, 'GET', $parameters);
     if ($this->format === 'json' && $this->decode_json) {
       return json_decode($response, $output_type);
     }
