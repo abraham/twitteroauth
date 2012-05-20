@@ -7,7 +7,7 @@
  */
 
 /* Load OAuth lib. You can find it at http://oauth.net */
-require_once('OAuth.php');
+require_once(dirname(__FILE__).'/OAuth.php');
 
 /**
  * Twitter OAuth class
@@ -31,10 +31,16 @@ class TwitterOAuth {
   public $decode_json = TRUE;
   /* Contains the last HTTP headers returned. */
   public $http_info;
+  /* Contains the last HTTP error, if any */
+  public $http_error;
   /* Set the useragnet. */
   public $useragent = 'TwitterOAuth v0.2.0-beta2';
   /* Immediately retry the API call if the response was not successful. */
   //public $retry = TRUE;
+  /* Set the proxy */
+  public $http_proxy = FALSE;
+  /* Set the proxy port */
+  public $http_proxy_port = FALSE;
 
 
 
@@ -78,9 +84,8 @@ class TwitterOAuth {
       $parameters['oauth_callback'] = $oauth_callback;
     } 
     $request = $this->oAuthRequest($this->requestTokenURL(), 'GET', $parameters);
-    $token = OAuthUtil::parse_parameters($request);
-    $this->token = new OAuthConsumer($token['oauth_token'], $token['oauth_token_secret']);
-    return $token;
+    
+    return $this->getToken($request);
   }
 
   /**
@@ -114,9 +119,8 @@ class TwitterOAuth {
       $parameters['oauth_verifier'] = $oauth_verifier;
     }
     $request = $this->oAuthRequest($this->accessTokenURL(), 'GET', $parameters);
-    $token = OAuthUtil::parse_parameters($request);
-    $this->token = new OAuthConsumer($token['oauth_token'], $token['oauth_token_secret']);
-    return $token;
+
+    return $this->getToken($request);
   }
 
   /**
@@ -134,9 +138,8 @@ class TwitterOAuth {
     $parameters['x_auth_password'] = $password;
     $parameters['x_auth_mode'] = 'client_auth';
     $request = $this->oAuthRequest($this->accessTokenURL(), 'POST', $parameters);
-    $token = OAuthUtil::parse_parameters($request);
-    $this->token = new OAuthConsumer($token['oauth_token'], $token['oauth_token_secret']);
-    return $token;
+
+    return $this->getToken($request);
   }
 
   /**
@@ -153,8 +156,8 @@ class TwitterOAuth {
   /**
    * POST wrapper for oAuthRequest.
    */
-  function post($url, $parameters = array()) {
-    $response = $this->oAuthRequest($url, 'POST', $parameters);
+  function post($url, $parameters = array(), $files = NULL) {
+    $response = $this->oAuthRequest($url, 'POST', $parameters, $files);
     if ($this->format === 'json' && $this->decode_json) {
       return json_decode($response);
     }
@@ -175,7 +178,7 @@ class TwitterOAuth {
   /**
    * Format and sign an OAuth / API request
    */
-  function oAuthRequest($url, $method, $parameters) {
+  function oAuthRequest($url, $method, $parameters, $files ) {
     if (strrpos($url, 'https://') !== 0 && strrpos($url, 'http://') !== 0) {
       $url = "{$this->host}{$url}.{$this->format}";
     }
@@ -185,7 +188,7 @@ class TwitterOAuth {
     case 'GET':
       return $this->http($request->to_url(), 'GET');
     default:
-      return $this->http($request->get_normalized_http_url(), $method, $request->to_postdata());
+      return $this->http($request->get_normalized_http_url(), $method, $request->to_postdata(), $files);
     }
   }
 
@@ -194,7 +197,7 @@ class TwitterOAuth {
    *
    * @return API results
    */
-  function http($url, $method, $postfields = NULL) {
+  function http($url, $method, $postfields = NULL, $files) {
     $this->http_info = array();
     $ci = curl_init();
     /* Curl settings */
@@ -206,11 +209,28 @@ class TwitterOAuth {
     curl_setopt($ci, CURLOPT_SSL_VERIFYPEER, $this->ssl_verifypeer);
     curl_setopt($ci, CURLOPT_HEADERFUNCTION, array($this, 'getHeader'));
     curl_setopt($ci, CURLOPT_HEADER, FALSE);
+    if ($this->http_proxy) {
+        curl_setopt($ci, CURLOPT_PROXY, $this->http_proxy);
+    }
+    if ($this->http_proxyport) {
+        curl_setopt($ci, CURLOPT_PROXYPORT, $this->http_proxyport);
+    }
 
     switch ($method) {
       case 'POST':
         curl_setopt($ci, CURLOPT_POST, TRUE);
-        if (!empty($postfields)) {
+        if(is_array($files)){
+          $post_file_array = array();
+          foreach($files as $key=>$value){
+             $post_file_array[$key] = "@{$value}";
+          }
+          curl_setopt($ci, CURLOPT_POSTFIELDS, $post_file_array);
+          if (!empty($postfields)) {
+            $url = "{$url}?{$postfields}";
+          }
+
+        }
+        else if (!empty($postfields)) {
           curl_setopt($ci, CURLOPT_POSTFIELDS, $postfields);
         }
         break;
@@ -224,6 +244,9 @@ class TwitterOAuth {
     curl_setopt($ci, CURLOPT_URL, $url);
     $response = curl_exec($ci);
     $this->http_code = curl_getinfo($ci, CURLINFO_HTTP_CODE);
+    if($this->http_code == 0) {
+        $this->http_error = curl_error($ci);
+    }
     $this->http_info = array_merge($this->http_info, curl_getinfo($ci));
     $this->url = $url;
     curl_close ($ci);
@@ -242,4 +265,54 @@ class TwitterOAuth {
     }
     return strlen($header);
   }
+
+  /**
+   * Added to go well with the Symfony2 DIC
+   * @param  $oauth_token
+   * @param  $oauth_token_secret
+   * @return void
+   */
+  function setOAuthToken($oauth_token, $oauth_token_secret) {
+      $this->token = new OAuthConsumer($oauth_token, $oauth_token_secret);
+  }
+
+  /**
+   * Avoid the notices if the token is not set
+   * @param  $request
+   * @return array
+   */
+  function getToken($request) {
+    $token = OAuthUtil::parse_parameters($request);
+    if (isset($token['oauth_token'], $token['oauth_token_secret'])) {
+        $this->token = new OAuthConsumer($token['oauth_token'], $token['oauth_token_secret']);
+    }
+
+    return $token;
+  }
+}
+
+class StatusNetOAuth extends TwitterOAuth {
+
+    function __construct($api_base, $consumer_key, $consumer_secret, $oauth_token = NULL, $oauth_token_secret = NULL) {
+        parent::__construct($consumer_key, $consumer_secret, $oauth_token, $oauth_token_secret);
+        /* Set up the API root URL. */
+        $this->host = $api_base;
+    }
+
+    /**
+    * Set API URLS
+    */
+    function accessTokenURL()  { return $this->host.'/oauth/access_token'; }
+    function authenticateURL() { return $this->host.'/oauth/authenticate'; }
+    function authorizeURL()    { return $this->host.'/oauth/authorize'; }
+    function requestTokenURL() { return $this->host.'/oauth/request_token'; }
+
+}
+
+class IdenticaOAuth extends StatusNetOAuth {
+
+    function __construct($consumer_key, $consumer_secret, $oauth_token = NULL, $oauth_token_secret = NULL) {
+        parent::__construct('https://identi.ca/api', $consumer_key, $consumer_secret, $oauth_token, $oauth_token_secret);
+    }
+
 }
