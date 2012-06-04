@@ -19,6 +19,8 @@ class TwitterOAuth {
   public $url;
   /* Set up the API root URL. */
   public $host = "https://api.twitter.com/1/";
+  /* Set up the Search API root URL. */
+  public $search_host = "http://search.twitter.com/search";
   /* Set timeout default. */
   public $timeout = 30;
   /* Set connect timeout. */
@@ -142,10 +144,10 @@ class TwitterOAuth {
   /**
    * GET wrapper for oAuthRequest.
    */
-  function get($url, $parameters = array()) {
+  function get($url, $parameters = array(), $output_type = 0) {
     $response = $this->oAuthRequest($url, 'GET', $parameters);
     if ($this->format === 'json' && $this->decode_json) {
-      return json_decode($response);
+      return json_decode($response, $output_type);
     }
     return $response;
   }
@@ -153,10 +155,10 @@ class TwitterOAuth {
   /**
    * POST wrapper for oAuthRequest.
    */
-  function post($url, $parameters = array()) {
+  function post($url, $parameters = array(), $output_type = 0) {
     $response = $this->oAuthRequest($url, 'POST', $parameters);
     if ($this->format === 'json' && $this->decode_json) {
-      return json_decode($response);
+      return json_decode($response, $output_type);
     }
     return $response;
   }
@@ -164,10 +166,21 @@ class TwitterOAuth {
   /**
    * DELETE wrapper for oAuthReqeust.
    */
-  function delete($url, $parameters = array()) {
+  function delete($url, $parameters = array(), $output_type = 0) {
     $response = $this->oAuthRequest($url, 'DELETE', $parameters);
     if ($this->format === 'json' && $this->decode_json) {
-      return json_decode($response);
+      return json_decode($response, $output_type);
+    }
+    return $response;
+  }
+
+  /**
+   * SEARCH wrapper for oAuthReqeust.
+   */
+  function search($parameters = array(), $output_type = 1) {
+    $response = $this->oAuthRequest('search', 'GET', $parameters);
+    if ($this->format === 'json' && $this->decode_json) {
+      return json_decode($response, $output_type);
     }
     return $response;
   }
@@ -179,6 +192,10 @@ class TwitterOAuth {
     if (strrpos($url, 'https://') !== 0 && strrpos($url, 'http://') !== 0) {
       $url = "{$this->host}{$url}.{$this->format}";
     }
+	elseif($url == 'search')
+	{
+      $url = "{$this->search_host}.{$this->format}";
+	}
     $request = OAuthRequest::from_consumer_and_token($this->consumer, $this->token, $method, $url, $parameters);
     $request->sign_request($this->sha1_method, $this->consumer, $this->token);
     switch ($method) {
