@@ -19,7 +19,7 @@
         Links:
         <a href='http://github.com/abraham/twitteroauth'>Source Code</a> &amp;
         <a href='http://wiki.github.com/abraham/twitteroauth/documentation'>Documentation</a> |
-        Contact @<a href='http://twitter.com/abraham'>abraham</a>
+        Contact @<a href='http://twitter.com/abraham'>abraham</a> or @<a href='http://twitter.com/lcobucci'>lcobucci</a>
       </p>
       <hr />
       <?php if (isset($menu)) { ?>
