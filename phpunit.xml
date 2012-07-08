@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit backupGlobals="false" backupStaticAttributes="false" bootstrap="boot.php">
+	<testsuites>
+		<testsuite name="TwitterOAuth Test Suite">
+			<directory>test/Abraham/TwitterOAuth</directory>
+		</testsuite>
+	</testsuites>
+</phpunit>
