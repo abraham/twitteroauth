@@ -195,38 +195,42 @@ class TwitterOAuth {
    * @return API results
    */
   function http($url, $method, $postfields = NULL) {
-    $this->http_info = array();
-    $ci = curl_init();
+
     /* Curl settings */
-    curl_setopt($ci, CURLOPT_USERAGENT, $this->useragent);
-    curl_setopt($ci, CURLOPT_CONNECTTIMEOUT, $this->connecttimeout);
-    curl_setopt($ci, CURLOPT_TIMEOUT, $this->timeout);
-    curl_setopt($ci, CURLOPT_RETURNTRANSFER, TRUE);
-    curl_setopt($ci, CURLOPT_HTTPHEADER, array('Expect:'));
-    curl_setopt($ci, CURLOPT_SSL_VERIFYPEER, $this->ssl_verifypeer);
-    curl_setopt($ci, CURLOPT_HEADERFUNCTION, array($this, 'getHeader'));
-    curl_setopt($ci, CURLOPT_HEADER, FALSE);
+    $options = array(
+      CURLOPT_USERAGENT => $this->useragent,
+      CURLOPT_CONNECTTIMEOUT => $this->connecttimeout,
+      CURLOPT_TIMEOUT => $this->timeout,
+      CURLOPT_RETURNTRANSFER => TRUE,
+      CURLOPT_HTTPHEADER => array('Expect:'),
+      CURLOPT_SSL_VERIFYPEER => $this->ssl_verifypeer,
+      CURLOPT_HEADERFUNCTION => array($this, 'getHeader'),
+      CURLOPT_HEADER => FALSE
+    );
 
     switch ($method) {
       case 'POST':
-        curl_setopt($ci, CURLOPT_POST, TRUE);
+        $options[] = array(CURLOPT_POST => TRUE);
         if (!empty($postfields)) {
-          curl_setopt($ci, CURLOPT_POSTFIELDS, $postfields);
+          $options[] = array(CURLOPT_POSTFIELDS => $postfields);
         }
         break;
       case 'DELETE':
-        curl_setopt($ci, CURLOPT_CUSTOMREQUEST, 'DELETE');
+        $options[] = array(CURLOPT_CUSTOMREQUEST => 'DELETE');
         if (!empty($postfields)) {
           $url = "{$url}?{$postfields}";
+          $options[] = array(CURLOPT_URL => $url);
         }
     }
 
-    curl_setopt($ci, CURLOPT_URL, $url);
+    $ci = curl_init();
+    curl_setopt_array($ci, $options);
     $response = curl_exec($ci);
     $this->http_code = curl_getinfo($ci, CURLINFO_HTTP_CODE);
-    $this->http_info = array_merge($this->http_info, curl_getinfo($ci));
+    $this->http_info = curl_getinfo($ci);
     $this->url = $url;
-    curl_close ($ci);
+    curl_close($ci);
+
     return $response;
   }
 
