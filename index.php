@@ -1,12 +1,18 @@
 <?php
+
+
 /**
  * @file
  * User has successfully authenticated with Twitter. Access tokens saved to session and DB.
  */
 
+// Import TwitterOAuth from it's namespace
+use Abraham\TwitterOAuth\TwitterOAuth;
+
+
 /* Load required lib files. */
 session_start();
-require_once('twitteroauth/twitteroauth.php');
+require_once('autoload.php');
 require_once('config.php');
 
 /* If access tokens are not available redirect to connect page. */
