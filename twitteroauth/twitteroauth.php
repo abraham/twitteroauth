@@ -19,6 +19,11 @@ class TwitterOAuth {
   public $url;
   /* Set up the API root URL. */
   public $host = "https://api.twitter.com/1/";
+  /* Map API urls by version for useAPIVersion function */
+  public $hosts_by_version = array(
+    "1"   => "https://api.twitter.com/1/",
+    "1.1" => "https://api.twitter.com/1.1/"
+  );
   /* Set timeout default. */
   public $timeout = 30;
   /* Set connect timeout. */
@@ -241,5 +246,13 @@ class TwitterOAuth {
       $this->http_header[$key] = $value;
     }
     return strlen($header);
+  }
+
+  function useAPIVersion($versionString) {
+    if (!isset($this->hosts_by_version[$versionString])) {
+      throw new Exception("TwitterOAuth: unknown Twitter API version $versionString");
+    }
+    $this->host = $this->hosts_by_version[$versionString];
+    return $this;
   }
 }
