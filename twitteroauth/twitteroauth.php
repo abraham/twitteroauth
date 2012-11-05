@@ -164,6 +164,17 @@ class TwitterOAuth {
   }
 
   /**
+   * Uploads are handled slightly differently
+   */
+  function upload($url, $parameters = array()) {
+    $response = $this->oAuthRequest($url, 'POST', $parameters, true);
+    if ($this->format === 'json' && $this->decode_json) {
+      return json_decode($response);
+    }
+    return $response;
+  }
+
+  /**
    * DELETE wrapper for oAuthReqeust.
    */
   function delete($url, $parameters = array()) {
@@ -177,17 +188,32 @@ class TwitterOAuth {
   /**
    * Format and sign an OAuth / API request
    */
-  function oAuthRequest($url, $method, $parameters) {
+  function oAuthRequest($url, $method, $parameters, $upload = false) {
     if (strrpos($url, 'https://') !== 0 && strrpos($url, 'http://') !== 0) {
       $url = "{$this->host}{$this->version}/{$url}.{$this->format}";
     }
-    $request = OAuthRequest::from_consumer_and_token($this->consumer, $this->token, $method, $url, $parameters);
-    $request->sign_request($this->sha1_method, $this->consumer, $this->token);
+    //$request = OAuthRequest::from_consumer_and_token($this->consumer, $this->token, $method, $url, $parameters);
+    //$request->sign_request($this->sha1_method, $this->consumer, $this->token);
+	if ($upload) {
+      // we only need to sign the oauth_* parameters for this, see
+      // https://dev.twitter.com/discussions/1059?page=4
+      $signable_parameters = Array();
+      foreach ($parameters as $k=>&$v)
+        if (substr($k, 0, 6) == "oauth_")
+          $signable_parameters[$k] = $v;
+      $request = OAuthRequest::from_consumer_and_token($this->consumer, $this->token, $method, $url, $signable_parameters);
+      $request->sign_request($this->sha1_method, $this->consumer, $this->token);
+      $request->set_parameters($parameters);
+    } else {
+      $request = OAuthRequest::from_consumer_and_token($this->consumer, $this->token, $method, $url, $parameters);
+      $request->sign_request($this->sha1_method, $this->consumer, $this->token);
+    }
     switch ($method) {
     case 'GET':
       return $this->http($request->to_url(), 'GET');
     default:
-      return $this->http($request->get_normalized_http_url(), $method, $request->to_postdata());
+      //return $this->http($request->get_normalized_http_url(), $method, $request->to_postdata());
+      return $this->http($request->get_normalized_http_url(), $method, $upload ? $request->get_parameters() : $request->to_postdata(), $upload ? $request->to_header() : false);	  
     }
   }
 
@@ -196,15 +222,16 @@ class TwitterOAuth {
    *
    * @return API results
    */
-  function http($url, $method, $postfields = NULL) {
+  function http($url, $method, $postfields = NULL, $authorization_header= false) {
     $this->http_info = array();
     $ci = curl_init();
+
+    $headers = Array('Expect:');
     /* Curl settings */
     curl_setopt($ci, CURLOPT_USERAGENT, $this->useragent);
     curl_setopt($ci, CURLOPT_CONNECTTIMEOUT, $this->connecttimeout);
     curl_setopt($ci, CURLOPT_TIMEOUT, $this->timeout);
     curl_setopt($ci, CURLOPT_RETURNTRANSFER, TRUE);
-    curl_setopt($ci, CURLOPT_HTTPHEADER, array('Expect:'));
     curl_setopt($ci, CURLOPT_SSL_VERIFYPEER, $this->ssl_verifypeer);
     curl_setopt($ci, CURLOPT_HEADERFUNCTION, array($this, 'getHeader'));
     curl_setopt($ci, CURLOPT_HEADER, FALSE);
@@ -212,6 +239,8 @@ class TwitterOAuth {
     switch ($method) {
       case 'POST':
         curl_setopt($ci, CURLOPT_POST, TRUE);
+        if ($authorization_header)
+          $headers[] = $authorization_header;
         if (!empty($postfields)) {
           curl_setopt($ci, CURLOPT_POSTFIELDS, $postfields);
         }
@@ -223,8 +252,10 @@ class TwitterOAuth {
         }
     }
 
+    curl_setopt($ci, CURLOPT_HTTPHEADER, $headers);
     curl_setopt($ci, CURLOPT_URL, $url);
     $response = curl_exec($ci);
+
     $this->http_code = curl_getinfo($ci, CURLINFO_HTTP_CODE);
     $this->http_info = array_merge($this->http_info, curl_getinfo($ci));
     $this->url = $url;
