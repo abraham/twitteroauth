@@ -18,7 +18,9 @@ class TwitterOAuth {
   /* Contains the last API call. */
   public $url;
   /* Set up the API root URL. */
-  public $host = "https://api.twitter.com/1/";
+  public $host = "https://api.twitter.com/";
+  /* Set the API version */
+  public $version = "1.1";
   /* Set timeout default. */
   public $timeout = 30;
   /* Set connect timeout. */
@@ -177,7 +179,7 @@ class TwitterOAuth {
    */
   function oAuthRequest($url, $method, $parameters) {
     if (strrpos($url, 'https://') !== 0 && strrpos($url, 'http://') !== 0) {
-      $url = "{$this->host}{$url}.{$this->format}";
+      $url = "{$this->host}{$this->version}/{$url}.{$this->format}";
     }
     $request = OAuthRequest::from_consumer_and_token($this->consumer, $this->token, $method, $url, $parameters);
     $request->sign_request($this->sha1_method, $this->consumer, $this->token);
