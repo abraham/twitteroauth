@@ -175,7 +175,7 @@ class TwitterOAuth {
   }
 
   /**
-   * DELETE wrapper for oAuthReqeust.
+   * DELETE wrapper for oAuthRequest.
    */
   function delete($url, $parameters = array()) {
     $response = $this->oAuthRequest($url, 'DELETE', $parameters);
@@ -192,8 +192,6 @@ class TwitterOAuth {
     if (strrpos($url, 'https://') !== 0 && strrpos($url, 'http://') !== 0) {
       $url = "{$this->host}{$this->version}/{$url}.{$this->format}";
     }
-    //$request = OAuthRequest::from_consumer_and_token($this->consumer, $this->token, $method, $url, $parameters);
-    //$request->sign_request($this->sha1_method, $this->consumer, $this->token);
 	if ($upload) {
       // we only need to sign the oauth_* parameters for this, see
       // https://dev.twitter.com/discussions/1059?page=4
@@ -212,7 +210,6 @@ class TwitterOAuth {
     case 'GET':
       return $this->http($request->to_url(), 'GET');
     default:
-      //return $this->http($request->get_normalized_http_url(), $method, $request->to_postdata());
       return $this->http($request->get_normalized_http_url(), $method, $upload ? $request->get_parameters() : $request->to_postdata(), $upload ? $request->to_header() : false);	  
     }
   }
