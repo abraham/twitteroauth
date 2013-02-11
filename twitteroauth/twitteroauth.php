@@ -79,7 +79,7 @@ class TwitterOAuth {
     } 
     $request = $this->oAuthRequest($this->requestTokenURL(), 'GET', $parameters);
     $token = OAuthUtil::parse_parameters($request);
-    $this->token = new OAuthConsumer($token['oauth_token'], $token['oauth_token_secret']);
+    $this->token = new OAuthConsumer(self::arr_get($token, 'oauth_token'), self::arr_get($token, 'oauth_token_secret'));
     return $token;
   }
 
@@ -90,7 +90,7 @@ class TwitterOAuth {
    */
   function getAuthorizeURL($token, $sign_in_with_twitter = TRUE) {
     if (is_array($token)) {
-      $token = $token['oauth_token'];
+      $token = self::arr_get($token, 'oauth_token');
     }
     if (empty($sign_in_with_twitter)) {
       return $this->authorizeURL() . "?oauth_token={$token}";
@@ -115,7 +115,7 @@ class TwitterOAuth {
     }
     $request = $this->oAuthRequest($this->accessTokenURL(), 'GET', $parameters);
     $token = OAuthUtil::parse_parameters($request);
-    $this->token = new OAuthConsumer($token['oauth_token'], $token['oauth_token_secret']);
+    $this->token = new OAuthConsumer(self::arr_get($token, 'oauth_token'), self::arr_get($token, 'oauth_token_secret'));
     return $token;
   }
 
@@ -135,7 +135,7 @@ class TwitterOAuth {
     $parameters['x_auth_mode'] = 'client_auth';
     $request = $this->oAuthRequest($this->accessTokenURL(), 'POST', $parameters);
     $token = OAuthUtil::parse_parameters($request);
-    $this->token = new OAuthConsumer($token['oauth_token'], $token['oauth_token_secret']);
+    $this->token = new OAuthConsumer(arr::get($token, 'oauth_token'), arr::get($token, 'oauth_token_secret'));
     return $token;
   }
 
@@ -242,4 +242,16 @@ class TwitterOAuth {
     }
     return strlen($header);
   }
+
+  /**
+	 * This method returns an empty value if the array index you are trying to access
+	 * does not exist.  It is useful for avoiding those undefined index notices from php.
+	 */
+	public static function arr_get($arr, $key, $default = '') {
+		$returnValue = $default;
+		if(isset($arr[$key])) {
+			$returnValue = $arr[$key];
+		}
+		return $returnValue;
+	}
 }
