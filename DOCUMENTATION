@@ -35,6 +35,14 @@ temporary credentials - Previously known as the request token.
 token credentials - Previously known as the access token.
 
 
+APP SETTINGS
+====================
+When registering your app with Twitter be sure to include the following information:
+
+-Callback URL: must have a valid value, without a placeholder URL no callback urls are allowed
+-Allow this application to be used to Sign in with Twitter:  checked yes.
+
+
 PARAMETERS
 ====================
 There are a number of parameters you can modify after creating a TwitterOAuth object.
