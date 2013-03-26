@@ -18,11 +18,11 @@ class TwitterOAuth {
   /* Contains the last API call. */
   public $url;
   /* Set up the API root URL. */
-  public $host = "https://api.twitter.com/1/";
+  public $host = "https://api.twitter.com/1.1/";
   /* Set timeout default. */
   public $timeout = 30;
   /* Set connect timeout. */
-  public $connecttimeout = 30; 
+  public $connecttimeout = 30;
   /* Verify SSL Cert. */
   public $ssl_verifypeer = FALSE;
   /* Respons format. */
@@ -33,6 +33,10 @@ class TwitterOAuth {
   public $http_info;
   /* Set the useragnet. */
   public $useragent = 'TwitterOAuth v0.2.0-beta2';
+  /* Requires proxy */
+  public $requires_proxy = false;
+  /* Set proxy */
+  public $proxy = '';
   /* Immediately retry the API call if the response was not successful. */
   //public $retry = TRUE;
 
@@ -43,14 +47,14 @@ class TwitterOAuth {
    * Set API URLS
    */
   function accessTokenURL()  { return 'https://api.twitter.com/oauth/access_token'; }
-  function authenticateURL() { return 'https://api.twitter.com/oauth/authenticate'; }
-  function authorizeURL()    { return 'https://api.twitter.com/oauth/authorize'; }
+  function authenticateURL() { return 'https://twitter.com/oauth/authenticate'; }
+  function authorizeURL()    { return 'https://twitter.com/oauth/authorize'; }
   function requestTokenURL() { return 'https://api.twitter.com/oauth/request_token'; }
 
   /**
    * Debug helpers
    */
-  function lastStatusCode() { return $this->http_status; }
+  function lastStatusCode() { return $this->http_code; }
   function lastAPICall() { return $this->last_api_call; }
 
   /**
@@ -76,7 +80,7 @@ class TwitterOAuth {
     $parameters = array();
     if (!empty($oauth_callback)) {
       $parameters['oauth_callback'] = $oauth_callback;
-    } 
+    }
     $request = $this->oAuthRequest($this->requestTokenURL(), 'GET', $parameters);
     $token = OAuthUtil::parse_parameters($request);
     $this->token = new OAuthConsumer($token['oauth_token'], $token['oauth_token_secret']);
@@ -115,8 +119,14 @@ class TwitterOAuth {
     }
     $request = $this->oAuthRequest($this->accessTokenURL(), 'GET', $parameters);
     $token = OAuthUtil::parse_parameters($request);
-    $this->token = new OAuthConsumer($token['oauth_token'], $token['oauth_token_secret']);
-    return $token;
+    //Gina Trapani: If a token has been used already, this returns an error. Adding check here.
+    //print_r($token);
+    if (isset($token['oauth_token']) && isset($token['oauth_token_secret'])) {
+        $this->token = new OAuthConsumer($token['oauth_token'], $token['oauth_token_secret']);
+        return $token;
+    } else {
+        return null;
+    }
   }
 
   /**
@@ -127,7 +137,7 @@ class TwitterOAuth {
    *                "user_id" => "9436992",
    *                "screen_name" => "abraham",
    *                "x_auth_expires" => "0")
-   */  
+   */
   function getXAuthToken($username, $password) {
     $parameters = array();
     $parameters['x_auth_username'] = $username;
@@ -149,7 +159,7 @@ class TwitterOAuth {
     }
     return $response;
   }
-  
+
   /**
    * POST wrapper for oAuthRequest.
    */
@@ -206,7 +216,10 @@ class TwitterOAuth {
     curl_setopt($ci, CURLOPT_SSL_VERIFYPEER, $this->ssl_verifypeer);
     curl_setopt($ci, CURLOPT_HEADERFUNCTION, array($this, 'getHeader'));
     curl_setopt($ci, CURLOPT_HEADER, FALSE);
-
+    if ($this->requires_proxy) {
+        curl_setopt($ci, CURLOPT_PROXY, $this->proxy);
+    }
+    
     switch ($method) {
       case 'POST':
         curl_setopt($ci, CURLOPT_POST, TRUE);
@@ -223,6 +236,7 @@ class TwitterOAuth {
 
     curl_setopt($ci, CURLOPT_URL, $url);
     $response = curl_exec($ci);
+    $error = curl_error($ci);
     $this->http_code = curl_getinfo($ci, CURLINFO_HTTP_CODE);
     $this->http_info = array_merge($this->http_info, curl_getinfo($ci));
     $this->url = $url;
@@ -242,4 +256,17 @@ class TwitterOAuth {
     }
     return strlen($header);
   }
+  
+  /**
+   * Set proxy properties
+   */
+  function setProxy($_requires_proxy,$_proxy) {
+    $setproxy = (bool)$_requires_proxy;
+    if ($setproxy && (isset($_proxy)) && ($_proxy <> '')) {
+        $this->requires_proxy = true;
+        $this->proxy = $_proxy;
+    } else {
+        $this->requires_proxy = false;        
+    }
+  }  
 }
