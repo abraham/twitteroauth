@@ -239,3 +239,29 @@ class TwitterOAuth {
     return strlen($header);
   }
 }
+
+class StatusNetOAuth extends TwitterOAuth {
+
+    function __construct($api_base, $consumer_key, $consumer_secret, $oauth_token = NULL, $oauth_token_secret = NULL) {
+        parent::__construct($consumer_key, $consumer_secret, $oauth_token, $oauth_token_secret);
+        /* Set up the API root URL. */
+        $this->host = $api_base;
+    }
+
+    /**
+    * Set API URLS
+    */
+    function accessTokenURL()  { return $this->host.'/oauth/access_token'; }
+    function authenticateURL() { return $this->host.'/oauth/authenticate'; }
+    function authorizeURL()    { return $this->host.'/oauth/authorize'; }
+    function requestTokenURL() { return $this->host.'/oauth/request_token'; }
+
+}
+
+class IdenticaOAuth extends StatusNetOAuth {
+
+    function __construct($consumer_key, $consumer_secret, $oauth_token = NULL, $oauth_token_secret = NULL) {
+        parent::__construct('https://identi.ca/api', $consumer_key, $consumer_secret, $oauth_token, $oauth_token_secret);
+    }
+
+}
