@@ -34,6 +34,7 @@ There are a number of parameters you can modify after creating a TwitterOAuth ob
 
 Switch an existing TwitterOAuth install to use version 1.1 of the API.
 
+    $connection->$host = "https://api.twitter.com/1.1/";
 
 Custom useragent.
 
