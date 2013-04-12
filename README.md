@@ -111,4 +111,4 @@ you wish to include for the API method such as curser or in_reply_to_status_id.
 Contributors
 ============
 
-* [Abraham Williams](http://www.twitter.com/abraham) - Main developer, current maintainer.
+* [Abraham Williams](https://twitter.com/abraham) - Main developer, current maintainer.
