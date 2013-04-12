@@ -51,7 +51,7 @@ Extended flow using example code
 
 To use TwitterOAuth with the Twitter API you need *TwitterOAuth.php*, *OAuth.php* and
 client credentials. You can get client credentials by registering your application at
-https://twitter.com/apps.
+[dev.twitter.com/apps](https://dev.twitter.com/apps).
 
 Users start out on connect.php which displays the "Sign in with Twitter" image hyperlinked
 to redirect.php. This button should be displayed on your homepage in your login section. The
