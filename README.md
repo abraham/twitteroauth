@@ -65,11 +65,9 @@ If you have your own configuration method feel free to use it instead of config.
     $connection = new TwitterOAuth(CONSUMER_KEY, CONSUMER_SECRET); // Use config.php client credentials
     $connection = new TwitterOAuth('abc890', '123xyz');
 
-2) Using the built $connection object you will ask Twitter for temporary credentials. If you
-wish to have a dynamic callback URL for each user you can do pass a URL as a parameter.
+2) Using the built $connection object you will ask Twitter for temporary credentials. The `oauth_callback` value is required.
 
-    $temporary_credentials = $connection->getRequestToken(); // Use applications registered callback.
-    $temporary_credentials = $connection->getRequestToken('http://example.com/callback.php?');
+    $temporary_credentials = $connection->getRequestToken(OAUTH_CALLBACK); // Use config.php callback URL.
 
 3) Now that we have temporary credentials the user has to go to Twitter and authorize the app
 to access and updates their data. You can also pass a second parameter of FALSE to not use Sign
