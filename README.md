@@ -70,8 +70,8 @@ If you have your own configuration method feel free to use it instead of config.
     $temporary_credentials = $connection->getRequestToken(OAUTH_CALLBACK); // Use config.php callback URL.
 
 3) Now that we have temporary credentials the user has to go to Twitter and authorize the app
-to access and updates their data. You can also pass a second parameter of FALSE to not use Sign
-in with Twitter: http://apiwiki.twitter.com/Sign-in-with-Twitter.
+to access and updates their data. You can also pass a second parameter of FALSE to not use [Sign
+in with Twitter](https://dev.twitter.com/docs/auth/sign-twitter).
 
     $redirect_url = $connection->getAuthorizeURL($temporary_credentials); // Use Sign in with Twitter
     $redirect_url = $connection->getAuthorizeURL($temporary_credentials, FALSE);
