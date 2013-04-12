@@ -19,6 +19,8 @@ class TwitterOAuth {
   public $url;
   /* Set up the API root URL. */
   public $host = "https://api.twitter.com/1/";
+  /* Set up the Search API root URL. */
+  public $search_host = "https://search.twitter.com/";
   /* Set timeout default. */
   public $timeout = 30;
   /* Set connect timeout. */
@@ -35,6 +37,8 @@ class TwitterOAuth {
   public $useragent = 'TwitterOAuth v0.2.0-beta2';
   /* Immediately retry the API call if the response was not successful. */
   //public $retry = TRUE;
+  /* The IP of the interface to return calls from the API to */
+  public $ip = '';
 
 
 
@@ -139,6 +143,9 @@ class TwitterOAuth {
    * GET wrapper for oAuthRequest.
    */
   function get($url, $parameters = array()) {
+    if ($url === 'search') {
+      $this->host = $this->search_host;
+    }
     $response = $this->oAuthRequest($url, 'GET', $parameters);
     if ($this->format === 'json' && $this->decode_json) {
       return json_decode($response);
@@ -202,6 +209,9 @@ class TwitterOAuth {
     curl_setopt($ci, CURLOPT_SSL_VERIFYPEER, $this->ssl_verifypeer);
     curl_setopt($ci, CURLOPT_HEADERFUNCTION, array($this, 'getHeader'));
     curl_setopt($ci, CURLOPT_HEADER, FALSE);
+    if (!empty($this->ip)) {
+      curl_setopt($ci, CURLOPT_INTERFACE, $this->ip);
+    }
 
     switch ($method) {
       case 'POST':
