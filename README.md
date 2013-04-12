@@ -55,9 +55,9 @@ client credentials. You can get client credentials by registering your applicati
 
 Users start out on connect.php which displays the "Sign in with Twitter" image hyperlinked
 to redirect.php. This button should be displayed on your homepage in your login section. The
-client credentials are saved in config.php as CONSUMER_KEY and CONSUMER_SECRET. You can
+client credentials are saved in config.php as `CONSUMER_KEY` and `CONSUMER_SECRET`. You can
 save a static callback URL in the app settings page, in the config file or use a dynamic
-callback URL later in step 2. In example use http://example.com/callback.php.
+callback URL later in step 2. In example use https://example.com/callback.php.
 
 1) When a user lands on redirect.php we build a new TwitterOAuth object using the client credentials.
 If you have your own configuration method feel free to use it instead of config.php.
