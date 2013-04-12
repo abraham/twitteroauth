@@ -98,11 +98,9 @@ TwitterOAuth object using the temporary credentials.
     $_SESSION['oauth_token_secret']);
 
 7) Now we ask Twitter for long lasting token credentials. These are specific to the application
-and user and will act like password to make future requests. If a dynamic callback URL was used
-you will also have to pass the oauth_verifier parameter. Normally the token credentials would
+and user and will act like password to make future requests. Normally the token credentials would
 get saved in your database but for this example we are just using sessions.
 
-    $token_credentials = $connection->getAccessToken(); // Used applications registered callback URL
     $token_credentials = $connection->getAccessToken($_REQUEST['oauth_verifier']);
 
 8) With the token credentials we build a new TwitterOAuth object.
