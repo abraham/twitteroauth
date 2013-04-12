@@ -62,7 +62,7 @@ callback URL later in step 2. In example use https://example.com/callback.php.
 1) When a user lands on redirect.php we build a new TwitterOAuth object using the client credentials.
 If you have your own configuration method feel free to use it instead of config.php.
 
-    $connection = new TwitterOAuth(CONSUMER_KEY, CONSUMER_SECRET);// Use config.php client credentials
+    $connection = new TwitterOAuth(CONSUMER_KEY, CONSUMER_SECRET); // Use config.php client credentials
     $connection = new TwitterOAuth('abc890', '123xyz');
 
 2) Using the built $connection object you will ask Twitter for temporary credentials. If you
