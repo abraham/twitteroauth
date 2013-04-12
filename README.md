@@ -104,9 +104,9 @@ get saved in your database but for this example we are just using sessions.
 methods. Directly copy the path from the API documentation and add an array of any parameter
 you wish to include for the API method such as curser or in_reply_to_status_id.
 
-    $content = $connection->get('account/verify_credentials');
-    $connection->post('statuses/update', array('status' => 'Text of status here', 'in_reply_to_status_id' => 123456));
-    $content = $connection->delete('statuses/destroy/12345');
+    $account = $connection->get('account/verify_credentials');
+    $status = $connection->post('statuses/update', array('status' => 'Text of status here', 'in_reply_to_status_id' => 123456));
+    $status = $connection->delete('statuses/destroy/12345');
 
 Contributors
 ============
