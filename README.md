@@ -32,13 +32,8 @@ Parameters
 
 There are a number of parameters you can modify after creating a TwitterOAuth object.
 
-Switch to XML instead of JSON.
+Switch an existing TwitterOAuth install to use version 1.1 of the API.
 
-    $connection->format = 'xml';
-
-Stop auto decoding JSON.
-
-    $connection->decode_json = FALSE;
 
 Custom useragent.
 
