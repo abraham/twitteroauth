@@ -76,11 +76,9 @@ in with Twitter](https://dev.twitter.com/docs/auth/sign-twitter).
     $redirect_url = $connection->getAuthorizeURL($temporary_credentials); // Use Sign in with Twitter
     $redirect_url = $connection->getAuthorizeURL($temporary_credentials, FALSE);
 
-4) You will now have a Twitter URL that you must send the user to. You can add parameters and
-they will return with the user in step 5.
+4) You will now have a Twitter URL that you must send the user to.
 
-    https://twitter.com/oauth/authenticate?oauth_token=xyz123
-    https://twitter.com/oauth/authenticate?oauth_token=xyz123&info=abc // info will return with user
+    https://api.twitter.com/oauth/authenticate?oauth_token=xyz123
 
 5) The user is now on twitter.com and may have to login. Once authenticated with Twitter they will
 will either have to click on allow/deny, or will be automatically redirected back to the callback.
