@@ -55,7 +55,7 @@ if(!isset($content)){
 
     // If not, let's add it to the database
     if($rs->num_rows == 0){
-	echo "insert me";
+
 		$q = "INSERT INTO `rss_twitter_users` (
 					oauth_provider, 
 					oauth_uid, 
