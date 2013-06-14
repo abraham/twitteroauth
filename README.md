@@ -32,9 +32,10 @@ Parameters
 
 There are a number of parameters you can modify after creating a TwitterOAuth object.
 
-Switch an existing TwitterOAuth install to use version 1.1 of the API.
+The latest reveissions of TwitterOAuth support the Twitter API v1.1 but if you want to
+update an old install from v1.0 you can do the following.
 
-    $connection->$host = "https://api.twitter.com/1.1/";
+    $connection->host = "https://api.twitter.com/1.1/";
 
 Custom useragent.
 
