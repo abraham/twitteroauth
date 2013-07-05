@@ -69,6 +69,9 @@ If you have your own configuration method feel free to use it instead of config.
 2) Using the built $connection object you will ask Twitter for temporary credentials. The `oauth_callback` value is required.
 
     $temporary_credentials = $connection->getRequestToken(OAUTH_CALLBACK); // Use config.php callback URL.
+    // Set token info in session
+    $_SESSION['oauth_token'] = $temporary_credentials['oauth_token']; x
+    $_SESSION['oauth_token_secret'] = $temporary_credentials['oauth_token_secret']; 
 
 3) Now that we have temporary credentials the user has to go to Twitter and authorize the app
 to access and updates their data. You can also pass a second parameter of FALSE to not use [Sign
