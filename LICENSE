@@ -1,4 +1,4 @@
-Copyright (c) 2009 Abraham Williams - http://abrah.am - abraham@poseurte.ch
+Copyright (c) 2009 Abraham Williams - http://abrah.am - abraham@abrah.am
  
 Permission is hereby granted, free of charge, to any person
 obtaining a copy of this software and associated documentation
