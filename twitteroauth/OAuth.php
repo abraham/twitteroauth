@@ -372,6 +372,7 @@ class OAuthRequest {
    * just uppercases the http method
    */
   public function get_normalized_http_method() {
+    
     return strtoupper($this->http_method);
   }
 
@@ -382,17 +383,18 @@ class OAuthRequest {
   public function get_normalized_http_url() {
     $parts = parse_url($this->http_url);
 
-    $port = @$parts['port'];
     $scheme = $parts['scheme'];
-    $host = $parts['host'];
-    $path = @$parts['path'];
+    $default_port = ($scheme == 'https') ? '443' : '80';
+    $port = isset($parts['port']) ? $parts['port'] : $default_port;
 
-    $port or $port = ($scheme == 'https') ? '443' : '80';
+    $host = $parts['host'];
+    $path = isset($parts['path']) ? $parts['path'] : '';
 
     if (($scheme == 'https' && $port != '443')
         || ($scheme == 'http' && $port != '80')) {
       $host = "$host:$port";
     }
+
     return "$scheme://$host$path";
   }
 
