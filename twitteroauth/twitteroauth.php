@@ -50,7 +50,7 @@ class TwitterOAuth {
   /**
    * Debug helpers
    */
-  function lastStatusCode() { return $this->http_code }
+  function lastStatusCode() { return $this->http_code; }
   function lastAPICall() { return $this->last_api_call; }
 
   /**
