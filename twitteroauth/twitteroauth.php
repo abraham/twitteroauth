@@ -35,6 +35,12 @@ class TwitterOAuth {
   public $useragent = 'TwitterOAuth v0.2.0-beta2';
   /* Immediately retry the API call if the response was not successful. */
   //public $retry = TRUE;
+  /**
+   * Set additional CURLOPT
+   * Should be assoc array of [ CURLOPT_1 => VALUE_1; CURLOPT_2 => VALUE_2; ]
+   * @var type array
+   */
+  protected $curl_opt_array = NULL;
 
 
 
@@ -55,14 +61,18 @@ class TwitterOAuth {
 
   /**
    * construct TwitterOAuth object
+   * @param array $curl_opt_array assoc array of curl options => values
    */
-  function __construct($consumer_key, $consumer_secret, $oauth_token = NULL, $oauth_token_secret = NULL) {
+  function __construct($consumer_key, $consumer_secret, $oauth_token = NULL, $oauth_token_secret = NULL, $curl_opt_array = NULL) {
     $this->sha1_method = new OAuthSignatureMethod_HMAC_SHA1();
     $this->consumer = new OAuthConsumer($consumer_key, $consumer_secret);
     if (!empty($oauth_token) && !empty($oauth_token_secret)) {
       $this->token = new OAuthConsumer($oauth_token, $oauth_token_secret);
     } else {
       $this->token = NULL;
+    }
+    if (is_array($curl_opt_array )) {
+      $this->curl_opt_array = $curl_opt_array;
     }
   }
 
@@ -202,6 +212,9 @@ class TwitterOAuth {
     curl_setopt($ci, CURLOPT_SSL_VERIFYPEER, $this->ssl_verifypeer);
     curl_setopt($ci, CURLOPT_HEADERFUNCTION, array($this, 'getHeader'));
     curl_setopt($ci, CURLOPT_HEADER, FALSE);
+    if (!$this->curl_opt_array === NULL) {
+      $this->setCurlOpt($ci, $this->curl_opt_array);
+    }
 
     switch ($method) {
       case 'POST':
@@ -237,5 +250,24 @@ class TwitterOAuth {
       $this->http_header[$key] = $value;
     }
     return strlen($header);
+  }
+  
+  /**
+   * Set additional curl options
+   * @param resource $curlObject curl session handler
+   * @param array $curlOptions assoc array of curl options => values
+   * @return boolean return TRUE if all options set corrct; return FALSE on errors
+   */
+  protected function setCurlOpt ($curlObject, $curlOptions) {
+    if ($curlObject === FALSE) {
+      /* if curl session initialize with errors return FALSE value */
+      return FALSE;
+    }
+    if (is_array($curlOptions === FALSE)) {
+      /* if options passed incorect return FALSE value */
+      return FALSE;
+    }
+    /* return operation status */
+    return curl_setopt_array($curlObject, $curlOptions);
   }
 }
