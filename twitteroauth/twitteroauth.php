@@ -263,7 +263,7 @@ class TwitterOAuth {
       /* if curl session initialize with errors return FALSE value */
       return FALSE;
     }
-    if (is_array($curlOptions === FALSE)) {
+    if (is_array($curlOptions) === FALSE) {
       /* if options passed incorect return FALSE value */
       return FALSE;
     }
