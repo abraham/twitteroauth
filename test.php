@@ -20,8 +20,8 @@ $access_token = $_SESSION['access_token'];
 $connection = new TwitterOAuth(CONSUMER_KEY, CONSUMER_SECRET, $access_token['oauth_token'], $access_token['oauth_token_secret']);
 
 /* If method is set change API call made. Test is called by default. */
-$content = $connection->get('account/rate_limit_status');
-echo "Current API hits remaining: {$content->remaining_hits}.";
+$content = $connection->get('https://api.twitter.com/1.1/application/rate_limit_status.json?resources=statuses');
+echo "Current API hits remaining: {$content->resources->statuses->{'/statuses/user_timeline'}->remaining}.";
 
 /* Get logged in user to help with tests. */
 $user = $connection->get('account/verify_credentials');
