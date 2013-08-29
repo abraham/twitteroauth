@@ -1,0 +1,9 @@
+{
+    "name": "vocativ/twitteroauth",
+    "require": {
+        "php": ">=5.3.0"
+    },
+    "autoload": {
+    	"classmap": ["twitteroauth/twitteroauth.php"]
+    }
+}
