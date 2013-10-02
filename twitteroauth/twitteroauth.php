@@ -192,7 +192,7 @@ class TwitterOAuth {
       return $this->http($request->to_url(), 'GET');
     default:
       // Submit parameters as an array to make cURL set "Content-Type: multipart/form-data" for the upload
-      return $this->http($request->get_normalized_http_url(), $method, ($multipart ? $parameters : $request->to_postdata()), $multipart);
+      return $this->http($request->get_normalized_http_url(), $method, ($multipart ? $parameters : $request->to_postdata()), $request, $multipart);
     }
   }
 
