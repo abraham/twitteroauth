@@ -176,14 +176,12 @@ class TwitterOAuth {
       $url = "{$this->host}{$url}.{$this->format}";
     }
     $signature_parameters = array();
-    if ($multipart) {
-      // When making a multipart request, use only oauth_* -keys for signature
-      foreach ($parameters AS $key => $value) {
-        if (strpos($key, 'oauth_') !== 0) {
-          continue;
-        }
-        $signature_parameters[$key] = $value;
+    // When making a multipart request, use only oauth_* -keys for signature
+    foreach ($parameters AS $key => $value) {
+      if ($multipart && strpos($key, 'oauth_') !== 0) {
+        continue;
       }
+      $signature_parameters[$key] = $value;
     }
     $request = OAuthRequest::from_consumer_and_token($this->consumer, $this->token, $method, $url, $signature_parameters);
     $request->sign_request($this->sha1_method, $this->consumer, $this->token);
