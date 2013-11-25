@@ -19,6 +19,8 @@ class TwitterOAuth {
   public $url;
   /* Set up the API root URL. */
   public $host = "https://api.twitter.com/1.1/";
+  /* Set up the API root URL for streams. */
+  public $stream_host  = "https://stream.twitter.com/1.1/";
   /* Set timeout default. */
   public $timeout = 30;
   /* Set connect timeout. */
@@ -35,6 +37,8 @@ class TwitterOAuth {
   public $useragent = 'TwitterOAuth v0.2.0-beta2';
   /* Immediately retry the API call if the response was not successful. */
   //public $retry = TRUE;
+  /* Callback for stream responses */
+  public $stream_callback;
 
 
 
@@ -225,6 +229,58 @@ class TwitterOAuth {
     curl_close ($ci);
     return $response;
   }
+
+  /** 
+   * Connect to a stream
+   *
+   * @callback return true to continue or false to stop
+   */
+  function stream($url, $parameters, $callback) {
+    if (strrpos($url, 'https://') !== 0 && strrpos($url, 'http://') !== 0) {
+      $url = "{$this->stream_host}{$url}.{$this->format}";
+    }
+
+    $request = OAuth\Request::from_consumer_and_token($this->consumer, $this->token, 'POST', $url, $parameters);
+    $request->sign_request($this->sha1_method, $this->consumer, $this->token);
+
+    $this->http_info = array();
+    $this->stream_callback = $callback;
+    $ci = curl_init();
+    /* Curl settings */
+    curl_setopt($ci, CURLOPT_USERAGENT, $this->useragent);
+    curl_setopt($ci, CURLOPT_CONNECTTIMEOUT, $this->connecttimeout);
+    curl_setopt($ci, CURLOPT_TIMEOUT, 0);
+    curl_setopt($ci, CURLOPT_HTTPHEADER, array('Expect:'));
+    curl_setopt($ci, CURLOPT_SSL_VERIFYPEER, $this->ssl_verifypeer);
+    curl_setopt($ci, CURLOPT_HEADERFUNCTION, array($this, 'getHeader'));
+    curl_setopt($ci, CURLOPT_HEADER, FALSE);
+    curl_setopt($ci, CURLOPT_WRITEFUNCTION, array($this, 'processStream'));
+    curl_setopt($ci, CURLOPT_URL, $request->get_normalized_http_url());
+    curl_setopt($ci, CURLOPT_POST, TRUE);
+    curl_setopt($ci, CURLOPT_POSTFIELDS, $request->to_postdata());
+    curl_exec($ci);
+    curl_close($ci);
+  }
+
+  function processStream($ci, $str) {
+    $response = $str;
+    if ($this->format === 'json' && $this->decode_json) {
+      $response = json_decode($response);
+    }
+
+    $continue = false;
+
+    if ($this->stream_callback) {
+      $continue = call_user_func_array($this->stream_callback, array($response));
+    }
+
+    if (!$continue) {
+      return 0;
+    }
+
+    return strlen($str);
+  }
+
 
   /**
    * Get the header info to store.
