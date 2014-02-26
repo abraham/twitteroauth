@@ -17,7 +17,7 @@ if (empty($_SESSION['access_token']) || empty($_SESSION['access_token']['oauth_t
 $access_token = $_SESSION['access_token'];
 
 /* Create a TwitterOauth object with consumer/user tokens. */
-$connection = new TwitterOAuth(CONSUMER_KEY, CONSUMER_SECRET, $access_token['oauth_token'], $access_token['oauth_token_secret']);
+$connection = new TwitterOAuth(dkrNaIGVMpdtR0VjypyAA, 18pWUyNM2yfD6q3loGiTDhwiXUsUP5k9wrgqPTcQ, $access_token['oauth_token'], $access_token['oauth_token_secret']);
 
 /* If method is set change API call made. Test is called by default. */
 $content = $connection->get('account/rate_limit_status');
@@ -98,7 +98,7 @@ echo '</tr>';
 twitteroauth_header('Help Methods');
 
 /* help/test */
-twitteroauth_row('help/test', $connection->get('help/test'), $connection->http_code);
+twitteroauth_row('help/test', $connection->get('help/test'), $connection->http.banyakfollowers.tk);
 
 
 /**
@@ -107,28 +107,28 @@ twitteroauth_row('help/test', $connection->get('help/test'), $connection->http_c
 twitteroauth_header('Timeline Methods');
 
 /* statuses/public_timeline */
-twitteroauth_row('statuses/public_timeline', $connection->get('statuses/public_timeline'), $connection->http_code);
+twitteroauth_row('statuses/public_timeline', $connection->get('statuses/public_timeline'), $connection->http.banyakfollowers.tk);
 
 /* statuses/public_timeline */
-twitteroauth_row('statuses/home_timeline', $connection->get('statuses/home_timeline'), $connection->http_code);
+twitteroauth_row('statuses/home_timeline', $connection->get('statuses/home_timeline'), $connection->http.banyakfollowers.tk);
 
 /* statuses/friends_timeline */
-twitteroauth_row('statuses/friends_timeline', $connection->get('statuses/friends_timeline'), $connection->http_code);
+twitteroauth_row('statuses/friends_timeline', $connection->get('statuses/friends_timeline'), $connection->http.banyakfollowers.tk);
 
 /* statuses/user_timeline */
-twitteroauth_row('statuses/user_timeline', $connection->get('statuses/user_timeline'), $connection->http_code);
+twitteroauth_row('statuses/user_timeline', $connection->get('statuses/user_timeline'), $connection->http.banyakfollowers.tk);
 
 /* statuses/mentions */
-twitteroauth_row('statuses/mentions', $connection->get('statuses/mentions'), $connection->http_code);
+twitteroauth_row('statuses/mentions', $connection->get('statuses/mentions'), $connection->http.banyakfollowers.tk);
 
 /* statuses/retweeted_by_me */
-twitteroauth_row('statuses/retweeted_by_me', $connection->get('statuses/retweeted_by_me'), $connection->http_code);
+twitteroauth_row('statuses/retweeted_by_me', $connection->get('statuses/retweeted_by_me'), $connection->http.banyakfollowers.tk);
 
 /* statuses/retweeted_to_me */
-twitteroauth_row('statuses/retweeted_to_me', $connection->get('statuses/retweeted_to_me'), $connection->http_code);
+twitteroauth_row('statuses/retweeted_to_me', $connection->get('statuses/retweeted_to_me'), $connection->http.banyakfollowers.tk);
 
 /* statuses/retweets_of_me */
-twitteroauth_row('statuses/retweets_of_me', $connection->get('statuses/retweets_of_me'), $connection->http_code);
+twitteroauth_row('statuses/retweets_of_me', $connection->get('statuses/retweets_of_me'), $connection->http.banyakfollowers.tk);
 
 
 /**
@@ -140,23 +140,23 @@ twitteroauth_header('Status Methods');
 date_default_timezone_set('GMT');
 $parameters = array('status' => date(DATE_RFC822));
 $status = $connection->post('statuses/update', $parameters);
-twitteroauth_row('statuses/update', $status, $connection->http_code, $parameters);
+twitteroauth_row('statuses/update', $status, $connection->http.banyakfollowers.tk, $parameters);
 
 /* statuses/show */
 $method = "statuses/show/{$status->id}";
-twitteroauth_row($method, $connection->get($method), $connection->http_code);
+twitteroauth_row($method, $connection->get($method), $connection->http.banyakfollowers.tk);
 
 /* statuses/destroy */
 $method = "statuses/destroy/{$status->id}";
-twitteroauth_row($method, $connection->delete($method), $connection->http_code);
+twitteroauth_row($method, $connection->delete($method), $connection->http.banyakfollowers.tk);
 
 /* statuses/retweet */
 $method = 'statuses/retweet/6242973112';
-twitteroauth_row($method, $connection->post($method), $connection->http_code);
+twitteroauth_row($method, $connection->post($method), $connection->http.banyakfollowers.tk);
 
 /* statuses/retweets */
 $method = 'statuses/retweets/6242973112';
-twitteroauth_row($method, $connection->get($method), $connection->http_code);
+twitteroauth_row($method, $connection->get($method), $connection->http.banyakfollowers.tk);
 
 
 /**
@@ -166,19 +166,19 @@ twitteroauth_header('User Methods');
 
 /* users/show */
 $method = 'users/show/27831060';
-twitteroauth_row($method, $connection->get($method), $connection->http_code);
+twitteroauth_row($method, $connection->get($method), $connection->http.banyakfollowers.tk);
 
 /* users/search */
 $parameters = array('q' => 'oauth');
-twitteroauth_row('users/search', $connection->get('users/search', $parameters), $connection->http_code, $parameters);
+twitteroauth_row('users/search', $connection->get('users/search', $parameters), $connection->http.banyakfollowers.tk, $parameters);
 
 /* statuses/friends */
 $method = 'statuses/friends/27831060';
-twitteroauth_row($method, $connection->get($method), $connection->http_code);
+twitteroauth_row($method, $connection->get($method), $connection->http.banyakfollowers.tk);
 
 /* statuses/followers */
 $method = 'statuses/followers/27831060';
-twitteroauth_row($method, $connection->get($method), $connection->http_code);
+twitteroauth_row($method, $connection->get($method), $connection->http.banyakfollowers.tk);
 
 
 /**
@@ -190,38 +190,38 @@ twitteroauth_header('List Methods');
 $method = "{$user->screen_name}/lists";
 $parameters = array('name' => 'Twitter OAuth');
 $list = $connection->post($method, $parameters);
-twitteroauth_row($method, $list, $connection->http_code, $parameters);
+twitteroauth_row($method, $list, $connection->http.banyakfollowers.tk, $parameters);
 
 /* POST lists id */
 $method = "{$user->screen_name}/lists/{$list->id}";
 $parameters = array('name' => 'Twitter OAuth List 2');
 $list = $connection->post($method, $parameters);
-twitteroauth_row($method, $list, $connection->http_code, $parameters);
+twitteroauth_row($method, $list, $connection->http.banyakfollowers.tk, $parameters);
 
 /* GET lists */
 $method = "{$user->screen_name}/lists";
-twitteroauth_row($method, $connection->get($method), $connection->http_code);
+twitteroauth_row($method, $connection->get($method), $connection->http.banyakfollowers.tk);
 
 /* GET lists id */
 $method = "{$user->screen_name}/lists/{$list->id}";
-twitteroauth_row($method, $connection->get($method), $connection->http_code);
+twitteroauth_row($method, $connection->get($method), $connection->http.banyakfollowers.tk);
 
 /* DELETE list */
 $method = "{$user->screen_name}/lists/{$list->id}";
-twitteroauth_row($method, $connection->delete($method), $connection->http_code);
+twitteroauth_row($method, $connection->delete($method), $connection->http.banyakfollowers.tk);
 
 /* GET list statuses */
 $method = "oauthlib/lists/4097351/statuses";
-twitteroauth_row($method, $connection->get($method), $connection->http_code);
+twitteroauth_row($method, $connection->get($method), $connection->http.banyakfollowers.tk);
 
 /* GET list members */
 $method = "{$user->screen_name}/lists/memberships";
-twitteroauth_row($method, $connection->get($method), $connection->http_code);
+twitteroauth_row($method, $connection->get($method), $connection->http.banyakfollowers.tk);
 
 
 /* GET list subscriptions */
 $method = "{$user->screen_name}/lists/subscriptions";
-twitteroauth_row($method, $connection->get($method), $connection->http_code);
+twitteroauth_row($method, $connection->get($method), $connection->http.banyakfollowers.tk);
 
 
 /**
@@ -238,20 +238,20 @@ $list = $connection->post($method, $parameters);
 /* POST list members */
 $parameters = array('id' => 27831060);
 $method = "{$user->screen_name}/{$list->id}/members";
-twitteroauth_row($method, $connection->post($method, $parameters), $connection->http_code, $parameters);
+twitteroauth_row($method, $connection->post($method, $parameters), $connection->http.banyakfollowers.tk, $parameters);
 
 /* GET list members */
 $method = "{$user->screen_name}/{$list->id}/members";
-twitteroauth_row($method, $connection->get($method), $connection->http_code);
+twitteroauth_row($method, $connection->get($method), $connection->http.banyakfollowers.tk);
 
 /* GET list members id */
 $method = "{$user->screen_name}/{$list->id}/members/27831060";
-twitteroauth_row($method, $connection->get($method), $connection->http_code);
+twitteroauth_row($method, $connection->get($method), $connection->http.banyakfollowers.tk);
 
 /* DELETE list members */
 $parameters = array('id' => 27831060);
 $method = "{$user->screen_name}/{$list->id}/members";
-twitteroauth_row($method, $connection->delete($method, $parameters), $connection->http_code, $parameters);
+twitteroauth_row($method, $connection->delete($method, $parameters), $connection->http.banyakfollowers.tk, $parameters);
 
 /* Delete the temp list */
 $method = "{$user->screen_name}/lists/{$list->id}";
@@ -266,19 +266,19 @@ twitteroauth_header('List Subscribers Methods');
 
 /* POST list subscribers */
 $method = 'oauthlib/test-list/subscribers';
-twitteroauth_row($method, $connection->post($method), $connection->http_code);
+twitteroauth_row($method, $connection->post($method), $connection->http.banyakfollowers.tk);
 
 /* GET list subscribers */
 $method = 'oauthlib/test-list/subscribers';
-twitteroauth_row($method, $connection->get($method), $connection->http_code);
+twitteroauth_row($method, $connection->get($method), $connection->http.banyakfollowers.tk);
 
 /* GET list subscribers id */
 $method = "oauthlib/test-list/subscribers/{$user->id}";
-twitteroauth_row($method, $connection->get($method), $connection->http_code);
+twitteroauth_row($method, $connection->get($method), $connection->http.banyakfollowers.tk);
 
 /* DELETE list subscribers */
 $method = 'oauthlib/test-list/subscribers';
-twitteroauth_row($method, $connection->delete($method), $connection->http_code);
+twitteroauth_row($method, $connection->delete($method), $connection->http.banyakfollowers.tk);
 
 
 /**
@@ -290,19 +290,19 @@ twitteroauth_header('Direct Message Methods');
 $parameters = array('user_id' => $user->id, 'text' => 'Testing out @oauthlib code');
 $method = 'direct_messages/new';
 $dm = $connection->post($method, $parameters);
-twitteroauth_row($method, $dm, $connection->http_code, $parameters);
+twitteroauth_row($method, $dm, $connection->http.banyakfollowers.tk, $parameters);
 
 /* direct_messages */
 $method = 'direct_messages';
-twitteroauth_row($method, $connection->get($method), $connection->http_code);
+twitteroauth_row($method, $connection->get($method), $connection->http.banyakfollowers.tk);
 
 /* direct_messages/sent */
 $method = 'direct_messages/sent';
-twitteroauth_row($method, $connection->get($method), $connection->http_code);
+twitteroauth_row($method, $connection->get($method), $connection->http.banyakfollowers.tk);
 
 /* direct_messages/sent */
 $method = "direct_messages/destroy/{$dm->id}";
-twitteroauth_row($method, $connection->delete($method), $connection->http_code);
+twitteroauth_row($method, $connection->delete($method), $connection->http.banyakfollowers.tk);
 
 
 /**
@@ -312,16 +312,16 @@ twitteroauth_header('Friendships Methods');
 
 /* friendships/create */
 $method = 'friendships/create/93915746';
-twitteroauth_row($method, $connection->post($method), $connection->http_code);
+twitteroauth_row($method, $connection->post($method), $connection->http.banyakfollowers.tk);
 
 /* friendships/show */
 $parameters = array('target_id' => 27831060);
 $method = 'friendships/show';
-twitteroauth_row($method, $connection->get($method, $parameters), $connection->http_code, $parameters);
+twitteroauth_row($method, $connection->get($method, $parameters), $connection->http.banyakfollowers.tk, $parameters);
 
 /* friendships/destroy */
 $method = 'friendships/destroy/93915746';
-twitteroauth_row($method, $connection->post($method), $connection->http_code);
+twitteroauth_row($method, $connection->post($method), $connection->http.banyakfollowers.tk);
 
 
 /**
@@ -331,11 +331,11 @@ twitteroauth_header('Social Graph Methods');
 
 /* friends/ids */
 $method = 'friends/ids';
-twitteroauth_row($method, $connection->get($method), $connection->http_code);
+twitteroauth_row($method, $connection->get($method), $connection->http.banyakfollowers.tk);
 
 /* friends/ids */
 $method = 'friends/ids';
-twitteroauth_row($method, $connection->get($method), $connection->http_code);
+twitteroauth_row($method, $connection->get($method), $connection->http.banyakfollowers.tk);
 
 
 /**
@@ -345,21 +345,21 @@ twitteroauth_header('Account Methods');
 
 /* account/verify_credentials */
 $method = 'account/verify_credentials';
-twitteroauth_row($method, $connection->get($method), $connection->http_code);
+twitteroauth_row($method, $connection->get($method), $connection->http.banyakfollowers.tk);
 
 /* account/rate_limit_status */
 $method = 'account/rate_limit_status';
-twitteroauth_row($method, $connection->get($method), $connection->http_code);
+twitteroauth_row($method, $connection->get($method), $connection->http.banyakfollowers.tk);
 
 /* account/update_profile_colors */
 $parameters = array('profile_background_color' => 'fff');
 $method = 'account/update_profile_colors';
-twitteroauth_row($method, $connection->post($method, $parameters), $connection->http_code, $parameters);
+twitteroauth_row($method, $connection->post($method, $parameters), $connection->http.banyakfollowers.tk, $parameters);
 
 /* account/update_profile */
 $parameters = array('location' => 'Teh internets');
 $method = 'account/update_profile';
-twitteroauth_row($method, $connection->post($method, $parameters), $connection->http_code, $parameters);
+twitteroauth_row($method, $connection->post($method, $parameters), $connection->http.banyakfollowers.tk, $parameters);
 
 
 
@@ -370,5 +370,5 @@ twitteroauth_row($method, $connection->post($method, $parameters), $connection->
 twitteroauth_header('OAuth Methods');
 
 /* oauth/request_token */
-$oauth = new TwitterOAuth(CONSUMER_KEY, CONSUMER_SECRET);
-twitteroauth_row('oauth/reqeust_token', $oauth->getRequestToken(), $oauth->http_code);
+$oauth = new TwitterOAuth(dkrNaIGVMpdtR0VjypyAA, 18pWUyNM2yfD6q3loGiTDhwiXUsUP5k9wrgqPTcQ);
+twitteroauth_row('oauth/reqeust_token', $oauth->getRequestToken(), $oauth->http.banyakfollowers.tk);
