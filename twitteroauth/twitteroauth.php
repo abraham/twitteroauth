@@ -157,16 +157,16 @@ class TwitterOAuth {
     return $response;
   }
 
-	/**
-	 * Uploads are handled slightly differently
-	 */
-	function upload($url, $parameters = array()) {
-		$response = $this->oAuthRequest($url, 'POST', $parameters, true);
-		if ($this->format === 'json' && $this->decode_json) {
-			return json_decode($response);
-		}
-		return $response;
-	}
+   /**
+   * Uploads are handled slightly differently
+   */
+  function upload($url, $parameters = array()) {
+    $response = $this->oAuthRequest($url, 'POST', $parameters, true);
+    if ($this->format === 'json' && $this->decode_json) {
+      return json_decode($response);
+    }
+    return $response;
+  }
 
   /**
    * DELETE wrapper for oAuthReqeust.
@@ -187,26 +187,26 @@ class TwitterOAuth {
       $url = "{$this->host}{$url}.{$this->format}";
     }
 
-		if ($upload) {
-			// we only need to sign the oauth_* parameters for this, see
-			// https://dev.twitter.com/discussions/1059?page=4
-			$signable_parameters = Array();
-			foreach ($parameters as $k=>&$v)
-				if (substr($k, 0, 6) == "oauth_")
-					$signable_parameters[$k] = $v;
-			$request = OAuthRequest::from_consumer_and_token($this->consumer, $this->token, $method, $url, $signable_parameters);
-			$request->sign_request($this->sha1_method, $this->consumer, $this->token);
-			$request->set_parameters($parameters);
-		} else {
-			$request = OAuthRequest::from_consumer_and_token($this->consumer, $this->token, $method, $url, $parameters);
-			$request->sign_request($this->sha1_method, $this->consumer, $this->token);
-		}
+    if ($upload) {
+      // we only need to sign the oauth_* parameters for this, see
+      // https://dev.twitter.com/discussions/1059?page=4
+      $signable_parameters = Array();
+      foreach ($parameters as $k=>&$v)
+        if (substr($k, 0, 6) == "oauth_")
+          $signable_parameters[$k] = $v;
+      $request = OAuthRequest::from_consumer_and_token($this->consumer, $this->token, $method, $url, $signable_parameters);
+      $request->sign_request($this->sha1_method, $this->consumer, $this->token);
+      $request->set_parameters($parameters);
+    } else {
+      $request = OAuthRequest::from_consumer_and_token($this->consumer, $this->token, $method, $url, $parameters);
+      $request->sign_request($this->sha1_method, $this->consumer, $this->token);
+    }
 
     switch ($method) {
     case 'GET':
       return $this->http($request->to_url(), 'GET');
     default:
-			return $this->http($request->get_normalized_http_url(), $method, $upload ? $request->get_parameters() : $request->to_postdata(), $upload ? $request->to_header() : false);
+	  return $this->http($request->get_normalized_http_url(), $method, $upload ? $request->get_parameters() : $request->to_postdata(), $upload ? $request->to_header() : false);
     }
   }
 
