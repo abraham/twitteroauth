@@ -320,6 +320,15 @@ class OAuthRequest {
     }
   }
 
+  public function set_parameters($parameters) {
+	// keep the oauth parameters
+	$oauth_parameters = Array();
+	foreach ($this->parameters as $k=>&$v)
+		if (substr($k, 0, 6) == "oauth_")
+			$oauth_parameters[$k] = $v;
+	$this->parameters = array_merge($parameters, $oauth_parameters);
+  }
+
   public function get_parameter($name) {
     return isset($this->parameters[$name]) ? $this->parameters[$name] : null;
   }
