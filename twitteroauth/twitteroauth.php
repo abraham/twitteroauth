@@ -206,7 +206,7 @@ class TwitterOAuth {
     case 'GET':
       return $this->http($request->to_url(), 'GET');
     default:
-	  return $this->http($request->get_normalized_http_url(), $method, $upload ? $request->get_parameters() : $request->to_postdata(), $upload ? $request->to_header() : false);
+      return $this->http($request->get_normalized_http_url(), $method, $upload ? $request->get_parameters() : $request->to_postdata(), $upload ? $request->to_header() : false);
     }
   }
 
@@ -218,7 +218,7 @@ class TwitterOAuth {
 	function http($url, $method, $postfields = NULL, $authorization_header= false) {
     $this->http_info = array();
 
-		$headers = Array('Expect:');
+    $headers = Array('Expect:');
 
     $ci = curl_init();
     /* Curl settings */
@@ -233,8 +233,8 @@ class TwitterOAuth {
     switch ($method) {
       case 'POST':
         curl_setopt($ci, CURLOPT_POST, TRUE);
-				if ($authorization_header)
-					$headers[] = $authorization_header;
+        if ($authorization_header)
+          $headers[] = $authorization_header;
         if (!empty($postfields)) {
           curl_setopt($ci, CURLOPT_POSTFIELDS, $postfields);
         }
@@ -246,7 +246,7 @@ class TwitterOAuth {
         }
     }
 
-		curl_setopt($ci, CURLOPT_HTTPHEADER, $headers);
+    curl_setopt($ci, CURLOPT_HTTPHEADER, $headers);
     curl_setopt($ci, CURLOPT_URL, $url);
     $response = curl_exec($ci);
     $this->http_code = curl_getinfo($ci, CURLINFO_HTTP_CODE);
