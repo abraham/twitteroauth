@@ -161,9 +161,7 @@ class TwitterOAuth {
 	 * Uploads are handled slightly differently
 	 */
 	function upload($url, $parameters = array()) {
-		$this->host = "https://upload.twitter.com/1.1/";
 		$response = $this->oAuthRequest($url, 'POST', $parameters, true);
-		$this->host = "https://api.twitter.com/1.1/";
 		if ($this->format === 'json' && $this->decode_json) {
 			return json_decode($response);
 		}
