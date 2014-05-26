@@ -50,8 +50,8 @@ class TwitterOAuth {
   /**
    * Debug helpers
    */
-  function lastStatusCode() { return $this->http_status; }
-  function lastAPICall() { return $this->last_api_call; }
+  function lastStatusCode() { return $this->http_code; }
+  //function lastAPICall() { return $this->last_api_call; }
 
   /**
    * construct TwitterOAuth object
@@ -76,9 +76,7 @@ class TwitterOAuth {
     $parameters = array();
     $parameters['oauth_callback'] = $oauth_callback; 
     $request = $this->oAuthRequest($this->requestTokenURL(), 'GET', $parameters);
-    $token = OAuthUtil::parse_parameters($request);
-    $this->token = new OAuthConsumer($token['oauth_token'], $token['oauth_token_secret']);
-    return $token;
+    return $this->getToken($request);
   }
 
   /**
@@ -110,9 +108,7 @@ class TwitterOAuth {
     $parameters = array();
     $parameters['oauth_verifier'] = $oauth_verifier;
     $request = $this->oAuthRequest($this->accessTokenURL(), 'GET', $parameters);
-    $token = OAuthUtil::parse_parameters($request);
-    $this->token = new OAuthConsumer($token['oauth_token'], $token['oauth_token_secret']);
-    return $token;
+    return $this->getToken($request);
   }
 
   /**
@@ -130,9 +126,7 @@ class TwitterOAuth {
     $parameters['x_auth_password'] = $password;
     $parameters['x_auth_mode'] = 'client_auth';
     $request = $this->oAuthRequest($this->accessTokenURL(), 'POST', $parameters);
-    $token = OAuthUtil::parse_parameters($request);
-    $this->token = new OAuthConsumer($token['oauth_token'], $token['oauth_token_secret']);
-    return $token;
+    return $this->getToken($request);
   }
 
   /**
@@ -238,4 +232,19 @@ class TwitterOAuth {
     }
     return strlen($header);
   }
+
+  /**
+   * Get the token from the request
+   *
+   * @return array
+   * @author Justin Palmer
+   **/
+  private function getToken($request)
+  {
+    $token = OAuthUtil::parse_parameters($request);
+	if(isset($token['oauth_token'], $token['oauth_token_secret']))
+    	$this->token = new OAuthConsumer($token['oauth_token'], $token['oauth_token_secret']);
+	return $token;
+  }
 }
+
