@@ -86,14 +86,20 @@ class TwitterOAuth {
    *
    * @returns a string
    */
-  function getAuthorizeURL($token, $sign_in_with_twitter = TRUE) {
+  function getAuthorizeURL($token, $sign_in_with_twitter = TRUE, $urlparams = array()) {
     if (is_array($token)) {
       $token = $token['oauth_token'];
     }
+    $params = "";
+    if (is_array($urlparams)) {
+	   foreach ($urlparams as $urlparamkey=>$urlparamvalue) {
+		   $params .= "&" . $urlparamkey . "=" . $urlparamvalue;
+	   } 
+    }
     if (empty($sign_in_with_twitter)) {
-      return $this->authorizeURL() . "?oauth_token={$token}";
+      return $this->authorizeURL() . "?oauth_token={$token}" . $params;
     } else {
-       return $this->authenticateURL() . "?oauth_token={$token}";
+       return $this->authenticateURL() . "?oauth_token={$token}" . $params;
     }
   }
 
