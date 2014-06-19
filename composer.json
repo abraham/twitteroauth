@@ -1,0 +1,16 @@
+{       
+    "name": "abraham/twitteroauth", 
+    "type": "package",
+    "description": "Twitter oauth",
+    "keywords": ["Twitter API", "Twitter oAuth"],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Abraham Williams",
+            "email": "abraham@abrah.am"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.2"
+    }
+}
