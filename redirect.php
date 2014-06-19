@@ -5,6 +5,10 @@ session_start();
 require_once('twitteroauth/twitteroauth.php');
 require_once('config.php');
 
+define('CONSUMER_KEY', 'ExgIiHHRlPkbovll9DBMyw');
+define('CONSUMER_SECRET', 'wzVsDK5z1pAPQuxS0NwkbNeGWsblrT7i5MK8s32U');
+define('OAUTH_CALLBACK', 'http://127.0.0.1/twitteroauth/callback.php');
+
 /* Build TwitterOAuth object with client credentials. */
 $connection = new TwitterOAuth(CONSUMER_KEY, CONSUMER_SECRET);
  
