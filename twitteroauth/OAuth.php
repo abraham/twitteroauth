@@ -382,10 +382,10 @@ class OAuthRequest {
   public function get_normalized_http_url() {
     $parts = parse_url($this->http_url);
 
-    $port = @$parts['port'];
+    $port   = (array_key_exists('port', $parts) ? $parts['port'] : NULL);
     $scheme = $parts['scheme'];
-    $host = $parts['host'];
-    $path = @$parts['path'];
+    $host   = $parts['host'];
+    $path   = (array_key_exists('path', $parts) ? $parts['path'] : NULL);
 
     $port or $port = ($scheme == 'https') ? '443' : '80';
 
