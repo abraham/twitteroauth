@@ -83,7 +83,7 @@ class TwitterOAuth {
 	 * @deprecated
 	 */
 	public function accessTokenURL() {
-		return $this->getUrl('access');
+		return $this->getUrl('access_token');
 	}
 
 	/**
@@ -189,7 +189,7 @@ class TwitterOAuth {
 	 * @throws Exception if the OAuth request fails
 	 */
 	public function getRequestToken($oauth_callback) {
-		$request = $this->oAuthRequest($this->requestTokenURL(), 'GET', array('oauth_callback' => $oauth_callback));
+		$request = $this->oAuthRequest($this->getUrl('request_token'), 'GET', array('oauth_callback' => $oauth_callback));
 
 		$token = OAuthUtil::parse_parameters($request);
 
@@ -224,7 +224,7 @@ class TwitterOAuth {
 	 * @throws Exception if the OAuth request fails
 	 */
 	function getAccessToken($oauth_verifier) {
-		$request = $this->oAuthRequest($this->accessTokenURL(), 'GET', array('oauth_verifier' => $oauth_verifier));
+		$request = $this->oAuthRequest($this->getUrl('access_token'), 'GET', array('oauth_verifier' => $oauth_verifier));
 
 		$token = OAuthUtil::parse_parameters($request);
 
@@ -248,7 +248,7 @@ class TwitterOAuth {
 	 */  
 	function getXAuthToken($username, $password) {
 		$parameters = array('x_auth_username' => $username, 'x_auth_password' => $password, 'x_auth_mode' => 'client_auth');
-		$request = $this->oAuthRequest($this->accessTokenURL(), 'POST', $parameters);
+		$request = $this->oAuthRequest($this->getUrl('access_token'), 'POST', $parameters);
 		$token = OAuthUtil::parse_parameters($request);
 
 		if (empty($token['oauth_token']) || empty($token['oauth_token_secret'])) {
