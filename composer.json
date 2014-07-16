@@ -1,0 +1,26 @@
+{
+    "name": "mcloide/twitteroauth",
+    "type": "package",
+    "description": "Wrapper class for the Twitter oAuth API",
+    "keywords": ["Twitter", "Twitter API", "oAuth", "Twitter oAuth"],
+    "homepage": "https://github.com/mcloide/twitteroauth",
+    "license": "MIT",
+    "authors": [
+		{
+			"name": "Abraham Williams",
+			"email": "abraham@abrah.am"
+		},
+        {
+            "name": "Cristiano Diniz da Silva",
+            "twitter": "@mcloide",
+            "homepage": "http://www.mcloide.com",
+            "role": "Software Engineer"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.2"
+    },
+    "autoload": {
+      "files": ["twitteroauth/twitteroauth.php"]
+    }
+}
