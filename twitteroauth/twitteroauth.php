@@ -129,7 +129,7 @@ class TwitterOAuth {
 				$url = (!empty($this->accessTokenUrl)) ? $this->accessTokenUrl : 'https://api.twitter.com/oauth/access_token';
 				break;
 			case 'authenticate':
-				(!empty($this->authenticateUrl)) ? $this->authenticateUrl : 'https://api.twitter.com/oauth/authenticate';
+				$url = (!empty($this->authenticateUrl)) ? $this->authenticateUrl : 'https://api.twitter.com/oauth/authenticate';
 				break;
 			case 'authorize':
 				$url = (!empty($this->authorizeUrl)) ? $this->authorizeUrl : 'https://api.twitter.com/oauth/authorize';
