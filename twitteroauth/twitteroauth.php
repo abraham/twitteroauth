@@ -123,6 +123,7 @@ class TwitterOAuth {
 	 * @return string
 	 */
 	public function getUrl($type = 'access_token') {
+		$url = '';
 		switch ($type) {
 			case 'access_token':
 				$url = (!empty($this->accessTokenUrl)) ? $this->accessTokenUrl : 'https://api.twitter.com/oauth/access_token';
