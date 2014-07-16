@@ -1,7 +1,24 @@
-TwitterOAuth
-------------
+TwitterOAuth / 500px OAuth
+--------------------------
 
-PHP library for working with Twitter's OAuth API.
+
+PHP library for working with 500px's OAuth API.
+===============================================
+
+This is a fork from the original librarly of Twitter OAuth. 500px has it's own API for OAuth and this is a change from
+the curren OAuth lib to support 500px OAuth api. It can be used to work with other OAuth's apis. Check the code so you can
+see how to properly set the ```host```, ```acccessTokenUrl```, ```authenticateURL```, ```authorizeURL``` and ```requestTokenURL```.
+
+The default values from these paths will still be set to the original Twitter OAuth api. To set them to 500px Api set them to:
+
+```
+$accessTokenURL =  'https://api.500px.com/v1/oauth/access_token';
+$authenticateURL = 'https://api.500px.com/v1/oauth/authorize';
+$authorizeURL = 'https://api.500px.com/v1/oauth/authorize';
+$requestTokenURL = 'https://api.500px.com/v1/oauth/request_token';
+$host = 'https://api.500px.com/v1/';
+```
+
 
 Flow Overview
 =============
