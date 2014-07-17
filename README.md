@@ -1,23 +1,42 @@
-TwitterOAuth / 500px OAuth
---------------------------
+TwitterOAuth
+------------
 
 
-PHP library for working with 500px's OAuth API.
-===============================================
+Updates
+=======
 
-This is a fork from the original librarly of Twitter OAuth. 500px has it's own API for OAuth and this is a change from
-the curren OAuth lib to support 500px OAuth api. It can be used to work with other OAuth's apis. Check the code so you can
-see how to properly set the ```host```, ```acccessTokenUrl```, ```authenticateURL```, ```authorizeURL``` and ```requestTokenURL```.
+The original library was updated to allow the API endpoints to be modified if necessary. This would allow other API's with similar
+endpoints and structure as Twitter's API to benefit from the Library. A example for this is the 500px.com API.
 
-The default values from these paths will still be set to the original Twitter OAuth api. To set them to 500px Api set them to:
+The library was modified to allow ```host```, ```acccessTokenUrl```, ```authenticateURL```, ```authorizeURL``` and ```requestTokenURL```
+to be updated or new values where it's default's value are Twitter's original API endpoints and host.
+
+The functions bellow are now deprecated:
 
 ```
-$accessTokenURL =  'https://api.500px.com/v1/oauth/access_token';
-$authenticateURL = 'https://api.500px.com/v1/oauth/authorize';
-$authorizeURL = 'https://api.500px.com/v1/oauth/authorize';
-$requestTokenURL = 'https://api.500px.com/v1/oauth/request_token';
-$host = 'https://api.500px.com/v1/';
+	accessTokenURL()
+	authenticateURL()
+	authorizeURL()
+	requestTokenURL()
 ```
+
+and they were replaced by:
+
+```
+	* @param string $type Default's to access. Values: <access_token>, <authenticate>, <authorize> and <request_token>
+	getUrl($type = 'access_token')
+```
+
+A new function was added so the ```host```, ```acccessTokenUrl```, ```authenticateURL```, ```authorizeURL``` and ```requestTokenURL```
+can now be set from application side:
+
+```
+	* @param string $param Accepted values: <host>, <accessTokenUrl>, <authenticateUrl>, <authorizeUrl>, <requestTokenUrl>
+	* @param string $value (optional) If empty will set the param with null
+	setParam($param, $value = null)
+```
+
+If you are new on the oAuth flow and logic please make sure to use the test files that are available under this repo.
 
 
 Flow Overview
