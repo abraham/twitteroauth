@@ -1,7 +1,43 @@
 TwitterOAuth
 ------------
 
-PHP library for working with Twitter's OAuth API.
+
+Updates
+=======
+
+The original library was updated to allow the API endpoints to be modified if necessary. This would allow other API's with similar
+endpoints and structure as Twitter's API to benefit from the Library. A example for this is the 500px.com API.
+
+The library was modified to allow ```host```, ```acccessTokenUrl```, ```authenticateURL```, ```authorizeURL``` and ```requestTokenURL```
+to be updated or new values where it's default's value are Twitter's original API endpoints and host.
+
+The functions bellow are now deprecated:
+
+```
+	accessTokenURL()
+	authenticateURL()
+	authorizeURL()
+	requestTokenURL()
+```
+
+and they were replaced by:
+
+```
+	* @param string $type Default's to access. Values: <access_token>, <authenticate>, <authorize> and <request_token>
+	getUrl($type = 'access_token')
+```
+
+A new function was added so the ```host```, ```acccessTokenUrl```, ```authenticateURL```, ```authorizeURL``` and ```requestTokenURL```
+can now be set from application side:
+
+```
+	* @param string $param Accepted values: <host>, <accessTokenUrl>, <authenticateUrl>, <authorizeUrl>, <requestTokenUrl>
+	* @param string $value (optional) If empty will set the param with null
+	setParam($param, $value = null)
+```
+
+If you are new on the oAuth flow and logic please make sure to use the test files that are available under this repo.
+
 
 Flow Overview
 =============
