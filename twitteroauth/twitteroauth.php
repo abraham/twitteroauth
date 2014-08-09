@@ -20,9 +20,9 @@ class TwitterOAuth {
   /* Set up the API root URL. */
   public $host = "https://api.twitter.com/1.1/";
   /* Set timeout default. */
-  public $timeout = 30;
+  public $timeout = 5;
   /* Set connect timeout. */
-  public $connecttimeout = 30; 
+  public $connecttimeout = 5; 
   /* Response format. */
   public $format = 'json';
   /* Decode returned json data. */
