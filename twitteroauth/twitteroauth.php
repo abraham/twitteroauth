@@ -202,6 +202,7 @@ class TwitterOAuth {
 
     /* Curl settings */
     $options = array(
+      CURLOPT_URL => $url,
       CURLOPT_USERAGENT => $this->useragent,
       CURLOPT_CONNECTTIMEOUT => $this->connecttimeout,
       CURLOPT_TIMEOUT => $this->timeout,
