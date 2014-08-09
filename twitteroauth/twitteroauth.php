@@ -1,9 +1,9 @@
 <?php
 
 /*
- * Abraham Williams (abraham@abrah.am) http://abrah.am
+ * Abraham Williams (abraham@abrah.am) https://abrah.am
  *
- * The first PHP Library to support OAuth for Twitter's REST API.
+ * The first PHP Library to support OAuth 1.0A for Twitter's REST API.
  */
 
 /* Load OAuth lib. You can find it at http://oauth.net */
