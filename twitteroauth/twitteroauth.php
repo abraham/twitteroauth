@@ -170,12 +170,7 @@ class TwitterOAuth {
     }
     $request = OAuthRequest::from_consumer_and_token($this->consumer, $this->token, $method, $url, $parameters);
     $request->sign_request($this->sha1_method, $this->consumer, $this->token);
-    switch ($method) {
-    case 'GET':
-      return $this->http($request->to_url(), 'GET');
-    default:
-      return $this->http($request->get_normalized_http_url(), $method, $request->to_postdata());
-    }
+    return $this->http($request->get_normalized_http_url(), $method, $request->to_header(), $parameters);
   }
 
   /**
@@ -183,16 +178,17 @@ class TwitterOAuth {
    *
    * @return API results
    */
-  function http($url, $method, $postfields = NULL) {
+  function http($url, $method, $header, $postfields = NULL) {
 
     /* Curl settings */
     $options = array(
+      // CURLOPT_VERBOSE => TRUE,
       CURLOPT_URL => $url,
       CURLOPT_USERAGENT => $this->useragent,
       CURLOPT_CONNECTTIMEOUT => $this->connecttimeout,
       CURLOPT_TIMEOUT => $this->timeout,
       CURLOPT_RETURNTRANSFER => TRUE,
-      CURLOPT_HTTPHEADER => array('Expect:'),
+      CURLOPT_HTTPHEADER => array($header, 'Expect:'),
       CURLOPT_SSL_VERIFYPEER => TRUE,
       CURLOPT_SSL_VERIFYHOST => 2,
       CURLOPT_HEADERFUNCTION => array($this, 'getHeader'),
