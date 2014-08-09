@@ -185,16 +185,16 @@ class TwitterOAuth {
       // CURLOPT_VERBOSE => TRUE,
       CURLOPT_CAINFO => 'cacert.pem',
       CURLOPT_CAPATH => __DIR__,
+      CURLOPT_CONNECTTIMEOUT => $this->connecttimeout,
+      CURLOPT_HEADER => FALSE,
+      CURLOPT_HEADERFUNCTION => array($this, 'getHeader'),
+      CURLOPT_HTTPHEADER => array($header, 'Expect:'),
+      CURLOPT_RETURNTRANSFER => TRUE,
+      CURLOPT_SSL_VERIFYHOST => 2,
+      CURLOPT_SSL_VERIFYPEER => TRUE,
+      CURLOPT_TIMEOUT => $this->timeout,
       CURLOPT_URL => $url,
       CURLOPT_USERAGENT => $this->useragent,
-      CURLOPT_CONNECTTIMEOUT => $this->connecttimeout,
-      CURLOPT_TIMEOUT => $this->timeout,
-      CURLOPT_RETURNTRANSFER => TRUE,
-      CURLOPT_HTTPHEADER => array($header, 'Expect:'),
-      CURLOPT_SSL_VERIFYPEER => TRUE,
-      CURLOPT_SSL_VERIFYHOST => 2,
-      CURLOPT_HEADERFUNCTION => array($this, 'getHeader'),
-      CURLOPT_HEADER => FALSE
     );
 
     switch ($method) {
