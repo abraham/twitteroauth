@@ -92,14 +92,14 @@ class TwitterOAuth {
     }
     $params = "";
     if (is_array($urlparams)) {
-	   foreach ($urlparams as $urlparamkey=>$urlparamvalue) {
-		   $params .= "&" . $urlparamkey . "=" . $urlparamvalue;
-	   } 
+	    foreach ($urlparams as $urlparamkey=>$urlparamvalue) {
+		    $params .= "&" . $urlparamkey . "=" . $urlparamvalue;
+	    }
     }
     if (empty($sign_in_with_twitter)) {
       return $this->authorizeURL() . "?oauth_token={$token}" . $params;
     } else {
-       return $this->authenticateURL() . "?oauth_token={$token}" . $params;
+      return $this->authenticateURL() . "?oauth_token={$token}" . $params;
     }
   }
 
