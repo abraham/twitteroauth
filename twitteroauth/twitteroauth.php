@@ -23,9 +23,7 @@ class TwitterOAuth {
   public $timeout = 30;
   /* Set connect timeout. */
   public $connecttimeout = 30; 
-  /* Verify SSL Cert. */
-  public $ssl_verifypeer = FALSE;
-  /* Respons format. */
+  /* Response format. */
   public $format = 'json';
   /* Decode returned json data. */
   public $decode_json = TRUE;
@@ -208,7 +206,8 @@ class TwitterOAuth {
       CURLOPT_TIMEOUT => $this->timeout,
       CURLOPT_RETURNTRANSFER => TRUE,
       CURLOPT_HTTPHEADER => array('Expect:'),
-      CURLOPT_SSL_VERIFYPEER => $this->ssl_verifypeer,
+      CURLOPT_SSL_VERIFYPEER => TRUE,
+      CURLOPT_SSL_VERIFYHOST => 2,
       CURLOPT_HEADERFUNCTION => array($this, 'getHeader'),
       CURLOPT_HEADER => FALSE
     );
