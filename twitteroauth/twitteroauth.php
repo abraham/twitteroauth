@@ -210,6 +210,7 @@ class TwitterOAuth {
           $url = "{$url}?{$postfields}";
           $options[] = array(CURLOPT_URL => $url);
         }
+        break;
     }
 
     $ci = curl_init();
