@@ -183,6 +183,8 @@ class TwitterOAuth {
     /* Curl settings */
     $options = array(
       // CURLOPT_VERBOSE => TRUE,
+      CURLOPT_CAINFO => 'cacert.pem',
+      CURLOPT_CAPATH => __DIR__,
       CURLOPT_URL => $url,
       CURLOPT_USERAGENT => $this->useragent,
       CURLOPT_CONNECTTIMEOUT => $this->connecttimeout,
