@@ -23,10 +23,6 @@ class TwitterOAuth {
   public $timeout = 5;
   /* Set connect timeout. */
   public $connecttimeout = 5; 
-  /* Response format. */
-  public $format = 'json';
-  /* Decode returned json data. */
-  public $decode_json = TRUE;
   /* Decode returned json data to an array. See http://php.net/manual/en/function.json-decode.php */
   public $decode_json_assoc = FALSE;
   /* Contains the last HTTP headers returned. */
@@ -146,10 +142,7 @@ class TwitterOAuth {
    */
   function get($url, $parameters = array()) {
     $response = $this->oAuthRequest($url, 'GET', $parameters);
-    if ($this->format === 'json' && $this->decode_json) {
-      return json_decode($response, $this->decode_json_assoc);
-    }
-    return $response;
+    return json_decode($response, $this->decode_json_assoc);
   }
   
   /**
@@ -157,10 +150,7 @@ class TwitterOAuth {
    */
   function post($url, $parameters = array()) {
     $response = $this->oAuthRequest($url, 'POST', $parameters);
-    if ($this->format === 'json' && $this->decode_json) {
-      return json_decode($response, $this->decode_json_assoc);
-    }
-    return $response;
+    return json_decode($response, $this->decode_json_assoc);
   }
 
   /**
@@ -168,10 +158,7 @@ class TwitterOAuth {
    */
   function delete($url, $parameters = array()) {
     $response = $this->oAuthRequest($url, 'DELETE', $parameters);
-    if ($this->format === 'json' && $this->decode_json) {
-      return json_decode($response, $this->decode_json_assoc);
-    }
-    return $response;
+    return json_decode($response, $this->decode_json_assoc);
   }
 
   /**
@@ -179,7 +166,7 @@ class TwitterOAuth {
    */
   function oAuthRequest($url, $method, $parameters) {
     if (strrpos($url, 'https://') !== 0 && strrpos($url, 'http://') !== 0) {
-      $url = "{$this->host}{$url}.{$this->format}";
+      $url = "{$this->host}{$url}.json";
     }
     $request = OAuthRequest::from_consumer_and_token($this->consumer, $this->token, $method, $url, $parameters);
     $request->sign_request($this->sha1_method, $this->consumer, $this->token);
