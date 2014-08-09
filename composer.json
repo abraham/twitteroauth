@@ -18,6 +18,7 @@
         "issues": "https://github.com/abraham/twitteroauth/issues"
     },
     "require": {
-        "php": ">=5.3.28"
+        "php": ">=5.3.0",
+        "ext-curl": "*"
     }
 }
