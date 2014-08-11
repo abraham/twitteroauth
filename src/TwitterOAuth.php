@@ -156,14 +156,6 @@ class TwitterOAuth {
   }
 
   /**
-   * DELETE wrapper for oAuthReqeust.
-   */
-  function delete($url, $parameters = array()) {
-    $response = $this->oAuthRequest($url, 'DELETE', $parameters);
-    return json_decode($response, $this->decode_json_assoc);
-  }
-
-  /**
    * Format and sign an OAuth / API request
    */
   function oAuthRequest($url, $method, $parameters) {
@@ -207,12 +199,6 @@ class TwitterOAuth {
         $options[CURLOPT_POST] = TRUE;
         if (!empty($postfields)) {
           $options[CURLOPT_POSTFIELDS] = OAuth\OAuthUtil::build_http_query($postfields);
-        }
-        break;
-      case 'DELETE':
-        $options[CURLOPT_CUSTOMREQUEST] = 'DELETE';
-        if (!empty($postfields)) {
-          $options[CURLOPT_URL] = $options[CURLOPT_URL] . '?' . OAuth\OAuthUtil::build_http_query($postfields);
         }
         break;
     }
