@@ -1,5 +1,7 @@
 <?php
 
+namespace Abraham\TwitterOAuth;
+use Abraham\TwitterOAuth\OAuth;
 /*
  * Abraham Williams (abraham@abrah.am) https://abrah.am
  *
@@ -53,10 +55,10 @@ class TwitterOAuth {
    * construct TwitterOAuth object
    */
   function __construct($consumer_key, $consumer_secret, $oauth_token = NULL, $oauth_token_secret = NULL) {
-    $this->sha1_method = new OAuthSignatureMethod_HMAC_SHA1();
-    $this->consumer = new OAuthConsumer($consumer_key, $consumer_secret);
+    $this->sha1_method = new OAuth\OAuthSignatureMethod_HMAC_SHA1();
+    $this->consumer = new OAuth\OAuthConsumer($consumer_key, $consumer_secret);
     if (!empty($oauth_token) && !empty($oauth_token_secret)) {
-      $this->token = new OAuthConsumer($oauth_token, $oauth_token_secret);
+      $this->token = new OAuth\OAuthConsumer($oauth_token, $oauth_token_secret);
     } else {
       $this->token = NULL;
     }
@@ -165,10 +167,8 @@ class TwitterOAuth {
    * Format and sign an OAuth / API request
    */
   function oAuthRequest($url, $method, $parameters) {
-    if (strrpos($url, 'https://') !== 0 && strrpos($url, 'http://') !== 0) {
-      $url = "{$this->host}{$url}.json";
-    }
-    $request = OAuthRequest::from_consumer_and_token($this->consumer, $this->token, $method, $url, $parameters);
+    $url = "{$this->host}{$url}.json";
+    $request = OAuth\OAuthRequest::from_consumer_and_token($this->consumer, $this->token, $method, $url, $parameters);
     $request->sign_request($this->sha1_method, $this->consumer, $this->token);
     return $this->http($request->get_normalized_http_url(), $method, $request->to_header(), $parameters);
   }
@@ -198,17 +198,21 @@ class TwitterOAuth {
     );
 
     switch ($method) {
-      case 'POST':
-        $options[] = array(CURLOPT_POST => TRUE);
+      case 'GET':
         if (!empty($postfields)) {
-          $options[] = array(CURLOPT_POSTFIELDS => $postfields);
+          $options[CURLOPT_URL] = $options[CURLOPT_URL] . '?' . OAuth\OAuthUtil::build_http_query($postfields);
+        }
+        break;
+      case 'POST':
+        $options[CURLOPT_POST] = TRUE;
+        if (!empty($postfields)) {
+          $options[CURLOPT_POSTFIELDS] = OAuth\OAuthUtil::build_http_query($postfields);
         }
         break;
       case 'DELETE':
-        $options[] = array(CURLOPT_CUSTOMREQUEST => 'DELETE');
+        $options[CURLOPT_CUSTOMREQUEST] = 'DELETE';
         if (!empty($postfields)) {
-          $url = "{$url}?{$postfields}";
-          $options[] = array(CURLOPT_URL => $url);
+          $options[CURLOPT_URL] = $options[CURLOPT_URL] . '?' . OAuth\OAuthUtil::build_http_query($postfields);
         }
         break;
     }

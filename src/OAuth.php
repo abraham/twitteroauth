@@ -1,13 +1,15 @@
 <?php
 // vim: foldmethod=marker
 
+namespace Abraham\TwitterOAuth\OAuth;
+
 /* Generic exception class
  */
-if (!class_exists('OAuthException', false)) {
-  class OAuthException extends Exception {
+// if (!class_exists('OAuthException', false)) {
+  class OAuthException extends \Exception {
     // pass
   }
-}
+// }
 
 class OAuthConsumer {
   public $key;
@@ -746,7 +748,7 @@ class OAuthDataStore {
 class OAuthUtil {
   public static function urlencode_rfc3986($input) {
   if (is_array($input)) {
-    return array_map(array('OAuthUtil', 'urlencode_rfc3986'), $input);
+    return array_map(array(__NAMESPACE__ . '\OAuthUtil', 'urlencode_rfc3986'), $input);
   } else if (is_scalar($input)) {
     return str_replace(
       '+',
