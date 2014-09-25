@@ -111,7 +111,9 @@ class TwitterOAuth {
     $parameters['oauth_verifier'] = $oauth_verifier;
     $request = $this->oAuthRequest($this->accessTokenURL(), 'GET', $parameters);
     $token = OAuthUtil::parse_parameters($request);
-    $this->token = new OAuthConsumer($token['oauth_token'], $token['oauth_token_secret']);
+    if(isset($token['oauth_token']) && isset($token['oauth_token_secret'])){
+      $this->token = new OAuthConsumer($token['oauth_token'], $token['oauth_token_secret']);
+    }
     return $token;
   }
 
