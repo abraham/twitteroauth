@@ -149,8 +149,8 @@ class TwitterOAuth {
   /**
    * POST wrapper for oAuthRequest.
    */
-  function post($url, $parameters = array()) {
-    $response = $this->oAuthRequest($url, 'POST', $parameters);
+  function post($url, $parameters = array(), $multipart = false) {
+    $response = $this->oAuthRequest($url, 'POST', $parameters, $multipart);
     if ($this->format === 'json' && $this->decode_json) {
       return json_decode($response);
     }
@@ -171,17 +171,26 @@ class TwitterOAuth {
   /**
    * Format and sign an OAuth / API request
    */
-  function oAuthRequest($url, $method, $parameters) {
+  function oAuthRequest($url, $method, $parameters, $multipart = false) {
     if (strrpos($url, 'https://') !== 0 && strrpos($url, 'http://') !== 0) {
       $url = "{$this->host}{$url}.{$this->format}";
     }
-    $request = OAuthRequest::from_consumer_and_token($this->consumer, $this->token, $method, $url, $parameters);
+    $signature_parameters = array();
+    // When making a multipart request, use only oauth_* -keys for signature
+    foreach ($parameters AS $key => $value) {
+      if ($multipart && strpos($key, 'oauth_') !== 0) {
+        continue;
+      }
+      $signature_parameters[$key] = $value;
+    }
+    $request = OAuthRequest::from_consumer_and_token($this->consumer, $this->token, $method, $url, $signature_parameters);
     $request->sign_request($this->sha1_method, $this->consumer, $this->token);
     switch ($method) {
     case 'GET':
       return $this->http($request->to_url(), 'GET');
     default:
-      return $this->http($request->get_normalized_http_url(), $method, $request->to_postdata());
+      // Submit parameters as an array to make cURL set "Content-Type: multipart/form-data" for the upload
+      return $this->http($request->get_normalized_http_url(), $method, ($multipart ? $parameters : $request->to_postdata()), $request, $multipart);
     }
   }
 
@@ -190,7 +199,7 @@ class TwitterOAuth {
    *
    * @return API results
    */
-  function http($url, $method, $postfields = NULL) {
+  function http($url, $method, $postfields = NULL, OAuthRequest $request = NULL, $multipart = false) {
     $this->http_info = array();
     $ci = curl_init();
     /* Curl settings */
@@ -198,7 +207,11 @@ class TwitterOAuth {
     curl_setopt($ci, CURLOPT_CONNECTTIMEOUT, $this->connecttimeout);
     curl_setopt($ci, CURLOPT_TIMEOUT, $this->timeout);
     curl_setopt($ci, CURLOPT_RETURNTRANSFER, TRUE);
-    curl_setopt($ci, CURLOPT_HTTPHEADER, array('Expect:'));
+    $headers = array('Expect:');
+    if ($multipart) {
+      $headers[] = $request->to_header();
+    }
+    curl_setopt($ci, CURLOPT_HTTPHEADER, $headers);
     curl_setopt($ci, CURLOPT_SSL_VERIFYPEER, $this->ssl_verifypeer);
     curl_setopt($ci, CURLOPT_HEADERFUNCTION, array($this, 'getHeader'));
     curl_setopt($ci, CURLOPT_HEADER, FALSE);
