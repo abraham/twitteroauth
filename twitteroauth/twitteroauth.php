@@ -77,6 +77,9 @@ class TwitterOAuth {
     $parameters['oauth_callback'] = $oauth_callback; 
     $request = $this->oAuthRequest($this->requestTokenURL(), 'GET', $parameters);
     $token = OAuthUtil::parse_parameters($request);
+    if(!isset($token['oauth_token']) || !isset($token['oauth_token_secret'])){
+      throw new Exception("Wrong oauth_callback");
+    }
     $this->token = new OAuthConsumer($token['oauth_token'], $token['oauth_token_secret']);
     return $token;
   }
@@ -111,6 +114,9 @@ class TwitterOAuth {
     $parameters['oauth_verifier'] = $oauth_verifier;
     $request = $this->oAuthRequest($this->accessTokenURL(), 'GET', $parameters);
     $token = OAuthUtil::parse_parameters($request);
+    if(!isset($token['oauth_token']) || !isset($token['oauth_token_secret'])){
+      throw new Exception("Wrong oauthVerifier");
+    }
     $this->token = new OAuthConsumer($token['oauth_token'], $token['oauth_token_secret']);
     return $token;
   }
@@ -131,6 +137,9 @@ class TwitterOAuth {
     $parameters['x_auth_mode'] = 'client_auth';
     $request = $this->oAuthRequest($this->accessTokenURL(), 'POST', $parameters);
     $token = OAuthUtil::parse_parameters($request);
+    if(!isset($token['oauth_token']) || !isset($token['oauth_token_secret'])){
+      throw new Exception("Wrong username or password");
+    }
     $this->token = new OAuthConsumer($token['oauth_token'], $token['oauth_token_secret']);
     return $token;
   }
