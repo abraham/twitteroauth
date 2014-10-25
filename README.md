@@ -109,6 +109,13 @@ you wish to include for the API method such as curser or in_reply_to_status_id.
     $status = $connection->post('statuses/update', array('status' => 'Text of status here', 'in_reply_to_status_id' => 123456));
     $status = $connection->delete('statuses/destroy/12345');
 
+10) If you would like to use the streaming API, you can use a callback to read tweet information. This example uses closures (available from PHP 5.3.0)
+
+    $connection->stream('statuses/filter', array('track' => '#london'), function($response) {
+        print_r($response);
+        return true; // or return false to close the stream
+    });
+
 Contributors
 ============
 
