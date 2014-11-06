@@ -1,33 +1,39 @@
+<?php include "twitteroauth/twitteroauth/twitteroauth.php"; ?>
 <?php
-/**
- * @file
- * User has successfully authenticated with Twitter. Access tokens saved to session and DB.
- */
+$consumer = "yqzs7r5uHLg9ohnOJnlFKMlsZ";
+$consumerSecret = "WvAScqgW9BYm75tfDEYhrqefAq8Vynv720FBmHc2qvCmpHwJZm";
+$accessToken = "365275877-oU4w8t1C7ozMfFFU7WZM6wIjZwBb25usNiOjBOhc";
+$accessTokenSecret = "Vf1hvGvSLSBKlThsV2OsN7wWatjbcQ6vWiMDmB0rcdT10";
+$twitter = new TwitterOauth($consumer,$consumerSecret,$accessToken,$accessTokenSecret);
 
-/* Load required lib files. */
-session_start();
-require_once('twitteroauth/twitteroauth.php');
-require_once('config.php');
+?>
+<html>
+	
+	<head>
+		<title>
+			Twitter feeds
 
-/* If access tokens are not available redirect to connect page. */
-if (empty($_SESSION['access_token']) || empty($_SESSION['access_token']['oauth_token']) || empty($_SESSION['access_token']['oauth_token_secret'])) {
-    header('Location: ./clearsessions.php');
+		</title>
+	</head>
+	<body>
+		<form action="" method="POST">
+		<label> Search : <input type ="" name="keyword"/></label>	
+
+<?php
+if( isset($_POST['keyword'])){
+$tweets = $twitter->get('https://api.twitter.com/1.1/search/tweets.json?q='.$_POST['keyword'].'&result_type=recent&count=4');
+	// foreach($tweets as $tweet){
+		//foreach ($tweet as $t) {
+			print_r($tweets); 
+			//echo "<br>";
+
+					# code...
+		//}
+	//}
 }
-/* Get user access tokens out of the session. */
-$access_token = $_SESSION['access_token'];
+	
+//<?php print_r($tweets);?>
 
-/* Create a TwitterOauth object with consumer/user tokens. */
-$connection = new TwitterOAuth(CONSUMER_KEY, CONSUMER_SECRET, $access_token['oauth_token'], $access_token['oauth_token_secret']);
 
-/* If method is set change API call made. Test is called by default. */
-$content = $connection->get('account/verify_credentials');
-
-/* Some example calls */
-//$connection->get('users/show', array('screen_name' => 'abraham'));
-//$connection->post('statuses/update', array('status' => date(DATE_RFC822)));
-//$connection->post('statuses/destroy', array('id' => 5437877770));
-//$connection->post('friendships/create', array('id' => 9436992));
-//$connection->post('friendships/destroy', array('id' => 9436992));
-
-/* Include HTML to display on the page */
-include('html.inc');
+</body>
+</html>
