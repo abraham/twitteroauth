@@ -13,12 +13,17 @@ require_once('OAuth.php');
  * Twitter OAuth class
  */
 class TwitterOAuth {
+
+  const UPLOAD_LIMIT = 4;
+
   /* Contains the last HTTP status code returned. */
   public $http_code;
   /* Contains the last API call. */
   public $url;
   /* Set up the API root URL. */
-  public $host = "https://api.twitter.com/1.1/";
+  public $host_api = "https://api.twitter.com/1.1/";
+  /* Set up the Upload API root URL. */
+  public $host_upload = "https://upload.twitter.com/1.1/";
   /* Set timeout default. */
   public $timeout = 30;
   /* Set connect timeout. */
@@ -148,8 +153,14 @@ class TwitterOAuth {
   
   /**
    * POST wrapper for oAuthRequest.
+   * Pass "images" key of type array in parameters to upload media
    */
   function post($url, $parameters = array()) {
+    if (isset($parameters['images']) && !empty($parameters['images'])) {
+      $images = array_slice($parameters['images'], 0, self::UPLOAD_LIMIT);
+      $parameters['media_ids'] = $this->upload($parameters['images']);
+      unset($parameters['images']);
+    }
     $response = $this->oAuthRequest($url, 'POST', $parameters);
     if ($this->format === 'json' && $this->decode_json) {
       return json_decode($response);
@@ -168,12 +179,28 @@ class TwitterOAuth {
     return $response;
   }
 
+  function upload($images) {
+    $mediaIds = array();
+
+    $url = "{$this->host_upload}media/upload.{$this->format}";
+    foreach ($images as $imagePath) {
+      $image = @file_get_contents($imagePath);
+      $response = $this->oAuthRequest($url, 'POST', array('media' => base64_encode($image)));
+      $media = json_decode($response, true);
+      if (isset($media['media_id_string'])) {
+        $mediaIds[] = $media['media_id_string'];
+      }
+    }
+
+    return implode(",", $mediaIds);
+  }
+
   /**
    * Format and sign an OAuth / API request
    */
   function oAuthRequest($url, $method, $parameters) {
     if (strrpos($url, 'https://') !== 0 && strrpos($url, 'http://') !== 0) {
-      $url = "{$this->host}{$url}.{$this->format}";
+      $url = "{$this->host_api}{$url}.{$this->format}";
     }
     $request = OAuthRequest::from_consumer_and_token($this->consumer, $this->token, $method, $url, $parameters);
     $request->sign_request($this->sha1_method, $this->consumer, $this->token);
