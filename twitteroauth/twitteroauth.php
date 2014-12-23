@@ -86,14 +86,19 @@ class TwitterOAuth {
    *
    * @returns a string
    */
-  function getAuthorizeURL($token, $sign_in_with_twitter = TRUE) {
+  function getAuthorizeURL($token, $sign_in_with_twitter = TRUE, $force_login = FALSE ) {
     if (is_array($token)) {
       $token = $token['oauth_token'];
     }
+
+    if( !empty( $force_login ) ){
+      $force_login = '&force_login=true';
+    }
+
     if (empty($sign_in_with_twitter)) {
-      return $this->authorizeURL() . "?oauth_token={$token}";
+      return $this->authorizeURL() . "?oauth_token={$token}$force_login";
     } else {
-       return $this->authenticateURL() . "?oauth_token={$token}";
+       return $this->authenticateURL() . "?oauth_token={$token}$force_login";
     }
   }
 
