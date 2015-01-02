@@ -143,6 +143,7 @@ class TwitterOAuth {
    * GET wrapper for oAuthRequest.
    */
   function get($url, $parameters = array()) {
+    $url = "{$this->host}{$url}.json";
     $response = $this->oAuthRequest($url, 'GET', $parameters);
     return json_decode($response, $this->decode_json_assoc);
   }
@@ -151,6 +152,7 @@ class TwitterOAuth {
    * POST wrapper for oAuthRequest.
    */
   function post($url, $parameters = array()) {
+    $url = "{$this->host}{$url}.json";
     $response = $this->oAuthRequest($url, 'POST', $parameters);
     return json_decode($response, $this->decode_json_assoc);
   }
@@ -159,7 +161,6 @@ class TwitterOAuth {
    * Format and sign an OAuth / API request
    */
   function oAuthRequest($url, $method, $parameters) {
-    $url = "{$this->host}{$url}.json";
     $request = OAuth\OAuthRequest::from_consumer_and_token($this->consumer, $this->token, $method, $url, $parameters);
     $request->sign_request($this->sha1_method, $this->consumer, $this->token);
     return $this->http($request->get_normalized_http_url(), $method, $request->to_header(), $parameters);
