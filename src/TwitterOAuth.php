@@ -70,7 +70,7 @@ class TwitterOAuth {
    *
    * @returns a key/value array containing oauth_token and oauth_token_secret
    */
-  function getRequestToken($callback_url) {
+  function getRequestToken($callback_url =  NULL) {
     $this->consumer->callback_url = $callback_url;
     $request = $this->oAuthRequest($this->requestTokenURL(), 'GET', array());
     $token = OAuth\OAuthUtil::parse_parameters($request);
