@@ -5,11 +5,9 @@ namespace Abraham\TwitterOAuth\OAuth;
 
 /* Generic exception class
  */
-// if (!class_exists('OAuthException', false)) {
   class OAuthException extends \Exception {
     // pass
   }
-// }
 
 class OAuthConsumer {
   public $key;
