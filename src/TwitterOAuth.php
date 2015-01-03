@@ -66,20 +66,6 @@ class TwitterOAuth {
     }
   }
 
-
-  /**
-   * Get a request_token from Twitter
-   *
-   * @returns a key/value array containing oauth_token and oauth_token_secret
-   */
-  function getRequestToken($oauth_callback) {
-    $this->consumer->callback_url = $oauth_callback;
-    $request = $this->oAuthRequest($this->requestTokenURL(), 'POST', array());
-    $token = OAuth\OAuthUtil::parse_parameters($request);
-    $this->token = new OAuth\OAuthConsumer($token['oauth_token'], $token['oauth_token_secret']);
-    return $token;
-  }
-
   /**
    * Get the authorize URL
    *
@@ -103,41 +89,12 @@ class TwitterOAuth {
   }
 
   /**
-   * Exchange request token and secret for an access token and
-   * secret, to sign API calls.
-   *
-   * @returns array("oauth_token" => "the-access-token",
-   *                "oauth_token_secret" => "the-access-secret",
-   *                "user_id" => "9436992",
-   *                "screen_name" => "abraham")
+   * Make /oauth/* requests to the API.
    */
-  function getAccessToken($oauth_verifier) {
-    $parameters = array();
-    $parameters['oauth_verifier'] = $oauth_verifier;
-    $request = $this->oAuthRequest($this->accessTokenURL(), 'POST', $parameters);
-    $token = OAuth\OAuthUtil::parse_parameters($request);
-    $this->token = new OAuth\OAuthConsumer($token['oauth_token'], $token['oauth_token_secret']);
-    return $token;
-  }
-
-  /**
-   * One time exchange of username and password for access token and secret.
-   *
-   * @returns array("oauth_token" => "the-access-token",
-   *                "oauth_token_secret" => "the-access-secret",
-   *                "user_id" => "9436992",
-   *                "screen_name" => "abraham",
-   *                "x_auth_expires" => "0")
-   */  
-  function getXAuthToken($username, $password) {
-    $parameters = array();
-    $parameters['x_auth_username'] = $username;
-    $parameters['x_auth_password'] = $password;
-    $parameters['x_auth_mode'] = 'client_auth';
-    $request = $this->oAuthRequest($this->accessTokenURL(), 'POST', $parameters);
-    $token = OAuth\OAuthUtil::parse_parameters($request);
-    $this->token = new OAuth\OAuthConsumer($token['oauth_token'], $token['oauth_token_secret']);
-    return $token;
+  function oauth($url, $parameters = array()) {
+    $url = "{$this->api_host}/{$url}";
+    $request = $this->oAuthRequest($url, 'POST', $parameters);
+    return OAuth\OAuthUtil::parse_parameters($request);
   }
 
   /**
