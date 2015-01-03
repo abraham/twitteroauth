@@ -20,7 +20,9 @@ class TwitterOAuth {
   /* Contains the last API call. */
   public $url;
   /* Set up the API root URL. */
-  public $host = "https://api.twitter.com/1.1/";
+  public $api_host = "https://api.twitter.com";
+  /* Set up the API root URL. */
+  public $api_version = "1.1";
   /* Set timeout default. */
   public $timeout = 5;
   /* Set connect timeout. */
@@ -139,19 +141,19 @@ class TwitterOAuth {
   }
 
   /**
-   * GET wrapper for oAuthRequest.
+   * Make GET requests to the API.
    */
   function get($url, $parameters = array()) {
-    $url = "{$this->host}{$url}.json";
+    $url = "{$this->api_host}/{$this->api_version}/{$url}.json";
     $response = $this->oAuthRequest($url, 'GET', $parameters);
     return json_decode($response, $this->decode_json_assoc);
   }
   
   /**
-   * POST wrapper for oAuthRequest.
+   * Make POST requests to the API.
    */
   function post($url, $parameters = array()) {
-    $url = "{$this->host}{$url}.json";
+    $url = "{$this->api_host}/{$this->api_version}/{$url}.json";
     $response = $this->oAuthRequest($url, 'POST', $parameters);
     return json_decode($response, $this->decode_json_assoc);
   }
