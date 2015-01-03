@@ -72,7 +72,7 @@ class TwitterOAuth {
    */
   function getRequestToken($oauth_callback) {
     $this->consumer->callback_url = $oauth_callback;
-    $request = $this->oAuthRequest($this->requestTokenURL(), 'GET', array());
+    $request = $this->oAuthRequest($this->requestTokenURL(), 'POST', array());
     $token = OAuth\OAuthUtil::parse_parameters($request);
     $this->token = new OAuth\OAuthConsumer($token['oauth_token'], $token['oauth_token_secret']);
     return $token;
@@ -112,7 +112,7 @@ class TwitterOAuth {
   function getAccessToken($oauth_verifier) {
     $parameters = array();
     $parameters['oauth_verifier'] = $oauth_verifier;
-    $request = $this->oAuthRequest($this->accessTokenURL(), 'GET', $parameters);
+    $request = $this->oAuthRequest($this->accessTokenURL(), 'POST', $parameters);
     $token = OAuth\OAuthUtil::parse_parameters($request);
     $this->token = new OAuth\OAuthConsumer($token['oauth_token'], $token['oauth_token_secret']);
     return $token;
