@@ -36,17 +36,6 @@ class TwitterOAuth {
   /* Immediately retry the API call if the response was not successful. */
   //public $retry = TRUE;
 
-
-
-
-  /**
-   * Set API URLS
-   */
-  function accessTokenURL()  { return 'https://api.twitter.com/oauth/access_token'; }
-  function authenticateURL() { return 'https://api.twitter.com/oauth/authenticate'; }
-  function authorizeURL()    { return 'https://api.twitter.com/oauth/authorize'; }
-  function requestTokenURL() { return 'https://api.twitter.com/oauth/request_token'; }
-
   /**
    * Debug helpers
    */
@@ -67,25 +56,11 @@ class TwitterOAuth {
   }
 
   /**
-   * Get the authorize URL
-   *
-   * @returns a string
+   * Make URLs for user browser navigation.
    */
-  function getAuthorizeURL($token, $sign_in_with_twitter = TRUE, $urlparams = array()) {
-    if (is_array($token)) {
-      $token = $token['oauth_token'];
-    }
-    $params = "";
-    if (is_array($urlparams)) {
-	    foreach ($urlparams as $urlparamkey=>$urlparamvalue) {
-		    $params .= "&" . $urlparamkey . "=" . $urlparamvalue;
-	    }
-    }
-    if (empty($sign_in_with_twitter)) {
-      return $this->authorizeURL() . "?oauth_token={$token}" . $params;
-    } else {
-      return $this->authenticateURL() . "?oauth_token={$token}" . $params;
-    }
+  function url($url, $parameters) {
+    $query = http_build_query($parameters);
+    return "{$this->api_host}/{$url}?{$query}";
   }
 
   /**
