@@ -24,6 +24,32 @@ class TwitterTest extends \PHPUnit_Framework_TestCase {
         $this->assertObjectHasAttribute('token', $this->twitter);
     }
 
+    public function testOauthRequestToken() {
+        $twitter = new TwitterOAuth(CONSUMER_KEY, CONSUMER_SECRET);
+        $result = $twitter->oauth('oauth/request_token', array('oauth_callback' => OAUTH_CALLBACK));
+        $this->assertEquals(200, $twitter->http_code);
+        $this->assertArrayHasKey('oauth_token', $result);
+        $this->assertArrayHasKey('oauth_token_secret', $result);
+        $this->assertArrayHasKey('oauth_callback_confirmed', $result);
+        return $result;
+    }
+
+    /**
+     * @depends testOauthRequestToken
+     */
+    public function testOauthAccessToken($request_token) {
+        // Can't test this without a browser logging into Twitter so check for the correct error instead.
+        $twitter = new TwitterOAuth(CONSUMER_KEY, CONSUMER_SECRET, $request_token['oauth_token'], $request_token['oauth_token_secret']);
+        $result = $twitter->oauth("oauth/access_token", array("oauth_verifier" => "fake_oauth_verifier"));
+        $this->assertEquals(401, $twitter->http_code);
+        $this->assertEquals(array('Invalid request token' => ''), $result);
+    }
+
+    public function testUrl() {
+        $url = $this->twitter->url('oauth/authorize', array('foo' => 'bar', 'baz' => 'qux'));
+        $this->assertEquals('https://api.twitter.com/oauth/authorize?foo=bar&baz=qux', $url);
+    }
+
     public function testGetAccountVerifyCredentials() {
         $result = $this->twitter->get('account/verify_credentials');
         $this->assertEquals(200, $this->twitter->http_code);
