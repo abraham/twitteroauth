@@ -1,7 +1,7 @@
 {       
     "name": "abraham/twitteroauth", 
     "type": "library",
-    "description": "The first PHP Library to support OAuth 1.0A for Twitter's REST API.",
+    "description": "The most popular PHP library for use with the Twitter OAuth REST API.",
     "keywords": ["twitter", "api", "oauth", "rest", "social"],
     "license": "MIT",
     "homepage": "http://twitteroauth.com",
