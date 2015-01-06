@@ -13,87 +13,72 @@ define('OAUTH_CALLBACK', getenv('OAUTH_CALLBACK'));
 
 class TwitterTest extends \PHPUnit_Framework_TestCase {
 
+    protected $twitter;
+
+    protected function setUp() {
+        $this->twitter = new TwitterOAuth(CONSUMER_KEY, CONSUMER_SECRET, ACCESS_TOKEN, ACCESS_TOKEN_SECRET);
+    }
+
     public function testBuildClient() {
-
-        $twitter = new TwitterOAuth(CONSUMER_KEY, CONSUMER_SECRET, ACCESS_TOKEN, ACCESS_TOKEN_SECRET);
-        $this->assertObjectHasAttribute('consumer', $twitter);
-        $this->assertObjectHasAttribute('token', $twitter);
-        return $twitter;
+        $this->assertObjectHasAttribute('consumer', $this->twitter);
+        $this->assertObjectHasAttribute('token', $this->twitter);
     }
 
-    /**
-     * @depends testBuildClient
-     */
-    public function testGetAccountVerifyCredentials($twitter) {
-        $result = $twitter->get('account/verify_credentials');
-        $this->assertEquals(200, $twitter->http_code);
+    public function testGetAccountVerifyCredentials() {
+        $result = $this->twitter->get('account/verify_credentials');
+        $this->assertEquals(200, $this->twitter->http_code);
     }
 
-    /**
-     * @depends testBuildClient
-     */
-    public function testGetStatusesMentionsTimeline($twitter) {
-        $result = $twitter->get('statuses/mentions_timeline');
-        $this->assertEquals(200, $twitter->http_code);
+    public function testGetStatusesMentionsTimeline() {
+        $result = $this->twitter->get('statuses/mentions_timeline');
+        $this->assertEquals(200, $this->twitter->http_code);
     }
 
-    /**
-     * @depends testBuildClient
-     */
-    public function testGetSearchTweets($twitter) {
-        $result = $twitter->get('search/tweets', array('q' => 'twitter'));
-        $this->assertEquals(200, $twitter->http_code);
+    public function testGetSearchTweets() {
+        $result = $this->twitter->get('search/tweets', array('q' => 'twitter'));
+        $this->assertEquals(200, $this->twitter->http_code);
         return $result->statuses;
     }
 
     /**
-     * @depends testBuildClient
      * @depends testGetSearchTweets
      */
-    public function testGetSearchTweetsWithMaxId($twitter, $statuses) {
+    public function testGetSearchTweetsWithMaxId($statuses) {
         $max_id = array_pop($statuses)->id_str;
-        $result = $twitter->get('search/tweets', array('q' => 'twitter', 'max_id' => $max_id));
-        $this->assertEquals(200, $twitter->http_code);
+        $result = $this->twitter->get('search/tweets', array('q' => 'twitter', 'max_id' => $max_id));
+        $this->assertEquals(200, $this->twitter->http_code);
     }
 
-    /**
-     * @depends testBuildClient
-     */
-    public function testPostFavoritesCreate($twitter) {
-        $result = $twitter->post('favorites/create', array('id' => '6242973112'));
-        if ($twitter->http_code == 403) {
+    public function testPostFavoritesCreate() {
+        $result = $this->twitter->post('favorites/create', array('id' => '6242973112'));
+        if ($this->twitter->http_code == 403) {
             // Status already favorited
             $this->assertEquals(139, $result->errors[0]->code);
         } else {
-            $this->assertEquals(200, $twitter->http_code);
+            $this->assertEquals(200, $this->twitter->http_code);
         }
     }
 
     /**
-     * @depends testBuildClient
      * @depends testPostFavoritesCreate
      */
-    public function testPostFavoritesDestroy($twitter) {
-        $result = $twitter->post('favorites/destroy', array('id' => '6242973112'));
-        $this->assertEquals(200, $twitter->http_code);
+    public function testPostFavoritesDestroy() {
+        $result = $this->twitter->post('favorites/destroy', array('id' => '6242973112'));
+        $this->assertEquals(200, $this->twitter->http_code);
     }
 
-    /**
-     * @depends testBuildClient
-     */
-    public function testPostStatusesUpdate($twitter) {
-        $result = $twitter->post('statuses/update', array('status' => 'test ' . time()));
-        $this->assertEquals(200, $twitter->http_code);
+    public function testPostStatusesUpdate() {
+        $result = $this->twitter->post('statuses/update', array('status' => 'test ' . time()));
+        $this->assertEquals(200, $this->twitter->http_code);
         return $result;
     }
 
     /**
-     * @depends testBuildClient
      * @depends testPostStatusesUpdate
      */
-    public function testPostStatusesDestroy($twitter, $status) {
-        $result = $twitter->post('statuses/destroy/' . $status->id_str);
-        $this->assertEquals(200, $twitter->http_code);
+    public function testPostStatusesDestroy($status) {
+        $result = $this->twitter->post('statuses/destroy/' . $status->id_str);
+        $this->assertEquals(200, $this->twitter->http_code);
     }
 
 }
