@@ -2,7 +2,7 @@
 
 namespace Abraham\TwitterOAuth\Test;
 
-require 'vendor/autoload.php';
+require __DIR__ . '/../vendor/autoload.php';
 use Abraham\TwitterOAuth\TwitterOAuth;
 
 define('CONSUMER_KEY', getenv('CONSUMER_KEY'));
