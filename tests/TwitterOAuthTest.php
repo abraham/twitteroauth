@@ -2,13 +2,19 @@
 
 namespace Abraham\TwitterOAuth\Test;
 
-require_once('config.php');
-
+require 'vendor/autoload.php';
 use Abraham\TwitterOAuth\TwitterOAuth;
+
+define('CONSUMER_KEY', getenv('CONSUMER_KEY'));
+define('CONSUMER_SECRET', getenv('CONSUMER_SECRET'));
+define('ACCESS_TOKEN', getenv('ACCESS_TOKEN'));
+define('ACCESS_TOKEN_SECRET', getenv('ACCESS_TOKEN_SECRET'));
+define('OAUTH_CALLBACK', getenv('OAUTH_CALLBACK'));
 
 class TwitterTest extends \PHPUnit_Framework_TestCase {
 
     public function testBuildClient() {
+
         $twitter = new TwitterOAuth(CONSUMER_KEY, CONSUMER_SECRET, ACCESS_TOKEN, ACCESS_TOKEN_SECRET);
         $this->assertObjectHasAttribute('consumer', $twitter);
         $this->assertObjectHasAttribute('token', $twitter);
