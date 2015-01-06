@@ -77,6 +77,7 @@ class TwitterTest extends \PHPUnit_Framework_TestCase {
      * @depends testPostStatusesUpdate
      */
     public function testPostStatusesDestroy($status) {
+        // This test fails on Travis CI if there are no arguments passed. Local is fine.
         $result = $this->twitter->post('statuses/destroy/' . $status->id_str, array('trim_user' => true));
         $this->assertEquals(200, $this->twitter->http_code);
     }
