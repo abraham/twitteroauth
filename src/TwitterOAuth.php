@@ -50,22 +50,22 @@ class TwitterOAuth {
   /**
    * A bunch of setter.
    */
-  function setApiHost($value) { $this->api_host = $value; }
-  function setApiVersion($value) { $this->api_version = $value; }
-  function setTimeout($value) { $this->timeout = $value; }
-  function setConnectionTimeout($value) { $this->connecttimeout = $value; }
-  function setDecodeJsonAssoc($value) { $this->decode_json_assoc = $value; }
-  function setUserAgent($value) { $this->useragent = $value; }
+  public function setApiHost($value) { $this->api_host = $value; }
+  public function setApiVersion($value) { $this->api_version = $value; }
+  public function setTimeout($value) { $this->timeout = $value; }
+  public function setConnectionTimeout($value) { $this->connecttimeout = $value; }
+  public function setDecodeJsonAssoc($value) { $this->decode_json_assoc = $value; }
+  public function setUserAgent($value) { $this->useragent = $value; }
 
   /**
    * Get info about the last request made.
    */
-  function lastApiPath() { return $this->last_api_path; }
-  function lastHttpCode() { return $this->last_http_code; }
-  function lastHttpMethod() { return $this->last_http_method; }
-  function lastRateLimit() { return $this->last_rate_limit; }
-  function lastResponse() { return $this->last_response; }
-  function resetLastResult() {
+  public function lastApiPath() { return $this->last_api_path; }
+  public function lastHttpCode() { return $this->last_http_code; }
+  public function lastHttpMethod() { return $this->last_http_method; }
+  public function lastRateLimit() { return $this->last_rate_limit; }
+  public function lastResponse() { return $this->last_response; }
+  public function resetLastResult() {
     $this->last_api_path = '';
     $this->last_http_code = 0;
     $this->last_http_method = '';
@@ -76,7 +76,7 @@ class TwitterOAuth {
   /**
    * construct TwitterOAuth object
    */
-  function __construct($consumer_key, $consumer_secret, $oauth_token = NULL, $oauth_token_secret = NULL) {
+  public function __construct($consumer_key, $consumer_secret, $oauth_token = NULL, $oauth_token_secret = NULL) {
     $this->resetLastResult();
     $this->sha1_method = new OAuth\OAuthSignatureMethod_HMAC_SHA1();
     $this->consumer = new OAuth\OAuthConsumer($consumer_key, $consumer_secret);
@@ -88,7 +88,7 @@ class TwitterOAuth {
   /**
    * Make URLs for user browser navigation.
    */
-  function url($path, $parameters) {
+  public function url($path, $parameters) {
     $this->resetLastResult();
     $this->last_api_path = $path;
     $query = http_build_query($parameters);
@@ -100,7 +100,7 @@ class TwitterOAuth {
   /**
    * Make /oauth/* requests to the API.
    */
-  function oauth($path, $parameters = array()) {
+  public function oauth($path, $parameters = array()) {
     $this->resetLastResult();
     $this->last_api_path = $path;
     $url = "{$this->api_host}/{$path}";
@@ -117,7 +117,7 @@ class TwitterOAuth {
   /**
    * Make GET requests to the API.
    */
-  function get($path, $parameters = array()) {
+  public function get($path, $parameters = array()) {
     $this->resetLastResult();
     $this->last_api_path = $path;
     $url = "{$this->api_host}/{$this->api_version}/{$path}.json";
@@ -130,7 +130,7 @@ class TwitterOAuth {
   /**
    * Make POST requests to the API.
    */
-  function post($path, $parameters = array()) {
+  public function post($path, $parameters = array()) {
     $this->resetLastResult();
     $this->last_api_path = $path;
     $url = "{$this->api_host}/{$this->api_version}/{$path}.json";
@@ -143,7 +143,7 @@ class TwitterOAuth {
   /**
    * Format and sign an OAuth / API request
    */
-  function oAuthRequest($url, $method, $parameters) {
+  private function oAuthRequest($url, $method, $parameters) {
     $this->last_http_method = $method;
     $request = OAuth\OAuthRequest::from_consumer_and_token($this->consumer, $this->token, $method, $url, $parameters);
     if (array_key_exists('oauth_callback', $parameters)) {
@@ -159,7 +159,7 @@ class TwitterOAuth {
    *
    * @return API results
    */
-  function http($url, $method, $header, $postfields) {
+  private function http($url, $method, $header, $postfields) {
     /* Curl settings */
     $options = array(
       // CURLOPT_VERBOSE => TRUE,
@@ -202,7 +202,7 @@ class TwitterOAuth {
   /**
    * Get the header info to store.
    */
-  function getHeader($ch, $header) {
+  private function getHeader($ch, $header) {
     $i = strpos($header, ':');
     if (!empty($i)) {
       $key = str_replace('-', '_', strtolower(substr($header, 0, $i)));
