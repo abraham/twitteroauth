@@ -23,25 +23,35 @@ class TwitterOAuthException extends \Exception {
  */
 class TwitterOAuth {
   /* Set up the API root URL. */
-  public $api_host = "https://api.twitter.com";
+  private $api_host = "https://api.twitter.com";
   /* Set up the API root URL. */
-  public $api_version = "1.1";
+  private $api_version = "1.1";
   /* Set timeout default. */
-  public $timeout = 5;
+  private $timeout = 5;
   /* Set connect timeout. */
-  public $connecttimeout = 5; 
+  private $connecttimeout = 5; 
   /* Decode returned json data to an array. See http://php.net/manual/en/function.json-decode.php */
-  public $decode_json_assoc = FALSE;
+  private $decode_json_assoc = FALSE;
   /* Contains the last HTTP headers returned. */
-  public $http_info;
+  private $http_info;
   /* Set the useragnet. */
-  public $useragent = 'TwitterOAuth v0.3.0-dev';
+  private $useragent = 'TwitterOAuth v0.3.0-dev';
   /* Cache details about the most recent API request. */
   private $last_api_path;
   private $last_http_code;
   private $last_http_method;
   private $last_rate_limit;
   private $last_response;
+
+  /**
+   * A bunch of setter.
+   */
+  function setApiHost($value) { $this->api_host = $value; }
+  function setApiVersion($value) { $this->api_version = $value; }
+  function setTimeout($value) { $this->timeout = $value; }
+  function setConnectionTimeout($value) { $this->connecttimeout = $value; }
+  function setDecodeJsonAssoc($value) { $this->decode_json_assoc = $value; }
+  function setUserAgent($value) { $this->useragent = $value; }
 
   /**
    * Get info about the last request made.
