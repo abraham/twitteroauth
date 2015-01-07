@@ -127,7 +127,7 @@ class TwitterOAuth {
     $this->last_api_path = $path;
     $url = "{$this->api_host}/{$this->api_version}/{$path}.json";
     $result = $this->oAuthRequest($url, 'GET', $parameters);
-    $response = json_decode($result, $this->decode_json_assoc, 512, JSON_BIGINT_AS_STRING);
+    $response = $this->json_decode($result);
     $this->last_response = $response;
     return $response;
   }
@@ -140,7 +140,7 @@ class TwitterOAuth {
     $this->last_api_path = $path;
     $url = "{$this->api_host}/{$this->api_version}/{$path}.json";
     $result = $this->oAuthRequest($url, 'POST', $parameters);
-    $response = json_decode($result, $this->decode_json_assoc, 512, JSON_BIGINT_AS_STRING);
+    $response = $this->json_decode($result);
     $this->last_response = $response;
     return $response;
   }
@@ -215,6 +215,15 @@ class TwitterOAuth {
     curl_close($ci);
 
     return $body;
+  }
+
+  private function json_decode($string) {
+    // BUG: https://bugs.php.net/bug.php?id=63520
+    if (defined('JSON_BIGINT_AS_STRING')) {
+      return json_decode($string, $this->decode_json_assoc, 512, JSON_BIGINT_AS_STRING);
+    } else {
+      return json_decode($string, $this->decode_json_assoc);
+    }
   }
 
   /**
