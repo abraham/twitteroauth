@@ -1,15 +1,18 @@
 <?php
+/**
+ * WARNING: Running these tests will post and delete through the actual Twitter account.
+ */
 
 namespace Abraham\TwitterOAuth\Test;
 
 require __DIR__ . '/../vendor/autoload.php';
 use Abraham\TwitterOAuth\TwitterOAuth;
 
-define('CONSUMER_KEY', getenv('CONSUMER_KEY'));
-define('CONSUMER_SECRET', getenv('CONSUMER_SECRET'));
-define('ACCESS_TOKEN', getenv('ACCESS_TOKEN'));
-define('ACCESS_TOKEN_SECRET', getenv('ACCESS_TOKEN_SECRET'));
-define('OAUTH_CALLBACK', getenv('OAUTH_CALLBACK'));
+define('CONSUMER_KEY', getenv('TEST_CONSUMER_KEY'));
+define('CONSUMER_SECRET', getenv('TEST_CONSUMER_SECRET'));
+define('ACCESS_TOKEN', getenv('TEST_ACCESS_TOKEN'));
+define('ACCESS_TOKEN_SECRET', getenv('TEST_ACCESS_TOKEN_SECRET'));
+define('OAUTH_CALLBACK', getenv('TEST_OAUTH_CALLBACK'));
 
 class TwitterTest extends \PHPUnit_Framework_TestCase {
 
