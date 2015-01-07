@@ -147,8 +147,7 @@ class TwitterOAuth {
    *
    * @return API results
    */
-  function http($url, $method, $header, $postfields = NULL) {
-
+  function http($url, $method, $header, $postfields) {
     /* Curl settings */
     $options = array(
       // CURLOPT_VERBOSE => TRUE,
