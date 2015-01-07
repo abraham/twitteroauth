@@ -95,6 +95,10 @@ class TwitterOAuth {
    */
   function oAuthRequest($url, $method, $parameters) {
     $request = OAuth\OAuthRequest::from_consumer_and_token($this->consumer, $this->token, $method, $url, $parameters);
+    if (array_key_exists('oauth_callback', $parameters)) {
+      // Twitter doesn't like oauth_callback as a parameter.
+      unset($parameters['oauth_callback']);
+    }
     $request->sign_request($this->sha1_method, $this->consumer, $this->token);
     return $this->http($request->get_normalized_http_url(), $method, $request->to_header(), $parameters);
   }
