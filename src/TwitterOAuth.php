@@ -22,8 +22,6 @@ class TwitterOAuthException extends \Exception {
  * Twitter OAuth class
  */
 class TwitterOAuth {
-  /* Contains the last HTTP status code returned. */
-  public $http_code;
   /* Set up the API root URL. */
   public $api_host = "https://api.twitter.com";
   /* Set up the API root URL. */
@@ -38,17 +36,34 @@ class TwitterOAuth {
   public $http_info;
   /* Set the useragnet. */
   public $useragent = 'TwitterOAuth v0.3.0-dev';
+  /* Cache details about the most recent API request. */
+  private $last_api_path;
+  private $last_http_code;
+  private $last_http_method;
+  private $last_rate_limit;
+  private $last_response;
 
   /**
-   * Debug helpers
+   * Get info about the last request made.
    */
-  function lastStatusCode() { return $this->http_code; }
-  function lastAPICall() { return $this->last_api_call; }
+  function lastApiPath() { return $this->last_api_path; }
+  function lastHttpCode() { return $this->last_http_code; }
+  function lastHttpMethod() { return $this->last_http_method; }
+  function lastRateLimit() { return $this->last_rate_limit; }
+  function lastResponse() { return $this->last_response; }
+  function resetLastResult() {
+    $this->last_api_path = '';
+    $this->last_http_code = 0;
+    $this->last_http_method = '';
+    $this->last_rate_limit = array();
+    $this->last_response = array();
+  }
 
   /**
    * construct TwitterOAuth object
    */
   function __construct($consumer_key, $consumer_secret, $oauth_token = NULL, $oauth_token_secret = NULL) {
+    $this->resetLastResult();
     $this->sha1_method = new OAuth\OAuthSignatureMethod_HMAC_SHA1();
     $this->consumer = new OAuth\OAuthConsumer($consumer_key, $consumer_secret);
     if (!empty($oauth_token) && !empty($oauth_token_secret)) {
@@ -63,19 +78,25 @@ class TwitterOAuth {
    */
   function url($url, $parameters) {
     $query = http_build_query($parameters);
-    return "{$this->api_host}/{$url}?{$query}";
+    $response = "{$this->api_host}/{$url}?{$query}";
+    $this->last_response = $response;
+    return $response;
   }
 
   /**
    * Make /oauth/* requests to the API.
    */
   function oauth($url, $parameters = array()) {
+    $this->resetLastResult();
+    $this->last_api_path = $url;
     $url = "{$this->api_host}/{$url}";
-    $response = $this->oAuthRequest($url, 'POST', $parameters);
-    if ($this->http_code == 200) {
-      return OAuth\OAuthUtil::parse_parameters($response);
+    $result = $this->oAuthRequest($url, 'POST', $parameters);
+    if ($this->lastHttpCode() == 200) {
+      $response = OAuth\OAuthUtil::parse_parameters($result);
+      $this->last_response = $response;
+      return $response;
     } else {
-      throw new TwitterOAuthException($response);
+      throw new TwitterOAuthException($result);
     }
   }
 
@@ -83,24 +104,33 @@ class TwitterOAuth {
    * Make GET requests to the API.
    */
   function get($url, $parameters = array()) {
+    $this->resetLastResult();
+    $this->last_api_path = $url;
     $url = "{$this->api_host}/{$this->api_version}/{$url}.json";
-    $response = $this->oAuthRequest($url, 'GET', $parameters);
-    return json_decode($response, $this->decode_json_assoc, 512, JSON_BIGINT_AS_STRING);
+    $result = $this->oAuthRequest($url, 'GET', $parameters);
+    $response = json_decode($result, $this->decode_json_assoc, 512, JSON_BIGINT_AS_STRING);
+    $this->last_response = $response;
+    return $response;
   }
   
   /**
    * Make POST requests to the API.
    */
   function post($url, $parameters = array()) {
+    $this->resetLastResult();
+    $this->last_api_path = $url;
     $url = "{$this->api_host}/{$this->api_version}/{$url}.json";
-    $response = $this->oAuthRequest($url, 'POST', $parameters);
-    return json_decode($response, $this->decode_json_assoc, 512, JSON_BIGINT_AS_STRING);
+    $result = $this->oAuthRequest($url, 'POST', $parameters);
+    $response = json_decode($result, $this->decode_json_assoc, 512, JSON_BIGINT_AS_STRING);
+    $this->last_response = $response;
+    return $response;
   }
 
   /**
    * Format and sign an OAuth / API request
    */
   function oAuthRequest($url, $method, $parameters) {
+    $this->last_http_method = $method;
     $request = OAuth\OAuthRequest::from_consumer_and_token($this->consumer, $this->token, $method, $url, $parameters);
     if (array_key_exists('oauth_callback', $parameters)) {
       // Twitter doesn't like oauth_callback as a parameter.
@@ -149,7 +179,7 @@ class TwitterOAuth {
     $ci = curl_init();
     curl_setopt_array($ci, $options);
     $response = curl_exec($ci);
-    $this->http_code = curl_getinfo($ci, CURLINFO_HTTP_CODE);
+    $this->last_http_code = curl_getinfo($ci, CURLINFO_HTTP_CODE);
     $this->http_info = curl_getinfo($ci);
     $this->url = $url;
     curl_close($ci);
