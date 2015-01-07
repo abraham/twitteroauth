@@ -34,6 +34,7 @@ class TwitterTest extends \PHPUnit_Framework_TestCase {
         $this->assertArrayHasKey('oauth_token', $result);
         $this->assertArrayHasKey('oauth_token_secret', $result);
         $this->assertArrayHasKey('oauth_callback_confirmed', $result);
+        $this->assertEquals('true', $result['oauth_callback_confirmed']);
         return $result;
     }
 
