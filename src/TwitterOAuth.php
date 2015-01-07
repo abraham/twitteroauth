@@ -32,13 +32,13 @@ class TwitterOAuth {
   private $connecttimeout = 5; 
   /* Decode returned json data to an array. See http://php.net/manual/en/function.json-decode.php */
   private $decode_json_assoc = FALSE;
-  /* Contains the last HTTP headers returned. */
-  private $http_info;
   /* Set the useragnet. */
   private $useragent = 'TwitterOAuth v0.3.0-dev';
   /* Cache details about the most recent API request. */
   private $last_api_path;
   private $last_http_code;
+  private $last_http_headers;
+  private $last_http_info;
   private $last_http_method;
   private $last_rate_limit;
   private $last_response;
@@ -68,6 +68,8 @@ class TwitterOAuth {
   public function resetLastResult() {
     $this->last_api_path = '';
     $this->last_http_code = 0;
+    $this->last_http_info = array();
+    $this->last_http_headers = array();
     $this->last_http_method = '';
     $this->last_rate_limit = array();
     $this->last_response = array();
@@ -159,7 +161,7 @@ class TwitterOAuth {
    *
    * @return API results
    */
-  private function http($url, $method, $header, $postfields) {
+  private function http($url, $method, $headers, $postfields) {
     /* Curl settings */
     $options = array(
       // CURLOPT_VERBOSE => TRUE,
@@ -167,8 +169,8 @@ class TwitterOAuth {
       CURLOPT_CAPATH => __DIR__,
       CURLOPT_CONNECTTIMEOUT => $this->connecttimeout,
       CURLOPT_HEADER => FALSE,
-      CURLOPT_HEADERFUNCTION => array($this, 'getHeader'),
-      CURLOPT_HTTPHEADER => array($header, 'Expect:'),
+      CURLOPT_HEADERFUNCTION => array($this, 'getHeaders'),
+      CURLOPT_HTTPHEADER => array($headers, 'Expect:'),
       CURLOPT_RETURNTRANSFER => TRUE,
       CURLOPT_SSL_VERIFYHOST => 2,
       CURLOPT_SSL_VERIFYPEER => TRUE,
@@ -193,7 +195,7 @@ class TwitterOAuth {
     curl_setopt_array($ci, $options);
     $response = curl_exec($ci);
     $this->last_http_code = curl_getinfo($ci, CURLINFO_HTTP_CODE);
-    $this->http_info = curl_getinfo($ci);
+    $this->last_http_info = curl_getinfo($ci);
     curl_close($ci);
 
     return $response;
@@ -202,12 +204,12 @@ class TwitterOAuth {
   /**
    * Get the header info to store.
    */
-  private function getHeader($ch, $header) {
+  private function getHeaders($ch, $header) {
     $i = strpos($header, ':');
     if (!empty($i)) {
       $key = str_replace('-', '_', strtolower(substr($header, 0, $i)));
       $value = trim(substr($header, $i + 2));
-      $this->http_header[$key] = $value;
+      $this->last_http_headers[$key] = $value;
     }
     return strlen($header);
   }
