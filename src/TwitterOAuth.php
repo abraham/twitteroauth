@@ -40,7 +40,7 @@ class TwitterOAuth {
   private $last_http_headers;
   private $last_http_info;
   private $last_http_method;
-  private $last_rate_limit;
+  private $last_x_headers;
   private $last_response;
   /* OAuth stuffs */
   private $consumer;
@@ -63,7 +63,7 @@ class TwitterOAuth {
   public function lastApiPath() { return $this->last_api_path; }
   public function lastHttpCode() { return $this->last_http_code; }
   public function lastHttpMethod() { return $this->last_http_method; }
-  public function lastRateLimit() { return $this->last_rate_limit; }
+  public function lastXHeaders() { return $this->last_x_headers; }
   public function lastResponse() { return $this->last_response; }
   public function resetLastResult() {
     $this->last_api_path = '';
@@ -71,7 +71,7 @@ class TwitterOAuth {
     $this->last_http_info = array();
     $this->last_http_headers = array();
     $this->last_http_method = '';
-    $this->last_rate_limit = array();
+    $this->last_x_headers = array();
     $this->last_response = array();
   }
 
@@ -168,8 +168,7 @@ class TwitterOAuth {
       CURLOPT_CAINFO => __DIR__ . DIRECTORY_SEPARATOR . 'cacert.pem',
       CURLOPT_CAPATH => __DIR__,
       CURLOPT_CONNECTTIMEOUT => $this->connecttimeout,
-      CURLOPT_HEADER => FALSE,
-      CURLOPT_HEADERFUNCTION => array($this, 'getHeaders'),
+      CURLOPT_HEADER => TRUE,
       CURLOPT_HTTPHEADER => array($headers, 'Expect:'),
       CURLOPT_RETURNTRANSFER => TRUE,
       CURLOPT_SSL_VERIFYHOST => 2,
@@ -195,22 +194,31 @@ class TwitterOAuth {
     curl_setopt_array($ci, $options);
     $response = curl_exec($ci);
     $this->last_http_code = curl_getinfo($ci, CURLINFO_HTTP_CODE);
+    list($header, $body) = explode("\r\n\r\n", $response, 2);
+    list($this->last_http_headers, $this->last_x_headers) = $this->parseHeaders($header);
     $this->last_http_info = curl_getinfo($ci);
     curl_close($ci);
 
-    return $response;
+    return $body;
   }
 
   /**
    * Get the header info to store.
    */
-  private function getHeaders($ch, $header) {
-    $i = strpos($header, ':');
-    if (!empty($i)) {
-      $key = str_replace('-', '_', strtolower(substr($header, 0, $i)));
-      $value = trim(substr($header, $i + 2));
-      $this->last_http_headers[$key] = $value;
+  private function parseHeaders($header_text) {
+    $headers = array();
+    $x_headers = array();
+    foreach (explode("\r\n", $header_text) as $i => $line) {
+      $i = strpos($line, ':');
+      if (!empty($i)) {
+        list ($key, $value) = explode(': ', $line);
+        $key = str_replace('-', '_', strtolower($key));
+          $headers[$key] = trim($value);
+        if (substr($key, 0, 1) == 'x') {
+          $x_headers[$key] = trim($value);
+        }
+      }
     }
-    return strlen($header);
+    return array($headers, $x_headers);
   }
 }
