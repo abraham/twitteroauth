@@ -89,7 +89,7 @@ class TwitterOAuth {
   function get($url, $parameters = array()) {
     $url = "{$this->api_host}/{$this->api_version}/{$url}.json";
     $response = $this->oAuthRequest($url, 'GET', $parameters);
-    return json_decode($response, $this->decode_json_assoc);
+    return json_decode($response, $this->decode_json_assoc, 512, JSON_BIGINT_AS_STRING);
   }
   
   /**
@@ -98,7 +98,7 @@ class TwitterOAuth {
   function post($url, $parameters = array()) {
     $url = "{$this->api_host}/{$this->api_version}/{$url}.json";
     $response = $this->oAuthRequest($url, 'POST', $parameters);
-    return json_decode($response, $this->decode_json_assoc);
+    return json_decode($response, $this->decode_json_assoc, 512, JSON_BIGINT_AS_STRING);
   }
 
   /**
