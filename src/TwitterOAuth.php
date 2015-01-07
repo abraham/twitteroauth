@@ -76,9 +76,11 @@ class TwitterOAuth {
   /**
    * Make URLs for user browser navigation.
    */
-  function url($url, $parameters) {
+  function url($path, $parameters) {
+    $this->resetLastResult();
+    $this->last_api_path = $path;
     $query = http_build_query($parameters);
-    $response = "{$this->api_host}/{$url}?{$query}";
+    $response = "{$this->api_host}/{$path}?{$query}";
     $this->last_response = $response;
     return $response;
   }
@@ -86,10 +88,10 @@ class TwitterOAuth {
   /**
    * Make /oauth/* requests to the API.
    */
-  function oauth($url, $parameters = array()) {
+  function oauth($path, $parameters = array()) {
     $this->resetLastResult();
-    $this->last_api_path = $url;
-    $url = "{$this->api_host}/{$url}";
+    $this->last_api_path = $path;
+    $url = "{$this->api_host}/{$path}";
     $result = $this->oAuthRequest($url, 'POST', $parameters);
     if ($this->lastHttpCode() == 200) {
       $response = OAuth\OAuthUtil::parse_parameters($result);
@@ -103,10 +105,10 @@ class TwitterOAuth {
   /**
    * Make GET requests to the API.
    */
-  function get($url, $parameters = array()) {
+  function get($path, $parameters = array()) {
     $this->resetLastResult();
-    $this->last_api_path = $url;
-    $url = "{$this->api_host}/{$this->api_version}/{$url}.json";
+    $this->last_api_path = $path;
+    $url = "{$this->api_host}/{$this->api_version}/{$path}.json";
     $result = $this->oAuthRequest($url, 'GET', $parameters);
     $response = json_decode($result, $this->decode_json_assoc, 512, JSON_BIGINT_AS_STRING);
     $this->last_response = $response;
@@ -116,10 +118,10 @@ class TwitterOAuth {
   /**
    * Make POST requests to the API.
    */
-  function post($url, $parameters = array()) {
+  function post($path, $parameters = array()) {
     $this->resetLastResult();
-    $this->last_api_path = $url;
-    $url = "{$this->api_host}/{$this->api_version}/{$url}.json";
+    $this->last_api_path = $path;
+    $url = "{$this->api_host}/{$this->api_version}/{$path}.json";
     $result = $this->oAuthRequest($url, 'POST', $parameters);
     $response = json_decode($result, $this->decode_json_assoc, 512, JSON_BIGINT_AS_STRING);
     $this->last_response = $response;
