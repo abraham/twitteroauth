@@ -98,8 +98,17 @@ class TwitterTest extends \PHPUnit_Framework_TestCase {
     }
 
     public function testPostStatusesUpdate() {
-        $result = $this->twitter->post('statuses/update', array('status' => 'test ' . time()));
+        $result = $this->twitter->post('statuses/update', array('status' => 'Hello World ' . time()));
         $this->assertEquals(200, $this->twitter->http_code);
+        return $result;
+    }
+
+    public function testPostStatusesUpdateUtf8() {
+        $result = $this->twitter->post('statuses/update', array('status' => 'xこんにちは世界 ' . time()));
+        $this->assertEquals(200, $this->twitter->http_code);
+        if ($this->twitter->http_code == 200) {
+            $result = $this->twitter->post('statuses/destroy/' . $result->id_str);
+        }
         return $result;
     }
 
