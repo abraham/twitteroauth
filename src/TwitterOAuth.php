@@ -33,7 +33,7 @@ class TwitterOAuth {
   /* Decode returned json data to an array. See http://php.net/manual/en/function.json-decode.php */
   private $decode_json_assoc = FALSE;
   /* Set the useragnet. */
-  private $useragent = 'TwitterOAuth v0.3.0-dev';
+  private $useragent = 'TwitterOAuth (+https://twitteroauth.com)';
   /* Cache details about the most recent API request. */
   private $last_api_path;
   private $last_http_code;
