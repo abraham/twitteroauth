@@ -123,23 +123,21 @@ class TwitterOAuth {
    * Make GET requests to the API.
    */
   public function get($path, $parameters = array()) {
-    $this->resetLastResult();
-    $this->last_api_path = $path;
-    $url = "{$this->api_host}/{$this->api_version}/{$path}.json";
-    $result = $this->oAuthRequest($url, 'GET', $parameters);
-    $response = $this->json_decode($result);
-    $this->last_response = $response;
-    return $response;
+    return $this->http('GET', $path, $parameters);
   }
   
   /**
    * Make POST requests to the API.
    */
   public function post($path, $parameters = array()) {
+    return $this->http('POST', $path, $parameters);
+  }
+
+  public function http($method, $path, $parameters) {
     $this->resetLastResult();
     $this->last_api_path = $path;
     $url = "{$this->api_host}/{$this->api_version}/{$path}.json";
-    $result = $this->oAuthRequest($url, 'POST', $parameters);
+    $result = $this->oAuthRequest($url, $method, $parameters);
     $response = $this->json_decode($result);
     $this->last_response = $response;
     return $response;
@@ -156,7 +154,7 @@ class TwitterOAuth {
       unset($parameters['oauth_callback']);
     }
     $request->sign_request($this->sha1_method, $this->consumer, $this->token);
-    return $this->http($request->get_normalized_http_url(), $method, $request->to_header(), $parameters);
+    return $this->request($request->get_normalized_http_url(), $method, $request->to_header(), $parameters);
   }
 
   /**
@@ -164,7 +162,7 @@ class TwitterOAuth {
    *
    * @return API results
    */
-  private function http($url, $method, $headers, $postfields) {
+  private function request($url, $method, $headers, $postfields) {
     /* Curl settings */
     $options = array(
       // CURLOPT_VERBOSE => TRUE,
