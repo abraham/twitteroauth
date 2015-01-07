@@ -135,9 +135,7 @@ class TwitterOAuth {
         break;
       case 'POST':
         $options[CURLOPT_POST] = TRUE;
-        if (!empty($postfields)) {
-          $options[CURLOPT_POSTFIELDS] = OAuth\OAuthUtil::build_http_query($postfields);
-        }
+        $options[CURLOPT_POSTFIELDS] = OAuth\OAuthUtil::build_http_query($postfields);
         break;
     }
 
