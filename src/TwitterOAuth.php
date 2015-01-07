@@ -24,8 +24,6 @@ class TwitterOAuthException extends \Exception {
 class TwitterOAuth {
   /* Contains the last HTTP status code returned. */
   public $http_code;
-  /* Contains the last API call. */
-  public $url;
   /* Set up the API root URL. */
   public $api_host = "https://api.twitter.com";
   /* Set up the API root URL. */
@@ -40,8 +38,6 @@ class TwitterOAuth {
   public $http_info;
   /* Set the useragnet. */
   public $useragent = 'TwitterOAuth v0.3.0-dev';
-  /* Immediately retry the API call if the response was not successful. */
-  //public $retry = TRUE;
 
   /**
    * Debug helpers
