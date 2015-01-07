@@ -13,6 +13,9 @@ define('CONSUMER_SECRET', getenv('TEST_CONSUMER_SECRET'));
 define('ACCESS_TOKEN', getenv('TEST_ACCESS_TOKEN'));
 define('ACCESS_TOKEN_SECRET', getenv('TEST_ACCESS_TOKEN_SECRET'));
 define('OAUTH_CALLBACK', getenv('TEST_OAUTH_CALLBACK'));
+define('PROXY', getenv('TEST_CURLOPT_PROXY'));
+define('PROXYUSERPWD', getenv('TEST_CURLOPT_PROXYUSERPWD'));
+define('PROXYPORT', getenv('TEST_CURLOPT_PROXYPORT'));
 
 class TwitterTest extends \PHPUnit_Framework_TestCase {
 
@@ -67,6 +70,19 @@ class TwitterTest extends \PHPUnit_Framework_TestCase {
     public function testGetAccountVerifyCredentials() {
         $result = $this->twitter->get('account/verify_credentials');
         $this->assertEquals(200, $this->twitter->lastHttpCode());
+    }
+
+    public function testSetProxy() {
+        $this->twitter->setProxy(array(
+            'CURLOPT_PROXY' => PROXY,
+            'CURLOPT_PROXYUSERPWD' => PROXYUSERPWD,
+            'CURLOPT_PROXYPORT' => PROXYPORT,
+        ));
+        $this->twitter->setConnectionTimeout(25);
+        $this->twitter->setTimeout(25);
+        $result = $this->twitter->get('account/verify_credentials');
+        $this->assertEquals(200, $this->twitter->lastHttpCode());
+        $this->assertObjectHasAttribute('id', $result);
     }
 
     public function testGetStatusesMentionsTimeline() {

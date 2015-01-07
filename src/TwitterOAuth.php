@@ -29,11 +29,13 @@ class TwitterOAuth {
   /* Set timeout default. */
   private $timeout = 5;
   /* Set connect timeout. */
-  private $connecttimeout = 5; 
+  private $connecttimeout = 5;
   /* Decode returned json data to an array. See http://php.net/manual/en/function.json-decode.php */
   private $decode_json_assoc = FALSE;
   /* Set the useragnet. */
   private $useragent = 'TwitterOAuth (+https://twitteroauth.com)';
+  /* Set a proxy. */
+  private $proxy = array();
   /* Cache details about the most recent API request. */
   private $last_api_path;
   private $last_http_code;
@@ -56,6 +58,7 @@ class TwitterOAuth {
   public function setConnectionTimeout($value) { $this->connecttimeout = $value; }
   public function setDecodeJsonAssoc($value) { $this->decode_json_assoc = $value; }
   public function setUserAgent($value) { $this->useragent = $value; }
+  public function setProxy($value) { $this->proxy = $value; }
 
   /**
    * Get info about the last request made.
@@ -178,6 +181,14 @@ class TwitterOAuth {
       CURLOPT_USERAGENT => $this->useragent,
     );
 
+    if (!empty($this->proxy)) {
+      $options[CURLOPT_PROXY] = $this->proxy['CURLOPT_PROXY'];
+      $options[CURLOPT_PROXYUSERPWD] = $this->proxy['CURLOPT_PROXYUSERPWD'];
+      $options[CURLOPT_PROXYPORT] = $this->proxy['CURLOPT_PROXYPORT'];
+      $options[CURLOPT_PROXYAUTH] = CURLAUTH_BASIC;
+      $options[CURLOPT_PROXYTYPE] = CURLPROXY_HTTP;
+    }
+
     switch ($method) {
       case 'GET':
         if (!empty($postfields)) {
@@ -194,7 +205,11 @@ class TwitterOAuth {
     curl_setopt_array($ci, $options);
     $response = curl_exec($ci);
     $this->last_http_code = curl_getinfo($ci, CURLINFO_HTTP_CODE);
-    list($header, $body) = explode("\r\n\r\n", $response, 2);
+    if (empty($this->proxy)) {
+      list($header, $body) = explode("\r\n\r\n", $response, 2);
+    } else {
+      list($connect, $header, $body) = explode("\r\n\r\n", $response, 3);
+    }
     list($this->last_http_headers, $this->last_x_headers) = $this->parseHeaders($header);
     $this->last_http_info = curl_getinfo($ci);
     curl_close($ci);
