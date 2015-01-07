@@ -12,6 +12,13 @@ use Abraham\TwitterOAuth\OAuth;
 require_once(__DIR__ . DIRECTORY_SEPARATOR . 'OAuth.php');
 
 /**
+ * Generic exception class
+ */
+class TwitterOAuthException extends \Exception {
+  // pass
+}
+
+/**
  * Twitter OAuth class
  */
 class TwitterOAuth {
@@ -68,8 +75,12 @@ class TwitterOAuth {
    */
   function oauth($url, $parameters = array()) {
     $url = "{$this->api_host}/{$url}";
-    $request = $this->oAuthRequest($url, 'POST', $parameters);
-    return OAuth\OAuthUtil::parse_parameters($request);
+    $response = $this->oAuthRequest($url, 'POST', $parameters);
+    if ($this->http_code == 200) {
+      return OAuth\OAuthUtil::parse_parameters($response);
+    } else {
+      throw new TwitterOAuthException($response);
+    }
   }
 
   /**

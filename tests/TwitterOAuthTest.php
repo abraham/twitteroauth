@@ -39,14 +39,24 @@ class TwitterTest extends \PHPUnit_Framework_TestCase {
     }
 
     /**
+     * @expectedException Abraham\TwitterOAuth\TwitterOAuthException
+     * @expectedExceptionMessage Failed to validate oauth signature and token
+     */
+    public function testOauthRequestTokenException() {
+        $twitter = new TwitterOAuth('CONSUMER_KEY', 'CONSUMER_SECRET');
+        $result = $twitter->oauth('oauth/request_token', array('oauth_callback' => OAUTH_CALLBACK));
+        return $result;
+    }
+
+    /**
+     * @expectedException Abraham\TwitterOAuth\TwitterOAuthException
+     * @expectedExceptionMessage Invalid request token
      * @depends testOauthRequestToken
      */
-    public function testOauthAccessToken($request_token) {
+    public function testOauthAccessTokenTokenException($request_token) {
         // Can't test this without a browser logging into Twitter so check for the correct error instead.
         $twitter = new TwitterOAuth(CONSUMER_KEY, CONSUMER_SECRET, $request_token['oauth_token'], $request_token['oauth_token_secret']);
         $result = $twitter->oauth("oauth/access_token", array("oauth_verifier" => "fake_oauth_verifier"));
-        $this->assertEquals(401, $twitter->http_code);
-        $this->assertEquals(array('Invalid request token' => ''), $result);
     }
 
     public function testUrl() {
