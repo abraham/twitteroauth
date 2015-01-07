@@ -22,8 +22,9 @@ class TwitterOAuthException extends \Exception {
  * Twitter OAuth class
  */
 class TwitterOAuth {
-  /* Set up the API root URL. */
+  /* Set up the API root URLs. */
   private $api_host = "https://api.twitter.com";
+  private $upload_host = "https://upload.twitter.com";
   /* Set up the API root URL. */
   private $api_version = "1.1";
   /* Set timeout default. */
@@ -123,20 +124,30 @@ class TwitterOAuth {
    * Make GET requests to the API.
    */
   public function get($path, $parameters = array()) {
-    return $this->http('GET', $path, $parameters);
+    return $this->http('GET', $this->api_host, $path, $parameters);
   }
   
   /**
    * Make POST requests to the API.
    */
   public function post($path, $parameters = array()) {
-    return $this->http('POST', $path, $parameters);
+    return $this->http('POST', $this->api_host, $path, $parameters);
   }
 
-  public function http($method, $path, $parameters) {
+  /**
+   * Upload media to upload.twitter.com.
+   */
+  public function upload($path, $parameters = array()) {
+    $file = file_get_contents($parameters['media']);
+    $base = base64_encode($file);
+    $parameters['media'] = $base;
+    return $this->http('POST', $this->upload_host, $path, $parameters);
+  }
+
+  public function http($method, $host, $path, $parameters) {
     $this->resetLastResult();
+    $url = "{$host}/{$this->api_version}/{$path}.json";
     $this->last_api_path = $path;
-    $url = "{$this->api_host}/{$this->api_version}/{$path}.json";
     $result = $this->oAuthRequest($url, $method, $parameters);
     $response = $this->json_decode($result);
     $this->last_response = $response;

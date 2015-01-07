@@ -129,6 +129,20 @@ class TwitterTest extends \PHPUnit_Framework_TestCase {
         return $result;
     }
 
+    public function testPostStatusesUpdateWithMedia() {
+        // Image source https://www.flickr.com/photos/titrans/8548825587/
+        $file_path = __DIR__ . '/kitten.jpg';
+        $result = $this->twitter->upload('media/upload', array('media' => $file_path));
+        $this->assertEquals(200, $this->twitter->lastHttpCode());
+        $this->assertObjectHasAttribute('media_id_string', $result);
+        $result = $this->twitter->post('statuses/update', array('status' => 'Hello World ' . time(), 'media_ids' => $result->media_id_string));
+        $this->assertEquals(200, $this->twitter->lastHttpCode());
+        if ($this->twitter->lastHttpCode() == 200) {
+            $result = $this->twitter->post('statuses/destroy/' . $result->id_str);
+        }
+        return $result;
+    }
+
     public function testPostStatusesUpdateUtf8() {
         $result = $this->twitter->post('statuses/update', array('status' => 'xこんにちは世界 ' . time()));
         $this->assertEquals(200, $this->twitter->lastHttpCode());
