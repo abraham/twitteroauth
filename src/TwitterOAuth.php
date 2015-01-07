@@ -42,6 +42,10 @@ class TwitterOAuth {
   private $last_http_method;
   private $last_rate_limit;
   private $last_response;
+  /* OAuth stuffs */
+  private $consumer;
+  private $token;
+  private $sha1_method;
 
   /**
    * A bunch of setter.
@@ -78,8 +82,6 @@ class TwitterOAuth {
     $this->consumer = new OAuth\OAuthConsumer($consumer_key, $consumer_secret);
     if (!empty($oauth_token) && !empty($oauth_token_secret)) {
       $this->token = new OAuth\OAuthToken($oauth_token, $oauth_token_secret);
-    } else {
-      $this->token = NULL;
     }
   }
 
@@ -192,7 +194,6 @@ class TwitterOAuth {
     $response = curl_exec($ci);
     $this->last_http_code = curl_getinfo($ci, CURLINFO_HTTP_CODE);
     $this->http_info = curl_getinfo($ci);
-    $this->url = $url;
     curl_close($ci);
 
     return $response;
