@@ -22,7 +22,8 @@
         "ext-curl": "*"
     },
     "require-dev": {
-        "phpunit/phpunit": "4.4.*"
+        "phpunit/phpunit": "4.4.*",
+        "squizlabs/php_codesniffer": "2.*"
     },
     "autoload": {
         "psr-4": { "Abraham\\TwitterOAuth\\": "src" }
