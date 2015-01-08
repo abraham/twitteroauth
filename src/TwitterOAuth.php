@@ -1,22 +1,17 @@
 <?php
-
-namespace Abraham\TwitterOAuth;
-use Abraham\TwitterOAuth\OAuth;
 /*
  * Abraham Williams (abraham@abrah.am) https://abrah.am
  *
  * The first PHP Library to support OAuth 1.0A for Twitter's REST API.
  */
 
+namespace Abraham\TwitterOAuth;
+
+use Abraham\TwitterOAuth\OAuth;
+use Abraham\TwitterOAuth\TwitterOAuthException;
+
 /* Load OAuth lib. You can find it at http://oauth.net */
 require_once(__DIR__ . DIRECTORY_SEPARATOR . 'OAuth.php');
-
-/**
- * Generic exception class
- */
-class TwitterOAuthException extends \Exception {
-  // pass
-}
 
 /**
  * Twitter OAuth class
