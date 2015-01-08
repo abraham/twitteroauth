@@ -28,7 +28,7 @@ class TwitterOAuth
     /* Set connect timeout. */
     private $connecttimeout = 5;
     /* Decode returned json data to an array. See http://php.net/manual/en/function.json-decode.php */
-    private $decode_json_assoc = FALSE;
+    private $decode_json_assoc = false;
     /* Set the useragnet. */
     private $useragent = 'TwitterOAuth (+https://twitteroauth.com)';
     /* Set a proxy. */
@@ -115,7 +115,7 @@ class TwitterOAuth
     /**
      * construct TwitterOAuth object
      */
-    public function __construct($consumer_key, $consumer_secret, $oauth_token = NULL, $oauth_token_secret = NULL)
+    public function __construct($consumer_key, $consumer_secret, $oauth_token = null, $oauth_token_secret = null)
     {
         $this->resetLastResult();
         $this->sha1_method = new OAuth\OAuthSignatureMethod_HMAC_SHA1();
@@ -189,7 +189,7 @@ class TwitterOAuth
         $url = "{$host}/{$this->api_version}/{$path}.json";
         $this->last_api_path = $path;
         $result = $this->oAuthRequest($url, $method, $parameters);
-        $response = $this->json_decode($result);
+        $response = $this->jsonDecode($result);
         $this->last_response = $response;
         return $response;
     }
@@ -222,11 +222,11 @@ class TwitterOAuth
             CURLOPT_CAINFO => __DIR__ . DIRECTORY_SEPARATOR . 'cacert.pem',
             CURLOPT_CAPATH => __DIR__,
             CURLOPT_CONNECTTIMEOUT => $this->connecttimeout,
-            CURLOPT_HEADER => TRUE,
+            CURLOPT_HEADER => true,
             CURLOPT_HTTPHEADER => array($headers, 'Expect:'),
-            CURLOPT_RETURNTRANSFER => TRUE,
+            CURLOPT_RETURNTRANSFER => true,
             CURLOPT_SSL_VERIFYHOST => 2,
-            CURLOPT_SSL_VERIFYPEER => TRUE,
+            CURLOPT_SSL_VERIFYPEER => true,
             CURLOPT_TIMEOUT => $this->timeout,
             CURLOPT_URL => $url,
             CURLOPT_USERAGENT => $this->useragent,
@@ -247,7 +247,7 @@ class TwitterOAuth
                 }
                 break;
             case 'POST':
-                $options[CURLOPT_POST] = TRUE;
+                $options[CURLOPT_POST] = true;
                 $options[CURLOPT_POSTFIELDS] = OAuth\OAuthUtil::build_http_query($postfields);
                 break;
         }
@@ -268,7 +268,7 @@ class TwitterOAuth
         return $body;
     }
 
-    private function json_decode($string)
+    private function jsonDecode($string)
     {
         // BUG: https://bugs.php.net/bug.php?id=63520
         if (defined('JSON_BIGINT_AS_STRING')) {
