@@ -47,6 +47,19 @@ class TwitterOAuth
     private $sha1_method;
 
     /**
+     * construct TwitterOAuth object
+     */
+    public function __construct($consumer_key, $consumer_secret, $oauth_token = null, $oauth_token_secret = null)
+    {
+        $this->resetLastResult();
+        $this->sha1_method = new OAuth\OAuthSignatureMethod_HMAC_SHA1();
+        $this->consumer = new OAuth\OAuthConsumer($consumer_key, $consumer_secret);
+        if (!empty($oauth_token) && !empty($oauth_token_secret)) {
+            $this->token = new OAuth\OAuthToken($oauth_token, $oauth_token_secret);
+        }
+    }
+
+    /**
      * A bunch of setter.
      */
     public function setApiHost($value)
@@ -110,19 +123,6 @@ class TwitterOAuth
         $this->last_http_method = '';
         $this->last_x_headers = array();
         $this->last_response = array();
-    }
-
-    /**
-     * construct TwitterOAuth object
-     */
-    public function __construct($consumer_key, $consumer_secret, $oauth_token = null, $oauth_token_secret = null)
-    {
-        $this->resetLastResult();
-        $this->sha1_method = new OAuth\OAuthSignatureMethod_HMAC_SHA1();
-        $this->consumer = new OAuth\OAuthConsumer($consumer_key, $consumer_secret);
-        if (!empty($oauth_token) && !empty($oauth_token_secret)) {
-            $this->token = new OAuth\OAuthToken($oauth_token, $oauth_token_secret);
-        }
     }
 
     /**
@@ -243,7 +243,7 @@ class TwitterOAuth
         switch ($method) {
             case 'GET':
                 if (!empty($postfields)) {
-                    $options[CURLOPT_URL] = $options[CURLOPT_URL] . '?' . OAuth\OAuthUtil::build_http_query($postfields);
+                    $options[CURLOPT_URL] .= '?' . OAuth\OAuthUtil::build_http_query($postfields);
                 }
                 break;
             case 'POST':
