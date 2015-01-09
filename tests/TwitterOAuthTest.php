@@ -2,10 +2,10 @@
 /**
  * WARNING: Running these tests will post and delete through the actual Twitter account.
  */
-
 namespace Abraham\TwitterOAuth\Test;
 
 require __DIR__ . '/../vendor/autoload.php';
+use Abraham\TwitterOAuth\TwitterOAuth;
 
 define('CONSUMER_KEY', getenv('TEST_CONSUMER_KEY'));
 define('CONSUMER_SECRET', getenv('TEST_CONSUMER_SECRET'));
@@ -16,7 +16,7 @@ define('PROXY', getenv('TEST_CURLOPT_PROXY'));
 define('PROXYUSERPWD', getenv('TEST_CURLOPT_PROXYUSERPWD'));
 define('PROXYPORT', getenv('TEST_CURLOPT_PROXYPORT'));
 
-class TwitterTest extends \PHPUnit_Framework_TestCase
+class TwitterOAuthTest extends \PHPUnit_Framework_TestCase
 {
 
     protected $twitter;
