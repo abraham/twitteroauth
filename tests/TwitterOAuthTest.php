@@ -6,8 +6,6 @@
 namespace Abraham\TwitterOAuth\Test;
 
 require __DIR__ . '/../vendor/autoload.php';
-use Abraham\TwitterOAuth\TwitterOAuth;
-use Abraham\TwitterOAuth\TwitterOAuthException;
 
 define('CONSUMER_KEY', getenv('TEST_CONSUMER_KEY'));
 define('CONSUMER_SECRET', getenv('TEST_CONSUMER_SECRET'));

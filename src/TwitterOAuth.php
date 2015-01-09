@@ -4,14 +4,7 @@
  *
  * The first PHP Library to support OAuth 1.0A for Twitter's REST API.
  */
-
 namespace Abraham\TwitterOAuth;
-
-use Abraham\TwitterOAuth\OAuth;
-use Abraham\TwitterOAuth\TwitterOAuthException;
-
-/* Load OAuth lib. You can find it at http://oauth.net */
-require_once(__DIR__ . DIRECTORY_SEPARATOR . 'OAuth.php');
 
 /**
  * Twitter OAuth class
@@ -52,10 +45,10 @@ class TwitterOAuth
     public function __construct($consumer_key, $consumer_secret, $oauth_token = null, $oauth_token_secret = null)
     {
         $this->resetLastResult();
-        $this->sha1_method = new OAuth\OAuthSignatureMethod_HMAC_SHA1();
-        $this->consumer = new OAuth\OAuthConsumer($consumer_key, $consumer_secret);
+        $this->sha1_method = new HmacSha1();
+        $this->consumer = new Consumer($consumer_key, $consumer_secret);
         if (!empty($oauth_token) && !empty($oauth_token_secret)) {
-            $this->token = new OAuth\OAuthToken($oauth_token, $oauth_token_secret);
+            $this->token = new Token($oauth_token, $oauth_token_secret);
         }
     }
 
@@ -148,7 +141,7 @@ class TwitterOAuth
         $url = "{$this->api_host}/{$path}";
         $result = $this->oAuthRequest($url, 'POST', $parameters);
         if ($this->lastHttpCode() == 200) {
-            $response = OAuth\OAuthUtil::parse_parameters($result);
+            $response = Util::parse_parameters($result);
             $this->last_response = $response;
             return $response;
         } else {
@@ -200,7 +193,7 @@ class TwitterOAuth
     private function oAuthRequest($url, $method, $parameters)
     {
         $this->last_http_method = $method;
-        $request = OAuth\OAuthRequest::from_consumer_and_token($this->consumer, $this->token, $method, $url, $parameters);
+        $request = Request::from_consumer_and_token($this->consumer, $this->token, $method, $url, $parameters);
         if (array_key_exists('oauth_callback', $parameters)) {
             // Twitter doesn't like oauth_callback as a parameter.
             unset($parameters['oauth_callback']);
@@ -243,12 +236,12 @@ class TwitterOAuth
         switch ($method) {
             case 'GET':
                 if (!empty($postfields)) {
-                    $options[CURLOPT_URL] .= '?' . OAuth\OAuthUtil::build_http_query($postfields);
+                    $options[CURLOPT_URL] .= '?' . Util::build_http_query($postfields);
                 }
                 break;
             case 'POST':
                 $options[CURLOPT_POST] = true;
-                $options[CURLOPT_POSTFIELDS] = OAuth\OAuthUtil::build_http_query($postfields);
+                $options[CURLOPT_POSTFIELDS] = Util::build_http_query($postfields);
                 break;
         }
 
