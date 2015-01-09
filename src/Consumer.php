@@ -9,6 +9,7 @@ class Consumer
 {
     public $key;
     public $secret;
+    public $callback_url;
 
     public function __construct($key, $secret, $callback_url = null)
     {
