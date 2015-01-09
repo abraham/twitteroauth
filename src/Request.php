@@ -15,9 +15,8 @@ class Request
     public static $version = '1.0';
     public static $POST_INPUT = 'php://input';
 
-    public function __construct($http_method, $http_url, $parameters = null)
+    public function __construct($http_method, $http_url, $parameters = array())
     {
-        $parameters = ($parameters) ? $parameters : array();
         $parameters = array_merge(Util::parseParameters(parse_url($http_url, PHP_URL_QUERY)), $parameters);
         $this->parameters = $parameters;
         $this->http_method = $http_method;
@@ -73,9 +72,8 @@ class Request
     /**
      * pretty much a helper function to set up the request
      */
-    public static function fromConsumerAndToken($consumer, $token, $http_method, $http_url, $parameters = null)
+    public static function fromConsumerAndToken($consumer, $token, $http_method, $http_url, $parameters = array())
     {
-        $parameters = ($parameters) ?  $parameters : array();
         $defaults = array("oauth_version" => Request::$version,
                           "oauth_nonce" => Request::generateNonce(),
                           "oauth_timestamp" => Request::generateTimestamp(),
