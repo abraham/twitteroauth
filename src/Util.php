@@ -32,7 +32,7 @@ class Util
     // Can filter out any non-oauth parameters if needed (default behaviour)
     // May 28th, 2010 - method updated to tjerk.meesters for a speed improvement.
     //                  see http://code.google.com/p/oauth/issues/detail?id=163
-    public static function splitReader($header, $only_allow_oauth_parameters = true)
+    public static function splitHeader($header, $only_allow_oauth_parameters = true)
     {
         $params = array();
         $pattern = '/(' . ($only_allow_oauth_parameters ? 'oauth_' : '') . '[a-z_-]*)=(:?"([^"]*)"|([^,]*))/';
@@ -48,7 +48,7 @@ class Util
     }
 
     // helper to try to sort out headers for people who aren't running apache
-    public static function getReaders()
+    public static function getHeaders()
     {
         if (function_exists('apache_request_headers')) {
             // we need this to get the actual Authorization: header
