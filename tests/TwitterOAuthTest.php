@@ -4,7 +4,6 @@
  */
 namespace Abraham\TwitterOAuth\Test;
 
-require __DIR__ . '/../vendor/autoload.php';
 use Abraham\TwitterOAuth\TwitterOAuth;
 
 define('CONSUMER_KEY', getenv('TEST_CONSUMER_KEY'));
@@ -18,7 +17,7 @@ define('PROXYPORT', getenv('TEST_CURLOPT_PROXYPORT'));
 
 class TwitterOAuthTest extends \PHPUnit_Framework_TestCase
 {
-
+    /** @var TwitterOAuth */
     protected $twitter;
 
     protected function setUp()
@@ -45,7 +44,7 @@ class TwitterOAuthTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException Abraham\TwitterOAuth\TwitterOAuthException
+     * @expectedException \Abraham\TwitterOAuth\TwitterOAuthException
      * @expectedExceptionMessage Failed to validate oauth signature and token
      */
     public function testOauthRequestTokenException()
@@ -56,15 +55,15 @@ class TwitterOAuthTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException Abraham\TwitterOAuth\TwitterOAuthException
+     * @expectedException \Abraham\TwitterOAuth\TwitterOAuthException
      * @expectedExceptionMessage Invalid request token
      * @depends testOauthRequestToken
      */
-    public function testOauthAccessTokenTokenException($request_token)
+    public function testOauthAccessTokenTokenException(array $requestToken)
     {
         // Can't test this without a browser logging into Twitter so check for the correct error instead.
-        $twitter = new TwitterOAuth(CONSUMER_KEY, CONSUMER_SECRET, $request_token['oauth_token'], $request_token['oauth_token_secret']);
-        $result = $twitter->oauth("oauth/access_token", array("oauth_verifier" => "fake_oauth_verifier"));
+        $twitter = new TwitterOAuth(CONSUMER_KEY, CONSUMER_SECRET, $requestToken['oauth_token'], $requestToken['oauth_token_secret']);
+        $twitter->oauth("oauth/access_token", array("oauth_verifier" => "fake_oauth_verifier"));
     }
 
     public function testUrl()
@@ -75,7 +74,7 @@ class TwitterOAuthTest extends \PHPUnit_Framework_TestCase
 
     public function testGetAccountVerifyCredentials()
     {
-        $result = $this->twitter->get('account/verify_credentials');
+        $this->twitter->get('account/verify_credentials');
         $this->assertEquals(200, $this->twitter->lastHttpCode());
     }
 
@@ -95,7 +94,7 @@ class TwitterOAuthTest extends \PHPUnit_Framework_TestCase
 
     public function testGetStatusesMentionsTimeline()
     {
-        $result = $this->twitter->get('statuses/mentions_timeline');
+        $this->twitter->get('statuses/mentions_timeline');
         $this->assertEquals(200, $this->twitter->lastHttpCode());
     }
 
@@ -111,8 +110,8 @@ class TwitterOAuthTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetSearchTweetsWithMaxId($statuses)
     {
-        $max_id = array_pop($statuses)->id_str;
-        $result = $this->twitter->get('search/tweets', array('q' => 'twitter', 'max_id' => $max_id));
+        $maxId = array_pop($statuses)->id_str;
+        $this->twitter->get('search/tweets', array('q' => 'twitter', 'max_id' => $maxId));
         $this->assertEquals(200, $this->twitter->lastHttpCode());
     }
 
@@ -132,7 +131,7 @@ class TwitterOAuthTest extends \PHPUnit_Framework_TestCase
      */
     public function testPostFavoritesDestroy()
     {
-        $result = $this->twitter->post('favorites/destroy', array('id' => '6242973112'));
+        $this->twitter->post('favorites/destroy', array('id' => '6242973112'));
         $this->assertEquals(200, $this->twitter->lastHttpCode());
     }
 
@@ -140,6 +139,7 @@ class TwitterOAuthTest extends \PHPUnit_Framework_TestCase
     {
         $result = $this->twitter->post('statuses/update', array('status' => 'Hello World ' . time()));
         $this->assertEquals(200, $this->twitter->lastHttpCode());
+
         return $result;
     }
 
@@ -174,13 +174,13 @@ class TwitterOAuthTest extends \PHPUnit_Framework_TestCase
      */
     public function testPostStatusesDestroy($status)
     {
-        $result = $this->twitter->post('statuses/destroy/' . $status->id_str);
+        $this->twitter->post('statuses/destroy/' . $status->id_str);
         $this->assertEquals(200, $this->twitter->lastHttpCode());
     }
 
     public function testLastResult()
     {
-        $result = $this->twitter->get('account/verify_credentials');
+        $this->twitter->get('account/verify_credentials');
         $this->assertEquals('account/verify_credentials', $this->twitter->lastApiPath());
         $this->assertEquals(200, $this->twitter->lastHttpCode());
         $this->assertEquals('GET', $this->twitter->lastHttpMethod());

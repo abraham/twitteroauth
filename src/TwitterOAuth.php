@@ -8,141 +8,220 @@ namespace Abraham\TwitterOAuth;
 
 /**
  * Twitter OAuth class
+ *
+ * @author Abraham Williams <abraham@abrah.am>
  */
 class TwitterOAuth
 {
-    /* Set up the API root URLs. */
-    private $api_host = "https://api.twitter.com";
-    private $upload_host = "https://upload.twitter.com";
-    /* Set up the API root URL. */
-    private $api_version = "1.1";
-    /* Set timeout default. */
+    /** @var string */
+    private $apiHost = "https://api.twitter.com";
+    /** @var string */
+    private $uploadHost = "https://upload.twitter.com";
+    /** @var string */
+    private $apiVersion = "1.1";
+    /** @var int */
     private $timeout = 5;
-    /* Set connect timeout. */
-    private $connecttimeout = 5;
-    /* Decode returned json data to an array. See http://php.net/manual/en/function.json-decode.php */
-    private $decode_json_assoc = false;
-    /* Set the useragnet. */
-    private $useragent = 'TwitterOAuth (+https://twitteroauth.com)';
-    /* Set a proxy. */
+    /** @var int */
+    private $connectionTimeout = 5;
+    /**
+     * Decode JSON Response as associative Array
+     *
+     * @see http://php.net/manual/en/function.json-decode.php
+     *
+     * @var bool
+     */
+    private $decodeJsonAsArray = false;
+    /** @var string */
+    private $userAgent = 'TwitterOAuth (+https://twitteroauth.com)';
+    /** @var array */
     private $proxy = array();
-    /* Cache details about the most recent API request. */
-    private $last_api_path;
-    private $last_http_code;
-    private $last_http_headers;
-    private $last_http_info;
-    private $last_http_method;
-    private $last_x_headers;
-    private $last_response;
-    /* OAuth stuffs */
+    /** @var string|null */
+    private $lastApiPath;
+    /** @var int|null */
+    private $lastHttpCode;
+    /** @var array */
+    private $lastHttpHeaders = array();
+    /** @var array */
+    private $lastHttpInfo = array();
+    /** @var string|null */
+    private $lastHttpMethod;
+    /** @var array */
+    private $lastXHeaders = array();
+    /** @var array|object|null */
+    private $lastResponse;
+    /** @var Consumer */
     private $consumer;
+    /** @var Token */
     private $token;
-    private $sha1_method;
+    /** @var HmacSha1 */
+    private $signatureMethod;
 
     /**
-     * construct TwitterOAuth object
+     * Constructor
+     *
+     * @param string      $consumerKey      The Application Consumer Key
+     * @param string      $consumerSecret   The Application Consumer Secret
+     * @param string|null $oauthToken       The Client Token (optional)
+     * @param string|null $oauthTokenSecret The Client Token Secret (optional)
      */
-    public function __construct($consumer_key, $consumer_secret, $oauth_token = null, $oauth_token_secret = null)
+    public function __construct($consumerKey, $consumerSecret, $oauthToken = null, $oauthTokenSecret = null)
     {
         $this->resetLastResult();
-        $this->sha1_method = new HmacSha1();
-        $this->consumer = new Consumer($consumer_key, $consumer_secret);
-        if (!empty($oauth_token) && !empty($oauth_token_secret)) {
-            $this->token = new Token($oauth_token, $oauth_token_secret);
+        $this->signatureMethod = new HmacSha1();
+        $this->consumer = new Consumer($consumerKey, $consumerSecret);
+        if (!empty($oauthToken) && !empty($oauthTokenSecret)) {
+            $this->token = new Token($oauthToken, $oauthTokenSecret);
         }
     }
 
     /**
-     * A bunch of setter.
+     * @param string $host
      */
-    public function setApiHost($value)
+    public function setApiHost($host)
     {
-        $this->api_host = $value;
-    }
-    public function setApiVersion($value)
-    {
-        $this->api_version = $value;
-    }
-    public function setTimeout($value)
-    {
-        $this->timeout = $value;
-    }
-    public function setConnectionTimeout($value)
-    {
-        $this->connecttimeout = $value;
-    }
-    public function setDecodeJsonAssoc($value)
-    {
-        $this->decode_json_assoc = $value;
-    }
-    public function setUserAgent($value)
-    {
-        $this->useragent = $value;
-    }
-    public function setProxy($value)
-    {
-        $this->proxy = $value;
+        $this->apiHost = $host;
     }
 
     /**
-     * Get info about the last request made.
+     * @param string $version
+     */
+    public function setApiVersion($version)
+    {
+        $this->apiVersion = $version;
+    }
+
+    /**
+     * @param int $timeout
+     */
+    public function setTimeout($timeout)
+    {
+        $this->timeout = (int)$timeout;
+    }
+
+    /**
+     * @param int $timeout
+     */
+    public function setConnectionTimeout($timeout)
+    {
+        $this->connectionTimeout = (int)$timeout;
+    }
+
+    /**
+     * @param bool $value
+     */
+    public function setDecodeJsonAsArray($value)
+    {
+        $this->decodeJsonAsArray = (bool)$value;
+    }
+
+    /**
+     * @param string $userAgent
+     */
+    public function setUserAgent($userAgent)
+    {
+        $this->userAgent = (string)$userAgent;
+    }
+
+    /**
+     * @param array $proxy
+     */
+    public function setProxy(array $proxy)
+    {
+        $this->proxy = $proxy;
+    }
+
+    /**
+     * @return null|string
      */
     public function lastApiPath()
     {
-        return $this->last_api_path;
+        return $this->lastApiPath;
     }
+
+    /**
+     * @return int|null
+     */
     public function lastHttpCode()
     {
-        return $this->last_http_code;
+        return $this->lastHttpCode;
     }
+
+    /**
+     * @return null|string
+     */
     public function lastHttpMethod()
     {
-        return $this->last_http_method;
+        return $this->lastHttpMethod;
     }
+
+    /**
+     * @return array
+     */
     public function lastXHeaders()
     {
-        return $this->last_x_headers;
+        return $this->lastXHeaders;
     }
+
+    /**
+     * @return array|null|object
+     */
     public function lastResponse()
     {
-        return $this->last_response;
+        return $this->lastResponse;
     }
+
+    /**
+     * Resets the last response information
+     */
     public function resetLastResult()
     {
-        $this->last_api_path = '';
-        $this->last_http_code = 0;
-        $this->last_http_info = array();
-        $this->last_http_headers = array();
-        $this->last_http_method = '';
-        $this->last_x_headers = array();
-        $this->last_response = array();
+        $this->lastApiPath = null;
+        $this->lastHttpCode = null;
+        $this->lastHttpInfo = array();
+        $this->lastHttpHeaders = array();
+        $this->lastHttpMethod = null;
+        $this->lastXHeaders = array();
+        $this->lastResponse = array();
     }
 
     /**
      * Make URLs for user browser navigation.
+     *
+     * @param string $path
+     * @param array  $parameters
+     *
+     * @return string
      */
-    public function url($path, $parameters)
+    public function url($path, array $parameters)
     {
         $this->resetLastResult();
-        $this->last_api_path = $path;
+        $this->lastApiPath = $path;
         $query = http_build_query($parameters);
-        $response = "{$this->api_host}/{$path}?{$query}";
-        $this->last_response = $response;
+        $response = "{$this->apiHost}/{$path}?{$query}";
+        $this->lastResponse = $response;
+
         return $response;
     }
 
     /**
      * Make /oauth/* requests to the API.
+     *
+     * @param string $path
+     * @param array  $parameters
+     *
+     * @return array
+     * @throws TwitterOAuthException
      */
-    public function oauth($path, $parameters = array())
+    public function oauth($path, array $parameters = array())
     {
         $this->resetLastResult();
-        $this->last_api_path = $path;
-        $url = "{$this->api_host}/{$path}";
+        $this->lastApiPath = $path;
+        $url = "{$this->apiHost}/{$path}";
         $result = $this->oAuthRequest($url, 'POST', $parameters);
         if ($this->lastHttpCode() == 200) {
             $response = Util::parseParameters($result);
-            $this->last_response = $response;
+            $this->lastResponse = $response;
+
             return $response;
         } else {
             throw new TwitterOAuthException($result);
@@ -151,70 +230,104 @@ class TwitterOAuth
 
     /**
      * Make GET requests to the API.
+     *
+     * @param string $path
+     * @param array  $parameters
+     *
+     * @return array|object
      */
-    public function get($path, $parameters = array())
+    public function get($path, array $parameters = array())
     {
-        return $this->http('GET', $this->api_host, $path, $parameters);
+        return $this->http('GET', $this->apiHost, $path, $parameters);
     }
-    
+
     /**
      * Make POST requests to the API.
+     *
+     * @param string $path
+     * @param array  $parameters
+     *
+     * @return array|object
      */
-    public function post($path, $parameters = array())
+    public function post($path, array $parameters = array())
     {
-        return $this->http('POST', $this->api_host, $path, $parameters);
+        return $this->http('POST', $this->apiHost, $path, $parameters);
     }
 
     /**
      * Upload media to upload.twitter.com.
+     *
+     * @param string $path
+     * @param array  $parameters
+     *
+     * @return array|object
      */
-    public function upload($path, $parameters = array())
+    public function upload($path, array $parameters = array())
     {
         $file = file_get_contents($parameters['media']);
         $base = base64_encode($file);
         $parameters['media'] = $base;
-        return $this->http('POST', $this->upload_host, $path, $parameters);
+        return $this->http('POST', $this->uploadHost, $path, $parameters);
     }
 
-    public function http($method, $host, $path, $parameters)
+    /**
+     * @param string $method
+     * @param string $host
+     * @param string $path
+     * @param array  $parameters
+     *
+     * @return array|object
+     */
+    public function http($method, $host, $path, array $parameters)
     {
         $this->resetLastResult();
-        $url = "{$host}/{$this->api_version}/{$path}.json";
-        $this->last_api_path = $path;
+        $url = "{$host}/{$this->apiVersion}/{$path}.json";
+        $this->lastApiPath = $path;
         $result = $this->oAuthRequest($url, $method, $parameters);
         $response = $this->jsonDecode($result);
-        $this->last_response = $response;
+        $this->lastResponse = $response;
+
         return $response;
     }
 
     /**
      * Format and sign an OAuth / API request
+     *
+     * @param string $url
+     * @param string $method
+     * @param array $parameters
+     *
+     * @return string
+     * @throws TwitterOAuthException
      */
-    private function oAuthRequest($url, $method, $parameters)
+    private function oAuthRequest($url, $method, array $parameters)
     {
-        $this->last_http_method = $method;
+        $this->lastHttpMethod = $method;
         $request = Request::fromConsumerAndToken($this->consumer, $this->token, $method, $url, $parameters);
         if (array_key_exists('oauth_callback', $parameters)) {
             // Twitter doesn't like oauth_callback as a parameter.
             unset($parameters['oauth_callback']);
         }
-        $request->signRequest($this->sha1_method, $this->consumer, $this->token);
+        $request->signRequest($this->signatureMethod, $this->consumer, $this->token);
         return $this->request($request->getNormalizedHttpUrl(), $method, $request->toHeader(), $parameters);
     }
 
     /**
      * Make an HTTP request
      *
-     * @return API results
+     * @param $url
+     * @param $method
+     * @param $headers
+     * @param $postfields
+     *
+     * @return string
      */
     private function request($url, $method, $headers, $postfields)
     {
         /* Curl settings */
         $options = array(
             // CURLOPT_VERBOSE => TRUE,
-            CURLOPT_CAINFO => __DIR__ . DIRECTORY_SEPARATOR . 'cacert.pem',
-            CURLOPT_CAPATH => __DIR__,
-            CURLOPT_CONNECTTIMEOUT => $this->connecttimeout,
+            CURLOPT_CONNECTTIMEOUT => $this->connectionTimeout,
             CURLOPT_HEADER => true,
             CURLOPT_HTTPHEADER => array($headers, 'Expect:'),
             CURLOPT_RETURNTRANSFER => true,
@@ -222,7 +335,7 @@ class TwitterOAuth
             CURLOPT_SSL_VERIFYPEER => true,
             CURLOPT_TIMEOUT => $this->timeout,
             CURLOPT_URL => $url,
-            CURLOPT_USERAGENT => $this->useragent,
+            CURLOPT_USERAGENT => $this->userAgent,
         );
 
         if (!empty($this->proxy)) {
@@ -245,50 +358,60 @@ class TwitterOAuth
                 break;
         }
 
-        $ci = curl_init();
-        curl_setopt_array($ci, $options);
-        $response = curl_exec($ci);
-        $this->last_http_code = curl_getinfo($ci, CURLINFO_HTTP_CODE);
+        $curlHandle = curl_init();
+        curl_setopt_array($curlHandle, $options);
+        $response = curl_exec($curlHandle);
+
+        $this->lastHttpCode = curl_getinfo($curlHandle, CURLINFO_HTTP_CODE);
         if (empty($this->proxy)) {
             list($header, $body) = explode("\r\n\r\n", $response, 2);
         } else {
             list($connect, $header, $body) = explode("\r\n\r\n", $response, 3);
         }
-        list($this->last_http_headers, $this->last_x_headers) = $this->parseHeaders($header);
-        $this->last_http_info = curl_getinfo($ci);
-        curl_close($ci);
+        list($this->lastHttpHeaders, $this->lastXHeaders) = $this->parseHeaders($header);
+        $this->lastHttpInfo = curl_getinfo($curlHandle);
+        curl_close($curlHandle);
 
         return $body;
     }
 
+    /**
+     * @param string $string
+     *
+     * @return array|object
+     */
     private function jsonDecode($string)
     {
         // BUG: https://bugs.php.net/bug.php?id=63520
         if (defined('JSON_BIGINT_AS_STRING')) {
-            return json_decode($string, $this->decode_json_assoc, 512, JSON_BIGINT_AS_STRING);
+            return json_decode($string, $this->decodeJsonAsArray, 512, JSON_BIGINT_AS_STRING);
         } else {
-            return json_decode($string, $this->decode_json_assoc);
+            return json_decode($string, $this->decodeJsonAsArray);
         }
     }
 
     /**
      * Get the header info to store.
+     *
+     * @param string $header
+     *
+     * @return array
      */
-    private function parseHeaders($header_text)
+    private function parseHeaders($header)
     {
         $headers = array();
-        $x_headers = array();
-        foreach (explode("\r\n", $header_text) as $i => $line) {
+        $xHeaders = array();
+        foreach (explode("\r\n", $header) as $i => $line) {
             $i = strpos($line, ':');
             if (!empty($i)) {
                 list ($key, $value) = explode(': ', $line);
                 $key = str_replace('-', '_', strtolower($key));
-                    $headers[$key] = trim($value);
+                $headers[$key] = trim($value);
                 if (substr($key, 0, 1) == 'x') {
-                    $x_headers[$key] = trim($value);
+                    $xHeaders[$key] = trim($value);
                 }
             }
         }
-        return array($headers, $x_headers);
+        return array($headers, $xHeaders);
     }
 }

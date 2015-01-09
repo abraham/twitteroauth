@@ -1,10 +1,10 @@
 <?php
+
 namespace Abraham\TwitterOAuth;
 
 /**
- * Generic exception class
+ * @author Abraham Williams <abraham@abrah.am>
  */
 class TwitterOAuthException extends \Exception
 {
-    // pass
 }

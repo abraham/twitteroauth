@@ -5,15 +5,19 @@
  */
 namespace Abraham\TwitterOAuth;
 
+/**
+ * @author Abraham Williams <abraham@abrah.am>
+ */
 class Token
 {
-    // access tokens and request tokens
+    /** @var string */
     public $key;
+    /** @var string */
     public $secret;
 
     /**
-     * key = the token
-     * secret = the token secret
+     * @param string $key    The OAuth Token
+     * @param string $secret The OAuth Token Scret
      */
     public function __construct($key, $secret)
     {
@@ -22,17 +26,16 @@ class Token
     }
 
     /**
-     * generates the basic string serialization of a token that a server
+     * Generates the basic string serialization of a token that a server
      * would respond to request_token and access_token calls with
+     *
+     * @return string
      */
-    public function toString()
-    {
-        return "oauth_token=" . Util::urlencodeRfc3986($this->key) .
-               "&oauth_token_secret=" . Util::urlencodeRfc3986($this->secret);
-    }
-
     public function __toString()
     {
-        return $this->toString();
+        return sprintf("oauth_token=%s&oauth_token_secret=%s",
+            Util::urlencodeRfc3986($this->key),
+            Util::urlencodeRfc3986($this->secret)
+        );
     }
 }
