@@ -35,7 +35,8 @@ class Util
     public static function split_header($header, $only_allow_oauth_parameters = true)
     {
         $params = array();
-        if (preg_match_all('/('.($only_allow_oauth_parameters ? 'oauth_' : '').'[a-z_-]*)=(:?"([^"]*)"|([^,]*))/', $header, $matches)) {
+        $pattern = '/(' . ($only_allow_oauth_parameters ? 'oauth_' : '') . '[a-z_-]*)=(:?"([^"]*)"|([^,]*))/';
+        if (preg_match_all($pattern, $header, $matches)) {
             foreach ($matches[1] as $i => $h) {
                 $params[$h] = Util::urldecode_rfc3986(empty($matches[3][$i]) ? $matches[4][$i] : $matches[3][$i]);
             }
