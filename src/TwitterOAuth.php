@@ -141,7 +141,7 @@ class TwitterOAuth
         $url = "{$this->api_host}/{$path}";
         $result = $this->oAuthRequest($url, 'POST', $parameters);
         if ($this->lastHttpCode() == 200) {
-            $response = Util::parse_parameters($result);
+            $response = Util::parseParameters($result);
             $this->last_response = $response;
             return $response;
         } else {
@@ -193,13 +193,13 @@ class TwitterOAuth
     private function oAuthRequest($url, $method, $parameters)
     {
         $this->last_http_method = $method;
-        $request = Request::from_consumer_and_token($this->consumer, $this->token, $method, $url, $parameters);
+        $request = Request::fromConsumerAndToken($this->consumer, $this->token, $method, $url, $parameters);
         if (array_key_exists('oauth_callback', $parameters)) {
             // Twitter doesn't like oauth_callback as a parameter.
             unset($parameters['oauth_callback']);
         }
-        $request->sign_request($this->sha1_method, $this->consumer, $this->token);
-        return $this->request($request->get_normalized_http_url(), $method, $request->to_header(), $parameters);
+        $request->signRequest($this->sha1_method, $this->consumer, $this->token);
+        return $this->request($request->getNormalizedHttpUrl(), $method, $request->toHeader(), $parameters);
     }
 
     /**
@@ -236,12 +236,12 @@ class TwitterOAuth
         switch ($method) {
             case 'GET':
                 if (!empty($postfields)) {
-                    $options[CURLOPT_URL] .= '?' . Util::build_http_query($postfields);
+                    $options[CURLOPT_URL] .= '?' . Util::buildHttpQuery($postfields);
                 }
                 break;
             case 'POST':
                 $options[CURLOPT_POST] = true;
-                $options[CURLOPT_POSTFIELDS] = Util::build_http_query($postfields);
+                $options[CURLOPT_POSTFIELDS] = Util::buildHttpQuery($postfields);
                 break;
         }
 

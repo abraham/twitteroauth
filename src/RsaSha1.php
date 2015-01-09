@@ -15,7 +15,7 @@ namespace Abraham\TwitterOAuth;
    */
 abstract class RsaSha1 extends SignatureMethod
 {
-    public function get_name()
+    public function getName()
     {
         return "RSA-SHA1";
     }
@@ -26,21 +26,21 @@ abstract class RsaSha1 extends SignatureMethod
     // (3) some sort of specific discovery code based on request
     //
     // Either way should return a string representation of the certificate
-    abstract protected function fetch_public_cert(&$request);
+    abstract protected function fetchPublicCert(&$request);
 
     // Up to the SP to implement this lookup of keys. Possible ideas are:
     // (1) do a lookup in a table of trusted certs keyed off of consumer
     //
     // Either way should return a string representation of the certificate
-    abstract protected function fetch_private_cert(&$request);
+    abstract protected function fetchPrivateCert(&$request);
 
-    public function build_signature($request, $consumer, $token)
+    public function buildSignature($request, $consumer, $token)
     {
-        $base_string = $request->get_signature_base_string();
+        $base_string = $request->getSignatureBaseString();
         $request->base_string = $base_string;
 
         // Fetch the private key cert based on the request
-        $cert = $this->fetch_private_cert($request);
+        $cert = $this->fetchPrivateCert($request);
 
         // Pull the private key ID from the certificate
         $privatekeyid = openssl_get_privatekey($cert);
@@ -54,14 +54,14 @@ abstract class RsaSha1 extends SignatureMethod
         return base64_encode($signature);
     }
 
-    public function check_signature($request, $consumer, $token, $signature)
+    public function checkSignature($request, $consumer, $token, $signature)
     {
         $decoded_sig = base64_decode($signature);
 
-        $base_string = $request->get_signature_base_string();
+        $base_string = $request->getSignatureBaseString();
 
         // Fetch the public key cert based on the request
-        $cert = $this->fetch_public_cert($request);
+        $cert = $this->fetchPublicCert($request);
 
         // Pull the public key ID from the certificate
         $publickeyid = openssl_get_publickey($cert);

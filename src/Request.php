@@ -18,7 +18,7 @@ class Request
     public function __construct($http_method, $http_url, $parameters = null)
     {
         $parameters = ($parameters) ? $parameters : array();
-        $parameters = array_merge(Util::parse_parameters(parse_url($http_url, PHP_URL_QUERY)), $parameters);
+        $parameters = array_merge(Util::parseParameters(parse_url($http_url, PHP_URL_QUERY)), $parameters);
         $this->parameters = $parameters;
         $this->http_method = $http_method;
         $this->http_url = $http_url;
@@ -27,7 +27,7 @@ class Request
     /**
      * attempt to build up a request from what was passed to the server
      */
-    public static function from_request($http_method = null, $http_url = null, $parameters = null)
+    public static function fromRequest($http_method = null, $http_url = null, $parameters = null)
     {
         $scheme = (!isset($_SERVER['HTTPS']) || $_SERVER['HTTPS'] != "on") ? 'http' : 'https';
         $http_url = ($http_url) ? $http_url : $scheme .
@@ -43,17 +43,17 @@ class Request
         // parsed parameter-list
         if (!$parameters) {
             // Find request headers
-            $request_headers = Util::get_headers();
+            $request_headers = Util::getHeaders();
 
             // Parse the query-string to find GET parameters
-            $parameters = Util::parse_parameters($_SERVER['QUERY_STRING']);
+            $parameters = Util::parseParameters($_SERVER['QUERY_STRING']);
 
             // It's a POST request of the proper content-type, so parse POST
             // parameters and add those overriding any duplicates from GET
             if ($http_method == "POST"
                 && isset($request_headers['Content-Type'])
                 && strstr($request_headers['Content-Type'], 'application/x-www-form-urlencoded')) {
-                $post_data = Util::parse_parameters(file_get_contents(self::$POST_INPUT));
+                $post_data = Util::parseParameters(file_get_contents(self::$POST_INPUT));
                 $parameters = array_merge($parameters, $post_data);
             }
 
@@ -61,7 +61,7 @@ class Request
             // and add those overriding any duplicates from GET or POST
             if (isset($request_headers['Authorization'])
                 && substr($request_headers['Authorization'], 0, 6) == 'OAuth ') {
-                $header_parameters = Util::split_header($request_headers['Authorization']);
+                $header_parameters = Util::splitHeader($request_headers['Authorization']);
                 $parameters = array_merge($parameters, $header_parameters);
             }
 
@@ -73,12 +73,12 @@ class Request
     /**
      * pretty much a helper function to set up the request
      */
-    public static function from_consumer_and_token($consumer, $token, $http_method, $http_url, $parameters = null)
+    public static function fromConsumerAndToken($consumer, $token, $http_method, $http_url, $parameters = null)
     {
         $parameters = ($parameters) ?  $parameters : array();
         $defaults = array("oauth_version" => Request::$version,
-                          "oauth_nonce" => Request::generate_nonce(),
-                          "oauth_timestamp" => Request::generate_timestamp(),
+                          "oauth_nonce" => Request::generateNonce(),
+                          "oauth_timestamp" => Request::generateTimestamp(),
                           "oauth_consumer_key" => $consumer->key);
         if ($token) {
             $defaults['oauth_token'] = $token->key;
@@ -89,7 +89,7 @@ class Request
         return new Request($http_method, $http_url, $parameters);
     }
 
-    public function set_parameter($name, $value, $allow_duplicates = true)
+    public function setParameter($name, $value, $allow_duplicates = true)
     {
         if ($allow_duplicates && isset($this->parameters[$name])) {
             // We have already added parameter(s) with this name, so add to the list
@@ -105,17 +105,17 @@ class Request
         }
     }
 
-    public function get_parameter($name)
+    public function getParameter($name)
     {
         return isset($this->parameters[$name]) ? $this->parameters[$name] : null;
     }
 
-    public function get_parameters()
+    public function getParameters()
     {
         return $this->parameters;
     }
 
-    public function unset_parameter($name)
+    public function unsetParameter($name)
     {
         unset($this->parameters[$name]);
     }
@@ -124,7 +124,7 @@ class Request
      * The request parameters, sorted and concatenated into a normalized string.
      * @return string
      */
-    public function get_signable_parameters()
+    public function getSignableParameters()
     {
         // Grab all parameters
         $params = $this->parameters;
@@ -135,7 +135,7 @@ class Request
             unset($params['oauth_signature']);
         }
 
-        return Util::build_http_query($params);
+        return Util::buildHttpQuery($params);
     }
 
     /**
@@ -145,15 +145,15 @@ class Request
      * and the parameters (normalized), each urlencoded
      * and the concated with &.
      */
-    public function get_signature_base_string()
+    public function getSignatureBaseString()
     {
         $parts = array(
-          $this->get_normalized_http_method(),
-          $this->get_normalized_http_url(),
-          $this->get_signable_parameters()
+          $this->getNormalizedHttpMethod(),
+          $this->getNormalizedHttpUrl(),
+          $this->getSignableParameters()
         );
 
-        $parts = Util::urlencode_rfc3986($parts);
+        $parts = Util::urlencodeRfc3986($parts);
 
         return implode('&', $parts);
     }
@@ -161,7 +161,7 @@ class Request
     /**
      * just uppercases the http method
      */
-    public function get_normalized_http_method()
+    public function getNormalizedHttpMethod()
     {
         return strtoupper($this->http_method);
     }
@@ -170,7 +170,7 @@ class Request
      * parses the url and rebuilds it to be
      * scheme://host/path
      */
-    public function get_normalized_http_url()
+    public function getNormalizedHttpUrl()
     {
         $parts = parse_url($this->http_url);
 
@@ -189,10 +189,10 @@ class Request
     /**
      * builds a url usable for a GET request
      */
-    public function to_url()
+    public function toUrl()
     {
-        $post_data = $this->to_postdata();
-        $out = $this->get_normalized_http_url();
+        $post_data = $this->toPostdata();
+        $out = $this->getNormalizedHttpUrl();
         if ($post_data) {
             $out .= '?'.$post_data;
         }
@@ -202,19 +202,19 @@ class Request
     /**
      * builds the data one would send in a POST request
      */
-    public function to_postdata()
+    public function toPostdata()
     {
-        return Util::build_http_query($this->parameters);
+        return Util::buildHttpQuery($this->parameters);
     }
 
     /**
      * builds the Authorization: header
      */
-    public function to_header($realm = null)
+    public function toHeader($realm = null)
     {
         $first = true;
         if ($realm) {
-            $out = 'Authorization: OAuth realm="' . Util::urlencode_rfc3986($realm) . '"';
+            $out = 'Authorization: OAuth realm="' . Util::urlencodeRfc3986($realm) . '"';
             $first = false;
         } else {
             $out = 'Authorization: OAuth';
@@ -228,7 +228,7 @@ class Request
                 throw new TwitterOAuthException('Arrays not supported in headers');
             }
             $out .= ($first) ? ' ' : ',';
-            $out .= Util::urlencode_rfc3986($k) . '="' . Util::urlencode_rfc3986($v) . '"';
+            $out .= Util::urlencodeRfc3986($k) . '="' . Util::urlencodeRfc3986($v) . '"';
             $first = false;
         }
         return $out;
@@ -236,27 +236,27 @@ class Request
 
     public function __toString()
     {
-        return $this->to_url();
+        return $this->toUrl();
     }
 
 
-    public function sign_request($signature_method, $consumer, $token)
+    public function signRequest($signature_method, $consumer, $token)
     {
-        $this->set_parameter("oauth_signature_method", $signature_method->get_name(), false);
-        $signature = $this->build_signature($signature_method, $consumer, $token);
-        $this->set_parameter("oauth_signature", $signature, false);
+        $this->setParameter("oauth_signature_method", $signature_method->getName(), false);
+        $signature = $this->buildSignature($signature_method, $consumer, $token);
+        $this->setParameter("oauth_signature", $signature, false);
     }
 
-    public function build_signature($signature_method, $consumer, $token)
+    public function buildSignature($signature_method, $consumer, $token)
     {
-        $signature = $signature_method->build_signature($this, $consumer, $token);
+        $signature = $signature_method->buildSignature($this, $consumer, $token);
         return $signature;
     }
 
     /**
      * util function: current timestamp
      */
-    private static function generate_timestamp()
+    private static function generateTimestamp()
     {
         return time();
     }
@@ -264,7 +264,7 @@ class Request
     /**
      * util function: current nonce
      */
-    private static function generate_nonce()
+    private static function generateNonce()
     {
         $mt = microtime();
         $rand = mt_rand();

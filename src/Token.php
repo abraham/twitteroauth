@@ -25,14 +25,14 @@ class Token
      * generates the basic string serialization of a token that a server
      * would respond to request_token and access_token calls with
      */
-    function to_string()
+    public function toString()
     {
-        return "oauth_token=" . Util::urlencode_rfc3986($this->key) .
-               "&oauth_token_secret=" . Util::urlencode_rfc3986($this->secret);
+        return "oauth_token=" . Util::urlencodeRfc3986($this->key) .
+               "&oauth_token_secret=" . Util::urlencodeRfc3986($this->secret);
     }
 
-    function __toString()
+    public function __toString()
     {
-        return $this->to_string();
+        return $this->toString();
     }
 }

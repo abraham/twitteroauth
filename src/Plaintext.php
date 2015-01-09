@@ -13,7 +13,7 @@ namespace Abraham\TwitterOAuth;
 class Plaintext extends SignatureMethod
 {
 
-    public function get_name()
+    public function getName()
     {
         return "PLAINTEXT";
     }
@@ -27,11 +27,11 @@ class Plaintext extends SignatureMethod
      * Please note that the second encoding MUST NOT happen in the SignatureMethod, as
      * OAuthRequest handles this!
      */
-    public function build_signature($request, $consumer, $token)
+    public function buildSignature($request, $consumer, $token)
     {
         $key_parts = array($consumer->secret, ($token) ? $token->secret : "");
 
-        $key_parts = Util::urlencode_rfc3986($key_parts);
+        $key_parts = Util::urlencodeRfc3986($key_parts);
         $key = implode('&', $key_parts);
         $request->base_string = $key;
 
