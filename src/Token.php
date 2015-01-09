@@ -15,7 +15,8 @@ class Token
      * key = the token
      * secret = the token secret
      */
-    function __construct($key, $secret) {
+    public function __construct($key, $secret)
+    {
         $this->key = $key;
         $this->secret = $secret;
     }

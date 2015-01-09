@@ -7,7 +7,8 @@ namespace Abraham\TwitterOAuth;
 
 class DataStore
 {
-    public function lookup_consumer($consumer_key) {
+    public function lookup_consumer($consumer_key)
+    {
         // implement me
     }
 

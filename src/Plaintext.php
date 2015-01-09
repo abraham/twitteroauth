@@ -29,10 +29,7 @@ class Plaintext extends SignatureMethod
      */
     public function build_signature($request, $consumer, $token)
     {
-        $key_parts = array(
-            $consumer->secret,
-            ($token) ? $token->secret : ""
-        );
+        $key_parts = array($consumer->secret, ($token) ? $token->secret : "");
 
         $key_parts = Util::urlencode_rfc3986($key_parts);
         $key = implode('&', $key_parts);
