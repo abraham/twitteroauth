@@ -12,8 +12,6 @@ namespace Abraham\TwitterOAuth;
  * verified way to the Service Provider, in a manner which is beyond the scope of this
  * specification.
  *   - Chapter 9.3 ("RSA-SHA1")
- *
- * @author Abraham Williams <abraham@abrah.am>
  */
 abstract class RsaSha1 extends SignatureMethod
 {

@@ -8,8 +8,6 @@ namespace Abraham\TwitterOAuth;
 /**
  * A class for implementing a Signature Method
  * See section 9 ("Signing Requests") in the spec
- *
- * @author Abraham Williams <abraham@abrah.am>
  */
 abstract class SignatureMethod
 {

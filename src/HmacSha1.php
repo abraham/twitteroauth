@@ -11,8 +11,6 @@ namespace Abraham\TwitterOAuth;
  * encoded per Parameter Encoding) of the Consumer Secret and Token Secret, separated by an '&'
  * character (ASCII code 38) even if empty.
  *   - Chapter 9.2 ("HMAC-SHA1")
- *
- * @author Abraham Williams <abraham@abrah.am>
  */
 class HmacSha1 extends SignatureMethod
 {

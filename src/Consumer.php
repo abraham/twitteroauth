@@ -5,9 +5,6 @@
  */
 namespace Abraham\TwitterOAuth;
 
-/**
- * @author Abraham Williams <abraham@abrah.am>
- */
 class Consumer
 {
     /** @var string  */
