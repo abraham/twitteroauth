@@ -321,12 +321,13 @@ class TwitterOAuth
      * @param $postfields
      *
      * @return string
+     * @throws TwitterOAuthException
      */
     private function request($url, $method, $headers, $postfields)
     {
         /* Curl settings */
         $options = array(
-            CURLOPT_VERBOSE => true,
+            // CURLOPT_VERBOSE => true,
             CURLOPT_CAINFO => __DIR__ . DIRECTORY_SEPARATOR . 'cacert.pem',
             CURLOPT_CAPATH => __DIR__,
             CURLOPT_CONNECTTIMEOUT => $this->connectionTimeout,
@@ -363,6 +364,11 @@ class TwitterOAuth
         $curlHandle = curl_init();
         curl_setopt_array($curlHandle, $options);
         $response = curl_exec($curlHandle);
+
+        switch (curl_errno($curlHandle)) {
+            case 51:
+                throw new TwitterOAuthException('The remote servers SSL certificate or SSH md5 fingerprint was deemed not OK.');
+        }
 
         $this->lastHttpCode = curl_getinfo($curlHandle, CURLINFO_HTTP_CODE);
         if (empty($this->proxy)) {
