@@ -1,4 +1,4 @@
-<span itemprop="name">TwitterOAuth</span> [![Build Status](https://img.shields.io/travis/abraham/twitteroauth.svg)](https://travis-ci.org/abraham/twitteroauth) [![Issues Count](https://img.shields.io/github/issues/abraham/twitteroauth.svg)](https://github.com/abraham/twitteroauth/issues)
+<span itemprop="name">TwitterOAuth</span> [![Build Status](https://img.shields.io/travis/abraham/twitteroauth.svg)](https://travis-ci.org/abraham/twitteroauth) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/abraham/twitteroauth/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/abraham/twitteroauth/?branch=master) [![Issues Count](https://img.shields.io/github/issues/abraham/twitteroauth.svg)](https://github.com/abraham/twitteroauth/issues)
 ------------
 
 <p itemprop="description">The most popular PHP library for Twitter's OAuth REST API.</p>
