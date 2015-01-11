@@ -365,9 +365,12 @@ class TwitterOAuth
         curl_setopt_array($curlHandle, $options);
         $response = curl_exec($curlHandle);
 
-        switch (curl_errno($curlHandle)) {
+        $curlErrno = curl_errno($curlHandle);
+        switch ($curlErrno) {
             case 51:
-                throw new TwitterOAuthException('The remote servers SSL certificate or SSH md5 fingerprint was deemed not OK.');
+                throw new TwitterOAuthException('The remote servers SSL certificate or SSH md5 fingerprint failed validation.');
+            case 56:
+                throw new TwitterOAuthException('Response from server failed or was interrupted.');
         }
 
         $this->lastHttpCode = curl_getinfo($curlHandle, CURLINFO_HTTP_CODE);
