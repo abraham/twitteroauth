@@ -22,9 +22,8 @@ class Request
      * @param string     $httpUrl
      * @param array|null $parameters
      */
-    public function __construct($httpMethod, $httpUrl, array $parameters = null)
+    public function __construct($httpMethod, $httpUrl, array $parameters = array())
     {
-        $parameters = null !== $parameters ? $parameters : array();
         $parameters = array_merge(Util::parseParameters(parse_url($httpUrl, PHP_URL_QUERY)), $parameters);
         $this->parameters = $parameters;
         $this->httpMethod = $httpMethod;
@@ -100,9 +99,8 @@ class Request
         Token $token = null,
         $httpMethod,
         $httpUrl,
-        array $parameters = null
+        array $parameters = array()
     ) {
-        $parameters = null !== $parameters ? $parameters : array();
         $defaults = array(
             "oauth_version" => Request::$version,
             "oauth_nonce" => Request::generateNonce(),
