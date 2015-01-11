@@ -7,6 +7,11 @@ namespace Abraham\TwitterOAuth;
 
 class Util
 {
+    /**
+     * @param $input
+     *
+     * @return array|mixed|string
+     */
     public static function urlencodeRfc3986($input)
     {
         if (is_array($input)) {
@@ -18,24 +23,37 @@ class Util
         }
     }
 
-
-    // This decode function isn't taking into consideration the above
-    // modifications to the encoding process. However, this method doesn't
-    // seem to be used anywhere so leaving it as is.
+    /**
+     * This decode function isn't taking into consideration the above
+     * modifications to the encoding process. However, this method doesn't
+     * seem to be used anywhere so leaving it as is.
+     *
+     * @param string $string
+     *
+     * @return string
+     */
     public static function urldecodeRfc3986($string)
     {
         return urldecode($string);
     }
 
-    // Utility function for turning the Authorization: header into
-    // parameters, has to do some unescaping
-    // Can filter out any non-oauth parameters if needed (default behaviour)
-    // May 28th, 2010 - method updated to tjerk.meesters for a speed improvement.
-    //                  see http://code.google.com/p/oauth/issues/detail?id=163
-    public static function splitHeader($header, $only_allow_oauth_parameters = true)
+    /**
+     * Utility function for turning the Authorization: header into
+     * parameters, has to do some unescaping
+     * Can filter out any non-oauth parameters if needed (default behaviour)
+     * May 28th, 2010 - method updated to tjerk.meesters for a speed improvement.
+     *
+     * @see http://code.google.com/p/oauth/issues/detail?id=163
+     *
+     * @param string $header
+     * @param bool   $onlyAllowOauthParams
+     *
+     * @return array
+     */
+    public static function splitHeader($header, $onlyAllowOauthParams = true)
     {
         $params = array();
-        $pattern = '/(' . ($only_allow_oauth_parameters ? 'oauth_' : '') . '[a-z_-]*)=(:?"([^"]*)"|([^,]*))/';
+        $pattern = '/(' . ($onlyAllowOauthParams ? 'oauth_' : '') . '[a-z_-]*)=(:?"([^"]*)"|([^,]*))/';
         if (preg_match_all($pattern, $header, $matches)) {
             foreach ($matches[1] as $i => $h) {
                 $params[$h] = Util::urldecodeRfc3986(empty($matches[3][$i]) ? $matches[4][$i] : $matches[3][$i]);
@@ -47,32 +65,36 @@ class Util
         return $params;
     }
 
-    // helper to try to sort out headers for people who aren't running apache
+    /**
+     * Helper to try to sort out headers for people who aren't running apache
+     *
+     * @return array
+     */
     public static function getHeaders()
     {
         if (function_exists('apache_request_headers')) {
             // we need this to get the actual Authorization: header
             // because apache tends to tell us it doesn't exist
-            $headers = apache_request_headers();
+            $apacheHeaders = apache_request_headers();
 
             // sanitize the output of apache_request_headers because
             // we always want the keys to be Cased-Like-This and arh()
             // returns the headers in the same case as they are in the
             // request
-            $out = array();
-            foreach ($headers as $key => $value) {
+            $headers = array();
+            foreach ($apacheHeaders as $key => $value) {
                 $key = str_replace(" ", "-", ucwords(strtolower(str_replace("-", " ", $key))));
-                $out[$key] = $value;
+                $headers[$key] = $value;
             }
         } else {
             // otherwise we don't have apache and are just going to have to hope
             // that $_SERVER actually contains what we need
-            $out = array();
+            $headers = array();
             if (isset($_SERVER['CONTENT_TYPE'])) {
-                $out['Content-Type'] = $_SERVER['CONTENT_TYPE'];
+                $headers['Content-Type'] = $_SERVER['CONTENT_TYPE'];
             }
             if (isset($_ENV['CONTENT_TYPE'])) {
-                $out['Content-Type'] = $_ENV['CONTENT_TYPE'];
+                $headers['Content-Type'] = $_ENV['CONTENT_TYPE'];
             }
 
             foreach ($_SERVER as $key => $value) {
@@ -81,16 +103,22 @@ class Util
                     // letter of every word that is not an initial HTTP and strip HTTP
                     // code from przemek
                     $key = str_replace(" ", "-", ucwords(strtolower(str_replace("_", " ", substr($key, 5)))));
-                    $out[$key] = $value;
+                    $headers[$key] = $value;
                 }
             }
         }
-        return $out;
+        return $headers;
     }
 
-    // This function takes a input like a=b&a=c&d=e and returns the parsed
-    // parameters like this
-    // array('a' => array('b','c'), 'd' => 'e')
+    /**
+     * This function takes a input like a=b&a=c&d=e and returns the parsed
+     * parameters like this
+     * array('a' => array('b','c'), 'd' => 'e')
+     *
+     * @param mixed $input
+     *
+     * @return array
+     */
     public static function parseParameters($input)
     {
         if (!isset($input) || !$input) {
@@ -99,30 +127,35 @@ class Util
 
         $pairs = explode('&', $input);
 
-        $parsed_parameters = array();
+        $parameters = array();
         foreach ($pairs as $pair) {
             $split = explode('=', $pair, 2);
             $parameter = Util::urldecodeRfc3986($split[0]);
             $value = isset($split[1]) ? Util::urldecodeRfc3986($split[1]) : '';
 
-            if (isset($parsed_parameters[$parameter])) {
+            if (isset($parameters[$parameter])) {
                 // We have already recieved parameter(s) with this name, so add to the list
                 // of parameters with this name
 
-                if (is_scalar($parsed_parameters[$parameter])) {
+                if (is_scalar($parameters[$parameter])) {
                     // This is the first duplicate, so transform scalar (string) into an array
                     // so we can add the duplicates
-                    $parsed_parameters[$parameter] = array($parsed_parameters[$parameter]);
+                    $parameters[$parameter] = array($parameters[$parameter]);
                 }
 
-                $parsed_parameters[$parameter][] = $value;
+                $parameters[$parameter][] = $value;
             } else {
-                $parsed_parameters[$parameter] = $value;
+                $parameters[$parameter] = $value;
             }
         }
-        return $parsed_parameters;
+        return $parameters;
     }
 
+    /**
+     * @param $params
+     *
+     * @return string
+     */
     public static function buildHttpQuery($params)
     {
         if (!$params) {
@@ -145,8 +178,8 @@ class Util
                 // Ref: Spec: 9.1.1 (1)
                 // June 12th, 2010 - changed to sort because of issue 164 by hidetaka
                 sort($value, SORT_STRING);
-                foreach ($value as $duplicate_value) {
-                    $pairs[] = $parameter . '=' . $duplicate_value;
+                foreach ($value as $duplicateValue) {
+                    $pairs[] = $parameter . '=' . $duplicateValue;
                 }
             } else {
                 $pairs[] = $parameter . '=' . $value;

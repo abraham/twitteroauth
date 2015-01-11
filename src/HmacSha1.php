@@ -14,21 +14,27 @@ namespace Abraham\TwitterOAuth;
  */
 class HmacSha1 extends SignatureMethod
 {
+    /**
+     * {@inheritDoc}
+     */
     public function getName()
     {
         return "HMAC-SHA1";
     }
 
-    public function buildSignature($request, $consumer, $token)
+    /**
+     * {@inheritDoc}
+     */
+    public function buildSignature(Request $request, Consumer $consumer, Token $token = null)
     {
-        $base_string = $request->getSignatureBaseString();
-        $request->base_string = $base_string;
+        $signatureBase = $request->getSignatureBaseString();
+        $request->baseString = $signatureBase;
 
-        $key_parts = array($consumer->secret, ($token) ? $token->secret : "" );
+        $parts = array($consumer->secret, null !== $token ? $token->secret : "");
 
-        $key_parts = Util::urlencodeRfc3986($key_parts);
-        $key = implode('&', $key_parts);
+        $parts = Util::urlencodeRfc3986($parts);
+        $key = implode('&', $parts);
 
-        return base64_encode(hash_hmac('sha1', $base_string, $key, true));
+        return base64_encode(hash_hmac('sha1', $signatureBase, $key, true));
     }
 }
