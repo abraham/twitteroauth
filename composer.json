@@ -28,7 +28,8 @@
     },
     "autoload": {
         "psr-4": {
-            "Abraham\\TwitterOAuth\\": "src"
+            "Abraham\\TwitterOAuth\\": "src",
+            "Abraham\\TwitterOAuth\\Tests\\": "tests"
         }
     }
 }
