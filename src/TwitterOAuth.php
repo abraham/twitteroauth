@@ -367,6 +367,8 @@ class TwitterOAuth
 
         $curlErrno = curl_errno($curlHandle);
         switch ($curlErrno) {
+            case 28:
+                throw new TwitterOAuthException('Request timed out.');
             case 51:
                 throw new TwitterOAuthException('The remote servers SSL certificate or SSH md5 fingerprint failed validation.');
             case 56:
