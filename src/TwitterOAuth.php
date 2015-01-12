@@ -131,6 +131,22 @@ class TwitterOAuth
     }
 
     /**
+     * @return string
+     */
+    public function getUploadHost()
+    {
+        return $this->uploadHost;
+    }
+
+    /**
+     * @param string $uploadHost
+     */
+    public function setUploadHost($uploadHost)
+    {
+        $this->uploadHost = $uploadHost;
+    }
+
+    /**
      * @return null|string
      */
     public function lastApiPath()
