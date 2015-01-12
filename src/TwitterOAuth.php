@@ -392,15 +392,35 @@ class TwitterOAuth
      * @param string $string
      *
      * @return array|object
+     * @throws \Exception if json is not decoded properly
      */
     private function jsonDecode($string)
     {
+        // BUG: https://github.com/abraham/twitteroauth/issues/288
         // BUG: https://bugs.php.net/bug.php?id=63520
-        if (defined('JSON_BIGINT_AS_STRING')) {
-            return json_decode($string, $this->decodeJsonAsArray, 512, JSON_BIGINT_AS_STRING);
+        // BUG: https://www.drupal.org/node/2209795
+        // Code fix from: https://github.com/firebase/php-jwt/blob/master/Authentication/JWT.php
+        if (version_compare(PHP_VERSION, '5.4.0', '>=') && !(defined('JSON_C_VERSION') && PHP_INT_SIZE > 4)) {
+            /** In PHP >=5.4.0, json_decode() accepts an options parameter, that allows you
+             * to specify that large ints (like twitter IDs) should be treated as
+             * strings, rather than the PHP default behaviour of converting them to floats.
+             */
+            $result = json_decode($string, $this->decodeJsonAsArray, 512, JSON_BIGINT_AS_STRING);
         } else {
-            return json_decode($string, $this->decodeJsonAsArray);
+            /** Not all servers will support that, however, so for older versions we must
+             * manually detect large ints in the JSON string and quote them (thus converting
+             * them to strings) before decoding, hence the preg_replace() call.
+             */
+            $max_int_length = strlen((string) PHP_INT_MAX) - 1;
+            $json_without_bigints = preg_replace('/:\s*(-?\d{'.$max_int_length.',})/', ': "$1"', $string);
+            $result = json_decode($json_without_bigints, $this->decodeJsonAsArray);
         }
+        if (function_exists('json_last_error') && $errno = json_last_error()) {
+            throw new \Exception('JSON decode error: '.$errno);
+        } elseif ($result === null && $string !== 'null') {
+            throw new \Exception('Null result with non-null input');
+        }
+        return $result;
     }
 
     /**
