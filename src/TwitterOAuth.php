@@ -407,13 +407,10 @@ class TwitterOAuth
              */
             $result = json_decode($string, $this->decodeJsonAsArray, 512, JSON_BIGINT_AS_STRING);
         } else {
-            /** Not all servers will support that, however, so for older versions we must
-             * manually detect large ints in the JSON string and quote them (thus converting
-             * them to strings) before decoding, hence the preg_replace() call.
+            /** Not all servers will support that, however, so for older versions so fall back to regular json_decode
+             * call, and assume users will use the in_str field provided by the Twitter API
              */
-            $max_int_length = strlen((string) PHP_INT_MAX) - 1;
-            $json_without_bigints = preg_replace('/:\s*(-?\d{'.$max_int_length.',})/', ': "$1"', $string);
-            $result = json_decode($json_without_bigints, $this->decodeJsonAsArray);
+            $result = json_decode($string, $this->decodeJsonAsArray);
         }
         if (function_exists('json_last_error') && $errno = json_last_error()) {
             throw new \Exception('JSON decode error: '.$errno);
