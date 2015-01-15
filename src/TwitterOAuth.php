@@ -389,8 +389,7 @@ class TwitterOAuth
     }
 
     /**
-     * @param string $string
-     *
+     * @param string $string JSON to decode
      * @return array|object
      * @throws \Exception if json is not decoded properly
      */
@@ -407,8 +406,9 @@ class TwitterOAuth
              */
             $result = json_decode($string, $this->decodeJsonAsArray, 512, JSON_BIGINT_AS_STRING);
         } else {
-            /** Not all servers will support that, however, so for older versions so fall back to regular json_decode
-             * call, and assume users will use the in_str field provided by the Twitter API
+            /** Not all servers will support that, however, so for older versions (or ones with the buggy
+             *  JSON_C_VERSION implementation, fall back to the vanilla json_decode
+             *  call, and assume users will use the 'id_str' field provided by the Twitter API
              */
             $result = json_decode($string, $this->decodeJsonAsArray);
         }
