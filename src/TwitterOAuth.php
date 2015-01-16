@@ -2,12 +2,12 @@
 /*
  * Abraham Williams (abraham@abrah.am) https://abrah.am
  *
- * The first PHP Library to support OAuth 1.0A for Twitter's REST API.
+ * The most popular PHP library for use with the Twitter OAuth REST API.
  */
 namespace Abraham\TwitterOAuth;
 
 /**
- * Twitter OAuth class
+ * TwitterOAuth class for interacting with the Twitter API.
  *
  * @author Abraham Williams <abraham@abrah.am>
  */
