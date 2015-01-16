@@ -75,14 +75,6 @@ class TwitterOAuth
     }
 
     /**
-     * @param string $host
-     */
-    public function setApiHost($host)
-    {
-        $this->apiHost = $host;
-    }
-
-    /**
      * @param string $version
      */
     public function setApiVersion($version)
