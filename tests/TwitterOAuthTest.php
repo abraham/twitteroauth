@@ -77,8 +77,7 @@ class TwitterOAuthTest extends \PHPUnit_Framework_TestCase
     //         'CURLOPT_PROXYUSERPWD' => PROXYUSERPWD,
     //         'CURLOPT_PROXYPORT' => PROXYPORT,
     //     ));
-    //     $this->twitter->setConnectionTimeout(60);
-    //     $this->twitter->setTimeout(60);
+    //     $this->twitter->setTimeouts(60, 60);
     //     $result = $this->twitter->get('account/verify_credentials');
     //     $this->assertEquals(200, $this->twitter->lastHttpCode());
     //     $this->assertObjectHasAttribute('id', $result);
@@ -129,8 +128,7 @@ class TwitterOAuthTest extends \PHPUnit_Framework_TestCase
 
     public function testPostStatusesUpdateWithMedia()
     {
-        $this->twitter->setConnectionTimeout(30);
-        $this->twitter->setTimeout(30);
+        $this->twitter->setTimeouts(60, 30);
         // Image source https://www.flickr.com/photos/titrans/8548825587/
         $file_path = __DIR__ . '/kitten.jpg';
         $result = $this->twitter->upload('media/upload', array('media' => $file_path));

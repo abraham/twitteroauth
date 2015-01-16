@@ -83,19 +83,15 @@ class TwitterOAuth
     }
 
     /**
+     * Set the connection and response timeouts.
+     *
+     * @param int $connectionTimeout
      * @param int $timeout
      */
-    public function setTimeout($timeout)
+    public function setTimeouts($connectionTimeout, $timeout)
     {
+        $this->connectionTimeout = (int)$connectionTimeout;
         $this->timeout = (int)$timeout;
-    }
-
-    /**
-     * @param int $timeout
-     */
-    public function setConnectionTimeout($timeout)
-    {
-        $this->connectionTimeout = (int)$timeout;
     }
 
     /**
