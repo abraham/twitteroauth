@@ -135,7 +135,7 @@ class TwitterOAuth
     }
 
     /**
-     * @return null|string
+     * @return string|null
      */
     public function lastHttpMethod()
     {
@@ -151,7 +151,7 @@ class TwitterOAuth
     }
 
     /**
-     * @return array|null|object
+     * @return array|object|null
      */
     public function lastResponse()
     {
