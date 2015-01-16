@@ -13,15 +13,15 @@ namespace Abraham\TwitterOAuth;
  */
 class TwitterOAuth
 {
-    /** @var string */
+    /** @var string HTTP host used for most API calls */
     private $apiHost = "https://api.twitter.com";
-    /** @var string */
+    /** @var string HTTP host used for uploading media */
     private $uploadHost = "https://upload.twitter.com";
-    /** @var string */
+    /** @var string Twitter API version */
     private $apiVersion = "1.1";
-    /** @var int */
+    /** @var int How long to wait for a response from the API */
     private $timeout = 5;
-    /** @var int */
+    /** @var int how long to wait while connecting to the API */
     private $connectionTimeout = 5;
     /**
      * Decode JSON Response as associative Array
@@ -31,29 +31,29 @@ class TwitterOAuth
      * @var bool
      */
     private $decodeJsonAsArray = false;
-    /** @var string */
+    /** @var string User-Agent header */
     private $userAgent = 'TwitterOAuth (+https://twitteroauth.com)';
-    /** @var array */
+    /** @var array Store proxy connection details */
     private $proxy = array();
-    /** @var string|null */
+    /** @var string|null API path from the most recent request */
     private $lastApiPath;
-    /** @var int|null */
+    /** @var int|null HTTP status code from the most recent request */
     private $lastHttpCode;
-    /** @var array */
+    /** @var array HTTP headers from the most recent request */
     private $lastHttpHeaders = array();
     /** @var array */
     private $lastHttpInfo = array();
-    /** @var string|null */
+    /** @var string|null HTTP method from the most recent request */
     private $lastHttpMethod;
-    /** @var array */
+    /** @var array HTTP headers from the most recent request that start with X */
     private $lastXHeaders = array();
-    /** @var array|object|null */
+    /** @var array|object|null HTTP body from the most recent request */
     private $lastResponse;
-    /** @var Consumer */
+    /** @var Consumer Twitter application details */
     private $consumer;
-    /** @var Token */
+    /** @var Token|null User access token details */
     private $token;
-    /** @var HmacSha1 */
+    /** @var HmacSha1 OAuth 1 signature type used by Twitter */
     private $signatureMethod;
 
     /**
