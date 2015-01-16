@@ -389,14 +389,19 @@ class TwitterOAuth
     }
 
     /**
-     * @param string $string
+     * @param string $string JSON to decode
      *
      * @return array|object
      */
     private function jsonDecode($string)
     {
         // BUG: https://bugs.php.net/bug.php?id=63520
-        if (defined('JSON_BIGINT_AS_STRING')) {
+        // Fix from https://github.com/firebase/php-jwt/blob/83b8899cb73d85d648af93f37ec0ac89f4a5bbae/Authentication/JWT.php#L210 via @thaddeusmt
+        if (
+            version_compare(PHP_VERSION, '5.4.0', '>=')
+            && !(defined('JSON_C_VERSION')
+            && PHP_INT_SIZE > 4)
+        ) {
             return json_decode($string, $this->decodeJsonAsArray, 512, JSON_BIGINT_AS_STRING);
         } else {
             return json_decode($string, $this->decodeJsonAsArray);
