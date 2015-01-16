@@ -207,7 +207,7 @@ class TwitterOAuth
         $url = "{$this->apiHost}/{$path}";
         $result = $this->oAuthRequest($url, 'POST', $parameters);
         if ($this->lastHttpCode() == 200) {
-            $response = Util::parseParameters($result);
+            parse_str($result, $response);
             $this->lastResponse = $response;
 
             return $response;
@@ -340,12 +340,12 @@ class TwitterOAuth
         switch ($method) {
             case 'GET':
                 if (!empty($postfields)) {
-                    $options[CURLOPT_URL] .= '?' . Util::buildHttpQuery($postfields);
+                    $options[CURLOPT_URL] .= '?' . http_build_query($postfields);
                 }
                 break;
             case 'POST':
                 $options[CURLOPT_POST] = true;
-                $options[CURLOPT_POSTFIELDS] = Util::buildHttpQuery($postfields);
+                $options[CURLOPT_POSTFIELDS] = http_build_query($postfields);
                 break;
         }
 
