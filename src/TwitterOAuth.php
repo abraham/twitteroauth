@@ -389,18 +389,35 @@ class TwitterOAuth
     }
 
     /**
-     * @param string $string
-     *
+     * @param string $string JSON to decode
      * @return array|object
+     * @throws \Exception if json is not decoded properly
      */
     private function jsonDecode($string)
     {
+        // BUG: https://github.com/abraham/twitteroauth/issues/288
         // BUG: https://bugs.php.net/bug.php?id=63520
-        if (defined('JSON_BIGINT_AS_STRING')) {
-            return json_decode($string, $this->decodeJsonAsArray, 512, JSON_BIGINT_AS_STRING);
+        // BUG: https://www.drupal.org/node/2209795
+        // Code fix from: https://github.com/firebase/php-jwt/blob/master/Authentication/JWT.php
+        if (version_compare(PHP_VERSION, '5.4.0', '>=') && !(defined('JSON_C_VERSION') && PHP_INT_SIZE > 4)) {
+            /** In PHP >=5.4.0, json_decode() accepts an options parameter, that allows you
+             * to specify that large ints (like twitter IDs) should be treated as
+             * strings, rather than the PHP default behaviour of converting them to floats.
+             */
+            $result = json_decode($string, $this->decodeJsonAsArray, 512, JSON_BIGINT_AS_STRING);
         } else {
-            return json_decode($string, $this->decodeJsonAsArray);
+            /** Not all servers will support that, however, so for older versions (or ones with the buggy
+             *  JSON_C_VERSION implementation, fall back to the vanilla json_decode
+             *  call, and assume users will use the 'id_str' field provided by the Twitter API
+             */
+            $result = json_decode($string, $this->decodeJsonAsArray);
         }
+        if (function_exists('json_last_error') && $errno = json_last_error()) {
+            throw new \Exception('JSON decode error: '.$errno);
+        } elseif ($result === null && $string !== 'null') {
+            throw new \Exception('Null result with non-null input');
+        }
+        return $result;
     }
 
     /**
