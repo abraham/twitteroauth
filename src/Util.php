@@ -17,17 +17,13 @@ class Util
         if (is_array($input)) {
             return array_map(array(__NAMESPACE__ . '\Util', 'urlencodeRfc3986'), $input);
         } elseif (is_scalar($input)) {
-            return str_replace('+', ' ', str_replace('%7E', '~', rawurlencode($input)));
+            return rawurlencode($input);
         } else {
             return '';
         }
     }
 
     /**
-     * This decode function isn't taking into consideration the above
-     * modifications to the encoding process. However, this method doesn't
-     * seem to be used anywhere so leaving it as is.
-     *
      * @param string $string
      *
      * @return string
