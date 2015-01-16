@@ -1,8 +1,8 @@
 <?php
-/*
- * Abraham Williams (abraham@abrah.am) https://abrah.am
- *
+/**
  * The most popular PHP library for use with the Twitter OAuth REST API.
+ *
+ * @license MIT
  */
 namespace Abraham\TwitterOAuth;
 
