@@ -360,6 +360,7 @@ class TwitterOAuth
             CURLOPT_TIMEOUT => $this->timeout,
             CURLOPT_URL => $url,
             CURLOPT_USERAGENT => $this->userAgent,
+            CURLOPT_ENCODING => 'gzip',
         );
 
         if (!empty($this->proxy)) {
