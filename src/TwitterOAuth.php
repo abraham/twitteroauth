@@ -49,6 +49,8 @@ class TwitterOAuth
     private $lastXHeaders = array();
     /** @var array|object|null HTTP body from the most recent request */
     private $lastResponse;
+    /** @var string|null Application bearer token */
+    private $bearer;
     /** @var Consumer Twitter application details */
     private $consumer;
     /** @var Token|null User access token details */
@@ -71,6 +73,9 @@ class TwitterOAuth
         $this->consumer = new Consumer($consumerKey, $consumerSecret);
         if (!empty($oauthToken) && !empty($oauthTokenSecret)) {
             $this->token = new Token($oauthToken, $oauthTokenSecret);
+        }
+        if (empty($oauthToken) && !empty($oauthTokenSecret)) {
+            $this->bearer = $oauthTokenSecret;
         }
     }
 
@@ -217,6 +222,29 @@ class TwitterOAuth
     }
 
     /**
+     * Make /oauth2/* requests to the API.
+     *
+     * @param string $path
+     * @param array  $parameters
+     *
+     * @return array|object
+     */
+    public function oauth2($path, array $parameters = array())
+    {
+        $method = 'POST';
+        $this->resetLastResult();
+        $this->lastApiPath = $path;
+        $this->lastHttpMethod = $method;
+        $url = "{$this->apiHost}/{$path}";
+        $request = Request::fromConsumerAndToken($this->consumer, $this->token, $method, $url, $parameters);
+        $headers = 'Authorization: Basic ' . $this->encodeAppAuthorization($this->consumer);
+        $result = $this->request($request->getNormalizedHttpUrl(), $method, $headers, $parameters);
+        $response = $this->jsonDecode($result);
+        $this->lastResponse = $response;
+        return $response;
+    }
+
+    /**
      * Make GET requests to the API.
      *
      * @param string $path
@@ -296,8 +324,13 @@ class TwitterOAuth
             // Twitter doesn't like oauth_callback as a parameter.
             unset($parameters['oauth_callback']);
         }
-        $request->signRequest($this->signatureMethod, $this->consumer, $this->token);
-        return $this->request($request->getNormalizedHttpUrl(), $method, $request->toHeader(), $parameters);
+        if ($this->bearer === null) {
+            $request->signRequest($this->signatureMethod, $this->consumer, $this->token);
+            $headers = $request->toHeader();
+        } else {
+            $headers = 'Authorization: Bearer ' . $this->bearer;
+        }
+        return $this->request($request->getNormalizedHttpUrl(), $method, $headers, $parameters);
     }
 
     /**
@@ -419,5 +452,20 @@ class TwitterOAuth
             }
         }
         return array($headers, $xHeaders);
+    }
+
+    /**
+     * Encode application authorization header with base64.
+     *
+     * @param Consumer $consumer
+     *
+     * @return string
+     */
+    private function encodeAppAuthorization($consumer)
+    {
+        // TODO: key and secret should be rfc 1738 encoded
+        $key = $consumer->key;
+        $secret = $consumer->secret;
+        return base64_encode($key . ':' . $secret);
     }
 }

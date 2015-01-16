@@ -22,6 +22,41 @@ class TwitterOAuthTest extends \PHPUnit_Framework_TestCase
         $this->assertObjectHasAttribute('token', $this->twitter);
     }
 
+    public function testOauth2Token()
+    {
+        $twitter = new TwitterOAuth(CONSUMER_KEY, CONSUMER_SECRET);
+        $result = $twitter->oauth2('oauth2/token', array('grant_type' => 'client_credentials'));
+        $this->assertEquals(200, $twitter->lastHttpCode());
+        $this->assertObjectHasAttribute('token_type', $result);
+        $this->assertObjectHasAttribute('access_token', $result);
+        $this->assertEquals('bearer', $result->token_type);
+        return $result;
+    }
+
+    /**
+     * @depends testOauth2Token
+     */
+    public function testBearerToken($accessToken)
+    {
+        $twitter = new TwitterOAuth(CONSUMER_KEY, CONSUMER_SECRET, null, $accessToken->access_token);
+        $result = $twitter->get('statuses/user_timeline', array('screen_name' => 'twitterapi'));
+        $this->assertEquals(200, $twitter->lastHttpCode());
+        return $result;
+    }
+
+    /**
+     * @depends testOauth2Token
+     */
+    public function testOauth2TokenInvalidate($accessToken)
+    {
+        $twitter = new TwitterOAuth(CONSUMER_KEY, CONSUMER_SECRET);
+        // HACK: access_token is already urlencoded but gets urlencoded again breaking the invalidate request.
+        $result = $twitter->oauth2('oauth2/invalidate_token', array('access_token' => urldecode($accessToken->access_token)));
+        $this->assertEquals(200, $twitter->lastHttpCode());
+        $this->assertObjectHasAttribute('access_token', $result);
+        return $result;
+    }
+
     public function testOauthRequestToken()
     {
         $twitter = new TwitterOAuth(CONSUMER_KEY, CONSUMER_SECRET);
