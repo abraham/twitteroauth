@@ -266,7 +266,7 @@ class TwitterOAuth
      *
      * @return array|object
      */
-    public function http($method, $host, $path, array $parameters)
+    private function http($method, $host, $path, array $parameters)
     {
         $this->resetLastResult();
         $url = "{$host}/{$this->apiVersion}/{$path}.json";
