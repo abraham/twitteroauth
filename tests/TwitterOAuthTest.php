@@ -22,6 +22,16 @@ class TwitterOAuthTest extends \PHPUnit_Framework_TestCase
         $this->assertObjectHasAttribute('token', $this->twitter);
     }
 
+    public function testSetOauthToken()
+    {
+        $twitter = new TwitterOAuth(CONSUMER_KEY, CONSUMER_SECRET);
+        $twitter->setOauthToken(ACCESS_TOKEN, ACCESS_TOKEN_SECRET);
+        $this->assertObjectHasAttribute('consumer', $twitter);
+        $this->assertObjectHasAttribute('token', $twitter);
+        $twitter->get('friendships/show', array('target_screen_name' => 'twitterapi'));
+        $this->assertEquals(200, $twitter->lastHttpCode());
+    }
+
     public function testOauth2Token()
     {
         $twitter = new TwitterOAuth(CONSUMER_KEY, CONSUMER_SECRET);
