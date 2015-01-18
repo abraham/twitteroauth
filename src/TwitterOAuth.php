@@ -82,6 +82,15 @@ class TwitterOAuth
     }
 
     /**
+     * @param string $oauthToken
+     * @param string $oauthTokenSecret
+     */
+    public function setOauthTokens($oauthToken, $oauthTokenSecret)
+    {
+        $this->token = new Token($oauthToken, $oauthTokenSecret);
+    } 
+
+    /**
      * @param string $version
      */
     public function setApiVersion($version)
