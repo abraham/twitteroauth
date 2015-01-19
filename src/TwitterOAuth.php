@@ -15,12 +15,10 @@ use Abraham\TwitterOAuth\Util\JsonDecoder;
  */
 class TwitterOAuth
 {
-    /** @var string HTTP host used for most API calls */
-    private $apiHost = "https://api.twitter.com";
-    /** @var string HTTP host used for uploading media */
-    private $uploadHost = "https://upload.twitter.com";
-    /** @var string Twitter API version */
-    private $apiVersion = "1.1";
+    const API_VERSION = '1.1';
+    const API_HOST = 'https://api.twitter.com';
+    const UPLOAD_HOST = 'https://upload.twitter.com';
+
     /** @var int How long to wait for a response from the API */
     private $timeout = 5;
     /** @var int how long to wait while connecting to the API */
@@ -88,14 +86,6 @@ class TwitterOAuth
     public function setOauthToken($oauthToken, $oauthTokenSecret)
     {
         $this->token = new Token($oauthToken, $oauthTokenSecret);
-    }
-
-    /**
-     * @param string $version
-     */
-    public function setApiVersion($version)
-    {
-        $this->apiVersion = $version;
     }
 
     /**
@@ -201,7 +191,7 @@ class TwitterOAuth
         $this->resetLastResult();
         $this->lastApiPath = $path;
         $query = http_build_query($parameters);
-        $response = "{$this->apiHost}/{$path}?{$query}";
+        $response = sprintf('%s/%s?%s', self::API_HOST, $path, $query);
         $this->lastResponse = $response;
 
         return $response;
@@ -220,7 +210,7 @@ class TwitterOAuth
     {
         $this->resetLastResult();
         $this->lastApiPath = $path;
-        $url = "{$this->apiHost}/{$path}";
+        $url = sprintf('%s/%s', self::API_HOST, $path);
         $result = $this->oAuthRequest($url, 'POST', $parameters);
         if ($this->lastHttpCode() == 200) {
             parse_str($result, $response);
@@ -246,7 +236,7 @@ class TwitterOAuth
         $this->resetLastResult();
         $this->lastApiPath = $path;
         $this->lastHttpMethod = $method;
-        $url = "{$this->apiHost}/{$path}";
+        $url = sprintf('%s/%s', self::API_HOST, $path);
         $request = Request::fromConsumerAndToken($this->consumer, $this->token, $method, $url, $parameters);
         $headers = 'Authorization: Basic ' . $this->encodeAppAuthorization($this->consumer);
         $result = $this->request($request->getNormalizedHttpUrl(), $method, $headers, $parameters);
@@ -265,7 +255,7 @@ class TwitterOAuth
      */
     public function get($path, array $parameters = array())
     {
-        return $this->http('GET', $this->apiHost, $path, $parameters);
+        return $this->http('GET', self::API_HOST, $path, $parameters);
     }
 
     /**
@@ -278,7 +268,7 @@ class TwitterOAuth
      */
     public function post($path, array $parameters = array())
     {
-        return $this->http('POST', $this->apiHost, $path, $parameters);
+        return $this->http('POST', self::API_HOST, $path, $parameters);
     }
 
     /**
@@ -294,7 +284,7 @@ class TwitterOAuth
         $file = file_get_contents($parameters['media']);
         $base = base64_encode($file);
         $parameters['media'] = $base;
-        return $this->http('POST', $this->uploadHost, $path, $parameters);
+        return $this->http('POST', self::UPLOAD_HOST, $path, $parameters);
     }
 
     /**
@@ -308,7 +298,7 @@ class TwitterOAuth
     private function http($method, $host, $path, array $parameters)
     {
         $this->resetLastResult();
-        $url = "{$host}/{$this->apiVersion}/{$path}.json";
+        $url = sprintf('%s/%s/%s.json', $host, self::API_VERSION, $path);
         $this->lastApiPath = $path;
         $result = $this->oAuthRequest($url, $method, $parameters);
         $response = JsonDecoder::decode($result, $this->decodeJsonAsArray);
@@ -412,7 +402,7 @@ class TwitterOAuth
         if (empty($this->proxy)) {
             list($header, $body) = explode("\r\n\r\n", $response, 2);
         } else {
-            list($connect, $header, $body) = explode("\r\n\r\n", $response, 3);
+            list(, $header, $body) = explode("\r\n\r\n", $response, 3);
         }
         list($this->lastHttpHeaders, $this->lastXHeaders) = $this->parseHeaders($header);
         $this->lastHttpInfo = curl_getinfo($curlHandle);
