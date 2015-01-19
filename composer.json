@@ -4,7 +4,7 @@
     "description": "The most popular PHP library for use with the Twitter OAuth REST API.",
     "keywords": ["twitter", "api", "oauth", "rest", "social"],
     "license": "MIT",
-    "homepage": "http://twitteroauth.com",
+    "homepage": "https://twitteroauth.com",
     "authors": [
         {
             "name": "Abraham Williams",
