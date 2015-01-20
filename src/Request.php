@@ -31,59 +31,6 @@ class Request
     }
 
     /**
-     * attempt to build up a request from what was passed to the server
-     *
-     * @param string|null $httpMethod
-     * @param string|null $httpUrl
-     * @param array|null  $parameters
-     *
-     * @return Request
-     */
-    public static function fromRequest($httpMethod = null, $httpUrl = null, array $parameters = null)
-    {
-        $scheme = (!isset($_SERVER['HTTPS']) || $_SERVER['HTTPS'] != "on") ? 'http' : 'https';
-        $httpUrl = ($httpUrl) ? $httpUrl : $scheme .
-            '://' . $_SERVER['SERVER_NAME'] .
-            ':' .
-            $_SERVER['SERVER_PORT'] .
-            $_SERVER['REQUEST_URI'];
-        $httpMethod = ($httpMethod) ? $httpMethod : $_SERVER['REQUEST_METHOD'];
-
-        // We weren't handed any parameters, so let's find the ones relevant to
-        // this request.
-        // If you run XML-RPC or similar you should use this to provide your own
-        // parsed parameter-list
-        if (null !== $parameters) {
-            // Find request headers
-            $headers = Util::getHeaders();
-
-            // Parse the query-string to find GET parameters
-            $parameters = Util::parseParameters($_SERVER['QUERY_STRING']);
-
-            // It's a POST request of the proper content-type, so parse POST
-            // parameters and add those overriding any duplicates from GET
-            if ($httpMethod == "POST"
-                && isset($headers['Content-Type'])
-                && strstr($headers['Content-Type'], 'application/x-www-form-urlencoded')
-            ) {
-                $post_data = Util::parseParameters(file_get_contents(self::$POST_INPUT));
-                $parameters = array_merge($parameters, $post_data);
-            }
-
-            // We have a Authorization-header with OAuth data. Parse the header
-            // and add those overriding any duplicates from GET or POST
-            if (isset($headers['Authorization'])
-                && substr($headers['Authorization'], 0, 6) == 'OAuth '
-            ) {
-                $headerParameters = Util::splitHeader($headers['Authorization']);
-                $parameters = array_merge($parameters, $headerParameters);
-            }
-        }
-
-        return new Request($httpMethod, $httpUrl, $parameters);
-    }
-
-    /**
      * pretty much a helper function to set up the request
      *
      * @param Consumer $consumer
