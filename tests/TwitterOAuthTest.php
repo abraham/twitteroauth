@@ -58,6 +58,7 @@ class TwitterOAuthTest extends \PHPUnit_Framework_TestCase
         return $accessToken;
     }
 
+    // This causes issues for parallel run tests.
     // /**
     //  * @depends testBearerToken
     //  */
@@ -102,7 +103,12 @@ class TwitterOAuthTest extends \PHPUnit_Framework_TestCase
     public function testOauthAccessTokenTokenException(array $requestToken)
     {
         // Can't test this without a browser logging into Twitter so check for the correct error instead.
-        $twitter = new TwitterOAuth(CONSUMER_KEY, CONSUMER_SECRET, $requestToken['oauth_token'], $requestToken['oauth_token_secret']);
+        $twitter = new TwitterOAuth(
+            CONSUMER_KEY,
+            CONSUMER_SECRET,
+            $requestToken['oauth_token'],
+            $requestToken['oauth_token_secret']
+        );
         $twitter->oauth("oauth/access_token", array("oauth_verifier" => "fake_oauth_verifier"));
     }
 
