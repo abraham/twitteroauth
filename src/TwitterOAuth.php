@@ -47,7 +47,7 @@ class TwitterOAuth
     private $lastHttpMethod;
     /** @var array HTTP headers from the most recent request that start with X */
     private $lastXHeaders = array();
-    /** @var array|object|null HTTP body from the most recent request */
+    /** @var array|object|string|null HTTP body from the most recent request */
     private $lastResponse;
     /** @var string|null Application bearer token */
     private $bearer;
