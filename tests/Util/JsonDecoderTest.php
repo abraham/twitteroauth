@@ -43,7 +43,7 @@ class JsonDecoderTest extends \PHPUnit_Framework_TestCase
      */
     private function getClass(\Closure $callable)
     {
-        $object = new stdClass();
+        $object = new \stdClass();
 
         return $callable($object);
     }
