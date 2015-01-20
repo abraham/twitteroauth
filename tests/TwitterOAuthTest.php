@@ -110,7 +110,8 @@ class TwitterOAuthTest extends \PHPUnit_Framework_TestCase
 
     public function testGetAccountVerifyCredentials()
     {
-        $this->twitter->get('account/verify_credentials');
+        // Include entities boolean added to test parameter value cohearsion
+        $this->twitter->get('account/verify_credentials', array("include_entities" => false));
         $this->assertEquals(200, $this->twitter->lastHttpCode());
     }
 

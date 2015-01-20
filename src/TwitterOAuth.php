@@ -375,12 +375,12 @@ class TwitterOAuth
         switch ($method) {
             case 'GET':
                 if (!empty($postfields)) {
-                    $options[CURLOPT_URL] .= '?' . http_build_query($postfields);
+                    $options[CURLOPT_URL] .= '?' . Util::buildHttpQuery($postfields);
                 }
                 break;
             case 'POST':
                 $options[CURLOPT_POST] = true;
-                $options[CURLOPT_POSTFIELDS] = http_build_query($postfields);
+                $options[CURLOPT_POSTFIELDS] = Util::buildHttpQuery($postfields);
                 break;
         }
 
