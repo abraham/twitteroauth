@@ -36,6 +36,9 @@ class TwitterOAuthTest extends \PHPUnit_Framework_TestCase
     {
         $twitter = new TwitterOAuth(CONSUMER_KEY, CONSUMER_SECRET);
         $result = $twitter->oauth2('oauth2/token', array('grant_type' => 'client_credentials'));
+        if ($twitter->lastHttpCode() !== 200) {
+            $this->assertEquals('foo', print_r($result, true));
+        }
         $this->assertEquals(200, $twitter->lastHttpCode());
         $this->assertObjectHasAttribute('token_type', $result);
         $this->assertObjectHasAttribute('access_token', $result);
