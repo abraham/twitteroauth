@@ -13,28 +13,12 @@ use Abraham\TwitterOAuth\Util\JsonDecoder;
  *
  * @author Abraham Williams <abraham@abrah.am>
  */
-class TwitterOAuth
+class TwitterOAuth extends Config
 {
     const API_VERSION = '1.1';
     const API_HOST = 'https://api.twitter.com';
     const UPLOAD_HOST = 'https://upload.twitter.com';
 
-    /** @var int How long to wait for a response from the API */
-    private $timeout = 5;
-    /** @var int how long to wait while connecting to the API */
-    private $connectionTimeout = 5;
-    /**
-     * Decode JSON Response as associative Array
-     *
-     * @see http://php.net/manual/en/function.json-decode.php
-     *
-     * @var bool
-     */
-    private $decodeJsonAsArray = false;
-    /** @var string User-Agent header */
-    private $userAgent = 'TwitterOAuth (+https://twitteroauth.com)';
-    /** @var array Store proxy connection details */
-    private $proxy = array();
     /** @var string|null API path from the most recent request */
     private $lastApiPath;
     /** @var int|null HTTP status code from the most recent request */
@@ -86,42 +70,6 @@ class TwitterOAuth
     public function setOauthToken($oauthToken, $oauthTokenSecret)
     {
         $this->token = new Token($oauthToken, $oauthTokenSecret);
-    }
-
-    /**
-     * Set the connection and response timeouts.
-     *
-     * @param int $connectionTimeout
-     * @param int $timeout
-     */
-    public function setTimeouts($connectionTimeout, $timeout)
-    {
-        $this->connectionTimeout = (int)$connectionTimeout;
-        $this->timeout = (int)$timeout;
-    }
-
-    /**
-     * @param bool $value
-     */
-    public function setDecodeJsonAsArray($value)
-    {
-        $this->decodeJsonAsArray = (bool)$value;
-    }
-
-    /**
-     * @param string $userAgent
-     */
-    public function setUserAgent($userAgent)
-    {
-        $this->userAgent = (string)$userAgent;
-    }
-
-    /**
-     * @param array $proxy
-     */
-    public function setProxy(array $proxy)
-    {
-        $this->proxy = $proxy;
     }
 
     /**
