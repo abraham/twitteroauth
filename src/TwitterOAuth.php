@@ -317,17 +317,15 @@ class TwitterOAuth extends Config
 
         $this->response->setHttpCode(curl_getinfo($curlHandle, CURLINFO_HTTP_CODE));
         if (empty($this->proxy)) {
-            list($header, $body) = explode("\r\n\r\n", $response, 2);
+            list($responseHeader, $responseBody) = explode("\r\n\r\n", $response, 2);
         } else {
-            list(, $header, $body) = explode("\r\n\r\n", $response, 3);
+            list(, $responseHeader, $responseBody) = explode("\r\n\r\n", $response, 3);
         }
-        list($responseHeaders, $responseXHeaders) = $this->parseHeaders($header);
-        $this->response->setXHeaders($responseXHeaders);
-        $this->response->setHeaders($responseHeaders);
+        $this->response->setHeaders($this->parseHeaders($responseHeader));
 
         curl_close($curlHandle);
 
-        return $body;
+        return $responseBody;
     }
 
     /**
@@ -340,19 +338,15 @@ class TwitterOAuth extends Config
     private function parseHeaders($header)
     {
         $headers = array();
-        $xHeaders = array();
         foreach (explode("\r\n", $header) as $i => $line) {
             $i = strpos($line, ':');
             if (!empty($i)) {
                 list ($key, $value) = explode(': ', $line);
                 $key = str_replace('-', '_', strtolower($key));
                 $headers[$key] = trim($value);
-                if (substr($key, 0, 1) == 'x') {
-                    $xHeaders[$key] = trim($value);
-                }
             }
         }
-        return array($headers, $xHeaders);
+        return $headers;
     }
 
     /**
