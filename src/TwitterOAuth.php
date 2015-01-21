@@ -19,20 +19,8 @@ class TwitterOAuth extends Config
     const API_HOST = 'https://api.twitter.com';
     const UPLOAD_HOST = 'https://upload.twitter.com';
 
-    /** @var string|null API path from the most recent request */
-    private $lastApiPath;
-    /** @var int|null HTTP status code from the most recent request */
-    private $lastHttpCode;
-    /** @var array HTTP headers from the most recent request */
-    private $lastHttpHeaders = array();
-    /** @var array */
-    private $lastHttpInfo = array();
-    /** @var string|null HTTP method from the most recent request */
-    private $lastHttpMethod;
-    /** @var array HTTP headers from the most recent request that start with X */
-    private $lastXHeaders = array();
-    /** @var array|object|string|null HTTP body from the most recent request */
-    private $lastResponse;
+    /** var Response details about the result of the last request */
+    private $response;
     /** @var string|null Application bearer token */
     private $bearer;
     /** @var Consumer Twitter application details */
@@ -52,7 +40,7 @@ class TwitterOAuth extends Config
      */
     public function __construct($consumerKey, $consumerSecret, $oauthToken = null, $oauthTokenSecret = null)
     {
-        $this->resetLastResult();
+        $this->resetLastResponse();
         $this->signatureMethod = new HmacSha1();
         $this->consumer = new Consumer($consumerKey, $consumerSecret);
         if (!empty($oauthToken) && !empty($oauthTokenSecret)) {
@@ -73,57 +61,43 @@ class TwitterOAuth extends Config
     }
 
     /**
-     * @return null|string
-     */
-    public function lastApiPath()
-    {
-        return $this->lastApiPath;
-    }
-
-    /**
-     * @return int|null
-     */
-    public function lastHttpCode()
-    {
-        return $this->lastHttpCode;
-    }
-
-    /**
      * @return string|null
      */
-    public function lastHttpMethod()
+    public function getLastApiPath()
     {
-        return $this->lastHttpMethod;
+        return $this->response->getApiPath();
+    }
+
+    /**
+     * @return int
+     */
+    public function getLastHttpCode()
+    {
+        return $this->response->getHttpCode();
     }
 
     /**
      * @return array
      */
-    public function lastXHeaders()
+    public function getLastXHeaders()
     {
-        return $this->lastXHeaders;
+        return $this->response->getXHeaders();
     }
 
     /**
      * @return array|object|null
      */
-    public function lastResponse()
+    public function getLastBody()
     {
-        return $this->lastResponse;
+        return $this->response->getBody();
     }
 
     /**
-     * Resets the last response information
+     * Resets the last response cache.
      */
-    public function resetLastResult()
+    public function resetLastResponse()
     {
-        $this->lastApiPath = null;
-        $this->lastHttpCode = null;
-        $this->lastHttpInfo = array();
-        $this->lastHttpHeaders = array();
-        $this->lastHttpMethod = null;
-        $this->lastXHeaders = array();
-        $this->lastResponse = array();
+        $this->response = new Response();
     }
 
     /**
@@ -136,13 +110,10 @@ class TwitterOAuth extends Config
      */
     public function url($path, array $parameters)
     {
-        $this->resetLastResult();
-        $this->lastApiPath = $path;
+        $this->resetLastResponse();
+        $this->response->setApiPath($path);
         $query = http_build_query($parameters);
-        $response = sprintf('%s/%s?%s', self::API_HOST, $path, $query);
-        $this->lastResponse = $response;
-
-        return $response;
+        return sprintf('%s/%s?%s', self::API_HOST, $path, $query);
     }
 
     /**
@@ -156,13 +127,13 @@ class TwitterOAuth extends Config
      */
     public function oauth($path, array $parameters = array())
     {
-        $this->resetLastResult();
-        $this->lastApiPath = $path;
+        $this->resetLastResponse();
+        $this->response->setApiPath($path);
         $url = sprintf('%s/%s', self::API_HOST, $path);
         $result = $this->oAuthRequest($url, 'POST', $parameters);
-        if ($this->lastHttpCode() == 200) {
+        if ($this->getLastHttpCode() == 200) {
             parse_str($result, $response);
-            $this->lastResponse = $response;
+            $this->response->setBody($response);
 
             return $response;
         } else {
@@ -181,15 +152,14 @@ class TwitterOAuth extends Config
     public function oauth2($path, array $parameters = array())
     {
         $method = 'POST';
-        $this->resetLastResult();
-        $this->lastApiPath = $path;
-        $this->lastHttpMethod = $method;
+        $this->resetLastResponse();
+        $this->response->setApiPath($path);
         $url = sprintf('%s/%s', self::API_HOST, $path);
         $request = Request::fromConsumerAndToken($this->consumer, $this->token, $method, $url, $parameters);
         $headers = 'Authorization: Basic ' . $this->encodeAppAuthorization($this->consumer);
         $result = $this->request($request->getNormalizedHttpUrl(), $method, $headers, $parameters);
         $response = JsonDecoder::decode($result, $this->decodeJsonAsArray);
-        $this->lastResponse = $response;
+        $this->response->setBody($response);
         return $response;
     }
 
@@ -245,13 +215,12 @@ class TwitterOAuth extends Config
      */
     private function http($method, $host, $path, array $parameters)
     {
-        $this->resetLastResult();
+        $this->resetLastResponse();
         $url = sprintf('%s/%s/%s.json', $host, self::API_VERSION, $path);
-        $this->lastApiPath = $path;
+        $this->response->setApiPath($path);
         $result = $this->oAuthRequest($url, $method, $parameters);
         $response = JsonDecoder::decode($result, $this->decodeJsonAsArray);
-        $this->lastResponse = $response;
-
+        $this->response->setBody($response);
         return $response;
     }
 
@@ -267,7 +236,6 @@ class TwitterOAuth extends Config
      */
     private function oAuthRequest($url, $method, array $parameters)
     {
-        $this->lastHttpMethod = $method;
         $request = Request::fromConsumerAndToken($this->consumer, $this->token, $method, $url, $parameters);
         if (array_key_exists('oauth_callback', $parameters)) {
             // Twitter doesn't like oauth_callback as a parameter.
@@ -346,14 +314,16 @@ class TwitterOAuth extends Config
                 throw new TwitterOAuthException('Response from server failed or was interrupted.');
         }
 
-        $this->lastHttpCode = curl_getinfo($curlHandle, CURLINFO_HTTP_CODE);
+        $this->response->setHttpCode(curl_getinfo($curlHandle, CURLINFO_HTTP_CODE));
         if (empty($this->proxy)) {
             list($header, $body) = explode("\r\n\r\n", $response, 2);
         } else {
             list(, $header, $body) = explode("\r\n\r\n", $response, 3);
         }
-        list($this->lastHttpHeaders, $this->lastXHeaders) = $this->parseHeaders($header);
-        $this->lastHttpInfo = curl_getinfo($curlHandle);
+        list($responseHeaders, $responseXHeaders) = $this->parseHeaders($header);
+        $this->response->setXHeaders($responseXHeaders);
+        $this->response->setHeaders($responseHeaders);
+
         curl_close($curlHandle);
 
         return $body;

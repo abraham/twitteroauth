@@ -29,14 +29,14 @@ class TwitterOAuthTest extends \PHPUnit_Framework_TestCase
         $this->assertObjectHasAttribute('consumer', $twitter);
         $this->assertObjectHasAttribute('token', $twitter);
         $twitter->get('friendships/show', array('target_screen_name' => 'twitterapi'));
-        $this->assertEquals(200, $twitter->lastHttpCode());
+        $this->assertEquals(200, $twitter->getLastHttpCode());
     }
 
     public function testOauth2Token()
     {
         $twitter = new TwitterOAuth(CONSUMER_KEY, CONSUMER_SECRET);
         $result = $twitter->oauth2('oauth2/token', array('grant_type' => 'client_credentials'));
-        $this->assertEquals(200, $twitter->lastHttpCode());
+        $this->assertEquals(200, $twitter->getLastHttpCode());
         $this->assertObjectHasAttribute('token_type', $result);
         $this->assertObjectHasAttribute('access_token', $result);
         $this->assertEquals('bearer', $result->token_type);
@@ -50,11 +50,11 @@ class TwitterOAuthTest extends \PHPUnit_Framework_TestCase
     {
         $twitter = new TwitterOAuth(CONSUMER_KEY, CONSUMER_SECRET, null, $accessToken->access_token);
         $result = $twitter->get('statuses/user_timeline', array('screen_name' => 'twitterapi'));
-        if ($twitter->lastHttpCode() !== 200) {
+        if ($twitter->getLastHttpCode() !== 200) {
             $this->assertEquals('foo', substr($accessToken->access_token, 0, 75));
             $this->assertEquals('foo', print_r($result, true));
         }
-        $this->assertEquals(200, $twitter->lastHttpCode());
+        $this->assertEquals(200, $twitter->getLastHttpCode());
         return $accessToken;
     }
 
@@ -67,7 +67,7 @@ class TwitterOAuthTest extends \PHPUnit_Framework_TestCase
     //     $twitter = new TwitterOAuth(CONSUMER_KEY, CONSUMER_SECRET);
     //     // HACK: access_token is already urlencoded but gets urlencoded again breaking the invalidate request.
     //     $result = $twitter->oauth2('oauth2/invalidate_token', array('access_token' => urldecode($accessToken->access_token)));
-    //     $this->assertEquals(200, $twitter->lastHttpCode());
+    //     $this->assertEquals(200, $twitter->getLastHttpCode());
     //     $this->assertObjectHasAttribute('access_token', $result);
     //     return $result;
     // }
@@ -76,7 +76,7 @@ class TwitterOAuthTest extends \PHPUnit_Framework_TestCase
     {
         $twitter = new TwitterOAuth(CONSUMER_KEY, CONSUMER_SECRET);
         $result = $twitter->oauth('oauth/request_token', array('oauth_callback' => OAUTH_CALLBACK));
-        $this->assertEquals(200, $twitter->lastHttpCode());
+        $this->assertEquals(200, $twitter->getLastHttpCode());
         $this->assertArrayHasKey('oauth_token', $result);
         $this->assertArrayHasKey('oauth_token_secret', $result);
         $this->assertArrayHasKey('oauth_callback_confirmed', $result);
@@ -122,7 +122,7 @@ class TwitterOAuthTest extends \PHPUnit_Framework_TestCase
     {
         // Include entities boolean added to test parameter value cohearsion
         $this->twitter->get('account/verify_credentials', array("include_entities" => false));
-        $this->assertEquals(200, $this->twitter->lastHttpCode());
+        $this->assertEquals(200, $this->twitter->getLastHttpCode());
     }
 
     // BUG: testing is too unreliable for now
@@ -135,20 +135,20 @@ class TwitterOAuthTest extends \PHPUnit_Framework_TestCase
     //     ));
     //     $this->twitter->setTimeouts(60, 60);
     //     $result = $this->twitter->get('account/verify_credentials');
-    //     $this->assertEquals(200, $this->twitter->lastHttpCode());
+    //     $this->assertEquals(200, $this->twitter->getLastHttpCode());
     //     $this->assertObjectHasAttribute('id', $result);
     // }
 
     public function testGetStatusesMentionsTimeline()
     {
         $this->twitter->get('statuses/mentions_timeline');
-        $this->assertEquals(200, $this->twitter->lastHttpCode());
+        $this->assertEquals(200, $this->twitter->getLastHttpCode());
     }
 
     public function testGetSearchTweets()
     {
         $result = $this->twitter->get('search/tweets', array('q' => 'twitter'));
-        $this->assertEquals(200, $this->twitter->lastHttpCode());
+        $this->assertEquals(200, $this->twitter->getLastHttpCode());
         return $result->statuses;
     }
 
@@ -159,17 +159,17 @@ class TwitterOAuthTest extends \PHPUnit_Framework_TestCase
     {
         $maxId = array_pop($statuses)->id_str;
         $this->twitter->get('search/tweets', array('q' => 'twitter', 'max_id' => $maxId));
-        $this->assertEquals(200, $this->twitter->lastHttpCode());
+        $this->assertEquals(200, $this->twitter->getLastHttpCode());
     }
 
     public function testPostFavoritesCreate()
     {
         $result = $this->twitter->post('favorites/create', array('id' => '6242973112'));
-        if ($this->twitter->lastHttpCode() == 403) {
+        if ($this->twitter->getLastHttpCode() == 403) {
             // Status already favorited
             $this->assertEquals(139, $result->errors[0]->code);
         } else {
-            $this->assertEquals(200, $this->twitter->lastHttpCode());
+            $this->assertEquals(200, $this->twitter->getLastHttpCode());
         }
     }
 
@@ -179,7 +179,7 @@ class TwitterOAuthTest extends \PHPUnit_Framework_TestCase
     public function testPostFavoritesDestroy()
     {
         $this->twitter->post('favorites/destroy', array('id' => '6242973112'));
-        $this->assertEquals(200, $this->twitter->lastHttpCode());
+        $this->assertEquals(200, $this->twitter->getLastHttpCode());
     }
 
     public function testPostStatusesUpdateWithMedia()
@@ -188,12 +188,12 @@ class TwitterOAuthTest extends \PHPUnit_Framework_TestCase
         // Image source https://www.flickr.com/photos/titrans/8548825587/
         $file_path = __DIR__ . '/kitten.jpg';
         $result = $this->twitter->upload('media/upload', array('media' => $file_path));
-        $this->assertEquals(200, $this->twitter->lastHttpCode());
+        $this->assertEquals(200, $this->twitter->getLastHttpCode());
         $this->assertObjectHasAttribute('media_id_string', $result);
         $parameters = array('status' => 'Hello World ' . time(), 'media_ids' => $result->media_id_string);
         $result = $this->twitter->post('statuses/update', $parameters);
-        $this->assertEquals(200, $this->twitter->lastHttpCode());
-        if ($this->twitter->lastHttpCode() == 200) {
+        $this->assertEquals(200, $this->twitter->getLastHttpCode());
+        if ($this->twitter->getLastHttpCode() == 200) {
             $result = $this->twitter->post('statuses/destroy/' . $result->id_str);
         }
         return $result;
@@ -202,7 +202,7 @@ class TwitterOAuthTest extends \PHPUnit_Framework_TestCase
     public function testPostStatusesUpdateUtf8()
     {
         $result = $this->twitter->post('statuses/update', array('status' => 'xこんにちは世界 ' . time()));
-        $this->assertEquals(200, $this->twitter->lastHttpCode());
+        $this->assertEquals(200, $this->twitter->getLastHttpCode());
         return $result;
     }
 
@@ -212,27 +212,25 @@ class TwitterOAuthTest extends \PHPUnit_Framework_TestCase
     public function testPostStatusesDestroy($status)
     {
         $this->twitter->post('statuses/destroy/' . $status->id_str);
-        $this->assertEquals(200, $this->twitter->lastHttpCode());
+        $this->assertEquals(200, $this->twitter->getLastHttpCode());
     }
 
     public function testLastResult()
     {
         $this->twitter->get('search/tweets', array('q' => 'twitter'));
-        $this->assertEquals('search/tweets', $this->twitter->lastApiPath());
-        $this->assertEquals(200, $this->twitter->lastHttpCode());
-        $this->assertEquals('GET', $this->twitter->lastHttpMethod());
-        $this->assertObjectHasAttribute('statuses', $this->twitter->lastResponse());
+        $this->assertEquals('search/tweets', $this->twitter->getLastApiPath());
+        $this->assertEquals(200, $this->twitter->getLastHttpCode());
+        $this->assertObjectHasAttribute('statuses', $this->twitter->getLastBody());
     }
 
     /**
      * @depends testLastResult
      */
-    public function testResetLastResult()
+    public function testResetLastResponse()
     {
-        $this->twitter->resetLastResult();
-        $this->assertEquals('', $this->twitter->lastApiPath());
-        $this->assertEquals(0, $this->twitter->lastHttpCode());
-        $this->assertEquals('', $this->twitter->lastHttpMethod());
-        $this->assertEquals(array(), $this->twitter->lastResponse());
+        $this->twitter->resetLastResponse();
+        $this->assertEquals('', $this->twitter->getLastApiPath());
+        $this->assertEquals(0, $this->twitter->getLastHttpCode());
+        $this->assertEquals(array(), $this->twitter->getLastBody());
     }
 }
