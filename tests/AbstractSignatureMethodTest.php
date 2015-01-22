@@ -13,7 +13,7 @@ abstract class AbstractSignatureMethodTest extends \PHPUnit_Framework_TestCase
      */
     abstract public function getClass();
 
-    abstract function signatureDataProvider();
+    abstract protected function signatureDataProvider();
 
     public function testGetName()
     {
