@@ -66,7 +66,10 @@ class TwitterOAuthTest extends \PHPUnit_Framework_TestCase
     // {
     //     $twitter = new TwitterOAuth(CONSUMER_KEY, CONSUMER_SECRET);
     //     // HACK: access_token is already urlencoded but gets urlencoded again breaking the invalidate request.
-    //     $result = $twitter->oauth2('oauth2/invalidate_token', array('access_token' => urldecode($accessToken->access_token)));
+    //     $result = $twitter->oauth2(
+    //         'oauth2/invalidate_token',
+    //         array('access_token' => urldecode($accessToken->access_token))
+    //     );
     //     $this->assertEquals(200, $twitter->getLastHttpCode());
     //     $this->assertObjectHasAttribute('access_token', $result);
     //     return $result;
