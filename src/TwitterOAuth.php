@@ -316,11 +316,9 @@ class TwitterOAuth extends Config
         }
 
         $this->response->setHttpCode(curl_getinfo($curlHandle, CURLINFO_HTTP_CODE));
-        if (empty($this->proxy)) {
-            list($responseHeader, $responseBody) = explode("\r\n\r\n", $response, 2);
-        } else {
-            list(, $responseHeader, $responseBody) = explode("\r\n\r\n", $response, 3);
-        }
+        $parts = explode("\r\n\r\n", $response);
+        $responseBody = array_pop($parts);
+        $responseHeader = array_pop($parts);
         $this->response->setHeaders($this->parseHeaders($responseHeader));
 
         curl_close($curlHandle);
