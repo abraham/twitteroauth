@@ -313,6 +313,8 @@ class TwitterOAuth extends Config
                 throw new TwitterOAuthException('The remote servers SSL certificate or SSH md5 fingerprint failed validation.');
             case 56:
                 throw new TwitterOAuthException('Response from server failed or was interrupted.');
+            case 77:
+                throw new TwitterOAuthException('Problem with the SSL CA cert (path? access rights?)');
         }
 
         $this->response->setHttpCode(curl_getinfo($curlHandle, CURLINFO_HTTP_CODE));
