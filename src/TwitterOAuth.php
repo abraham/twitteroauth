@@ -254,10 +254,10 @@ class TwitterOAuth extends Config
     /**
      * Make an HTTP request
      *
-     * @param $url
-     * @param $method
-     * @param $headers
-     * @param $postfields
+     * @param string $url
+     * @param string $method
+     * @param string $headers
+     * @param array $postfields
      *
      * @return string
      * @throws TwitterOAuthException
