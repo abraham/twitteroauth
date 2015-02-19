@@ -212,21 +212,13 @@ class Request
     /**
      * Builds the Authorization: header
      *
-     * @param string|null $realm
-     *
      * @return string
      * @throws TwitterOAuthException
      */
-    public function toHeader($realm = null)
+    public function toHeader()
     {
         $first = true;
-        if ($realm) {
-            $out = 'Authorization: OAuth realm="' . Util::urlencodeRfc3986($realm) . '"';
-            $first = false;
-        } else {
-            $out = 'Authorization: OAuth';
-        }
-
+        $out = 'Authorization: OAuth';
         foreach ($this->parameters as $k => $v) {
             if (substr($k, 0, 5) != "oauth") {
                 continue;
