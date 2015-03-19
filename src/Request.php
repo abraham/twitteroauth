@@ -226,7 +226,7 @@ class Request
             if (is_array($v)) {
                 throw new TwitterOAuthException('Arrays not supported in headers');
             }
-            $out .= ($first) ? ' ' : ',';
+            $out .= ($first) ? ' ' : ', ';
             $out .= Util::urlencodeRfc3986($k) . '="' . Util::urlencodeRfc3986($v) . '"';
             $first = false;
         }
