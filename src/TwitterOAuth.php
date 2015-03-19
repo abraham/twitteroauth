@@ -157,8 +157,8 @@ class TwitterOAuth extends Config
         $this->response->setApiPath($path);
         $url = sprintf('%s/%s', self::API_HOST, $path);
         $request = Request::fromConsumerAndToken($this->consumer, $this->token, $method, $url, $parameters);
-        $headers = 'Authorization: Basic ' . $this->encodeAppAuthorization($this->consumer);
-        $result = $this->request($request->getNormalizedHttpUrl(), $method, $headers, $parameters);
+        $authorization = 'Authorization: Basic ' . $this->encodeAppAuthorization($this->consumer);
+        $result = $this->request($request->getNormalizedHttpUrl(), $method, $authorization, $parameters);
         $response = JsonDecoder::decode($result, $this->decodeJsonAsArray);
         $this->response->setBody($response);
         return $response;
@@ -244,11 +244,11 @@ class TwitterOAuth extends Config
         }
         if ($this->bearer === null) {
             $request->signRequest($this->signatureMethod, $this->consumer, $this->token);
-            $headers = $request->toHeader();
+            $authorization = $request->toHeader();
         } else {
-            $headers = 'Authorization: Bearer ' . $this->bearer;
+            $authorization = 'Authorization: Bearer ' . $this->bearer;
         }
-        return $this->request($request->getNormalizedHttpUrl(), $method, $headers, $parameters);
+        return $this->request($request->getNormalizedHttpUrl(), $method, $authorization, $parameters);
     }
 
     /**
@@ -256,14 +256,15 @@ class TwitterOAuth extends Config
      *
      * @param string $url
      * @param string $method
-     * @param string $headers
+     * @param string $authorization
      * @param array $postfields
      *
      * @return string
      * @throws TwitterOAuthException
      */
-    private function request($url, $method, $headers, $postfields)
+    private function request($url, $method, $authorization, $postfields)
     {
+        var_dump('$authorization', $authorization);
         /* Curl settings */
         $options = array(
             // CURLOPT_VERBOSE => true,
@@ -271,7 +272,7 @@ class TwitterOAuth extends Config
             CURLOPT_CAPATH => __DIR__,
             CURLOPT_CONNECTTIMEOUT => $this->connectionTimeout,
             CURLOPT_HEADER => true,
-            CURLOPT_HTTPHEADER => array($headers, 'Expect:'),
+            CURLOPT_HTTPHEADER => array($authorization, 'Expect:'),
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_SSL_VERIFYHOST => 2,
             CURLOPT_SSL_VERIFYPEER => true,
