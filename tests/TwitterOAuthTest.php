@@ -89,7 +89,7 @@ class TwitterOAuthTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @expectedException \Abraham\TwitterOAuth\TwitterOAuthException
-     * @expectedExceptionMessage Failed to validate oauth signature and token
+     * @expectedExceptionMessage Could not authenticate you
      */
     public function testOauthRequestTokenException()
     {
