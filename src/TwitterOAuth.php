@@ -264,7 +264,6 @@ class TwitterOAuth extends Config
      */
     private function request($url, $method, $authorization, $postfields)
     {
-        var_dump('$authorization', $authorization);
         /* Curl settings */
         $options = array(
             // CURLOPT_VERBOSE => true,
