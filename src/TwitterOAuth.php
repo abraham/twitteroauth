@@ -271,7 +271,7 @@ class TwitterOAuth extends Config
             CURLOPT_CAPATH => __DIR__,
             CURLOPT_CONNECTTIMEOUT => $this->connectionTimeout,
             CURLOPT_HEADER => true,
-            CURLOPT_HTTPHEADER => array($authorization, 'Expect:'),
+            CURLOPT_HTTPHEADER => array('Accept: application/json', $authorization, 'Expect:'),
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_SSL_VERIFYHOST => 2,
             CURLOPT_SSL_VERIFYPEER => true,
