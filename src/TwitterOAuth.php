@@ -235,7 +235,7 @@ class TwitterOAuth extends Config
      * @return string
      * @throws TwitterOAuthException
      */
-    private function oAuthRequest($url, $method, array $parameters)
+    protected function oAuthRequest($url, $method, array $parameters)
     {
         $request = Request::fromConsumerAndToken($this->consumer, $this->token, $method, $url, $parameters);
         if (array_key_exists('oauth_callback', $parameters)) {
@@ -339,8 +339,7 @@ class TwitterOAuth extends Config
     {
         $headers = array();
         foreach (explode("\r\n", $header) as $i => $line) {
-            $i = strpos($line, ':');
-            if (!empty($i)) {
+            if (strpos($line, ':') !== false) {
                 list ($key, $value) = explode(': ', $line);
                 $key = str_replace('-', '_', strtolower($key));
                 $headers[$key] = trim($value);
@@ -362,5 +361,15 @@ class TwitterOAuth extends Config
         $key = $consumer->key;
         $secret = $consumer->secret;
         return base64_encode($key . ':' . $secret);
+    }
+
+    /**
+     * Getter for Response
+     * 
+     * @return Response
+     */
+    public function getResponse()
+    {
+        return $this->response;
     }
 }
