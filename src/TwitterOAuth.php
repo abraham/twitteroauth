@@ -306,15 +306,19 @@ class TwitterOAuth extends Config
         $response = curl_exec($curlHandle);
 
         $curlErrno = curl_errno($curlHandle);
-        switch ($curlErrno) {
-            case 28:
-                throw new TwitterOAuthException('Request timed out.');
-            case 51:
-                throw new TwitterOAuthException('The remote servers SSL certificate or SSH md5 fingerprint failed validation.');
-            case 56:
-                throw new TwitterOAuthException('Response from server failed or was interrupted.');
-            case 77:
-                throw new TwitterOAuthException('Problem with the SSL CA cert (path? access rights?)');
+        if ($curlErrno > 0) {
+            switch ($curlErrno) {
+                case 28:
+                    throw new TwitterOAuthException('Request timed out.');
+                case 51:
+                    throw new TwitterOAuthException('The remote servers SSL certificate or SSH md5 fingerprint failed validation.');
+                case 56:
+                    throw new TwitterOAuthException('Response from server failed or was interrupted.');
+                case 77:
+                    throw new TwitterOAuthException('Problem with the SSL CA cert (path? access rights?)');
+                default:
+                    throw new TwitterOAuthException(curl_error($curlHandle), $curlErrno);
+            }
         }
 
         $this->response->setHttpCode(curl_getinfo($curlHandle, CURLINFO_HTTP_CODE));
