@@ -191,6 +191,19 @@ class TwitterOAuth extends Config
     }
 
     /**
+     * Make DELETE requests to the API.
+     *
+     * @param string $path
+     * @param array  $parameters
+     *
+     * @return array|object
+     */
+    public function delete($path, array $parameters = array())
+    {
+        return $this->http('DELETE', self::API_HOST, $path, $parameters);
+    }
+
+    /**
      * Upload media to upload.twitter.com.
      *
      * @param string $path
@@ -299,6 +312,11 @@ class TwitterOAuth extends Config
                 $options[CURLOPT_POST] = true;
                 $options[CURLOPT_POSTFIELDS] = Util::buildHttpQuery($postfields);
                 break;
+            case 'DELETE':
+                $options[CURLOPT_CUSTOMREQUEST] = 'DELETE';
+                if (!empty($postfields)) {
+                    $options[CURLOPT_URL] .= '?' . Util::buildHttpQuery($postfields);
+                }
         }
 
         $curlHandle = curl_init();
