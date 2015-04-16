@@ -325,7 +325,7 @@ class TwitterOAuth extends Config
 
         // Throw exceptions on cURL errors.
         if (curl_errno($curlHandle) > 0) {
-            throw new TwitterOAuthException(curl_error($curlHandle), $curlErrno);
+            throw new TwitterOAuthException(curl_error($curlHandle), curl_errno($curlHandle));
         }
 
         $this->response->setHttpCode(curl_getinfo($curlHandle, CURLINFO_HTTP_CODE));
