@@ -19,7 +19,7 @@ class TwitterOAuth extends Config
     const API_HOST = 'https://api.twitter.com';
     const UPLOAD_HOST = 'https://upload.twitter.com';
 
-    /** var Response details about the result of the last request */
+    /** @var Response details about the result of the last request */
     private $response;
     /** @var string|null Application bearer token */
     private $bearer;
