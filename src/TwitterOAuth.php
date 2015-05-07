@@ -204,6 +204,19 @@ class TwitterOAuth extends Config
     }
 
     /**
+     * Make PUT requests to the API.
+     *
+     * @param string $path
+     * @param array  $parameters
+     *
+     * @return array|object
+     */
+    public function put($path, array $parameters = array())
+    {
+        return $this->http('PUT', self::API_HOST, $path, $parameters);
+    }
+
+    /**
      * Upload media to upload.twitter.com.
      *
      * @param string $path
@@ -314,6 +327,11 @@ class TwitterOAuth extends Config
                 break;
             case 'DELETE':
                 $options[CURLOPT_CUSTOMREQUEST] = 'DELETE';
+                if (!empty($postfields)) {
+                    $options[CURLOPT_URL] .= '?' . Util::buildHttpQuery($postfields);
+                }
+            case 'PUT':
+                $options[CURLOPT_CUSTOMREQUEST] = 'PUT';
                 if (!empty($postfields)) {
                     $options[CURLOPT_URL] .= '?' . Util::buildHttpQuery($postfields);
                 }
