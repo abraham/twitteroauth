@@ -42,7 +42,9 @@ class TwitterOAuth extends Config
     {
         $this->resetLastResponse();
         $this->signatureMethod = new HmacSha1();
-        $this->consumer = new Consumer($consumerKey, $consumerSecret);
+        
+        $this->setConsumer($consumerKey, $consumerSercret);
+        
         if (!empty($oauthToken) && !empty($oauthTokenSecret)) {
             $this->token = new Token($oauthToken, $oauthTokenSecret);
         }
@@ -58,6 +60,21 @@ class TwitterOAuth extends Config
     public function setOauthToken($oauthToken, $oauthTokenSecret)
     {
         $this->token = new Token($oauthToken, $oauthTokenSecret);
+    }
+    
+    public function getOauthToken()
+    {
+        return $this->token;
+    }
+    
+    public function setConsumer($consumerKey, $consumerSecret)
+    {
+        $this->consumer = new Consumer($consumerKey, $consumerSecret);
+    }
+    
+    public function getConsumer()
+    {
+        return $this->consumer;
     }
 
     /**
