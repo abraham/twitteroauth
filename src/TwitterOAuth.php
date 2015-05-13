@@ -62,16 +62,26 @@ class TwitterOAuth extends Config
         $this->token = new Token($oauthToken, $oauthTokenSecret);
     }
     
+    /**
+     * @return Token|null
+     */
     public function getOauthToken()
     {
         return $this->token;
     }
-    
+
+    /**
+     * @param $consumerKey
+     * @param $consumerSecret
+     */
     public function setConsumer($consumerKey, $consumerSecret)
     {
         $this->consumer = new Consumer($consumerKey, $consumerSecret);
     }
-    
+
+    /**
+     * @return Consumer
+     */
     public function getConsumer()
     {
         return $this->consumer;
