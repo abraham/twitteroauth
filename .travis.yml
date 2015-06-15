@@ -7,7 +7,8 @@ php:
 before_script:
     - composer self-update
     - composer install --prefer-source --no-interaction --dev
-script: phpunit
+script:
+  - find . -name '*.php' -print0 | xargs -0 -L 1 -P 8 php -l
 notifications:
   webhooks:
     urls:
