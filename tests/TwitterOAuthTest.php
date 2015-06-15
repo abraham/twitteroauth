@@ -100,7 +100,7 @@ class TwitterOAuthTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @expectedException \Abraham\TwitterOAuth\TwitterOAuthException
-     * @expectedExceptionMessage Invalid request token
+     * @expectedExceptionMessage Invalid oauth_verifier parameter
      * @depends testOauthRequestToken
      */
     public function testOauthAccessTokenTokenException(array $requestToken)
