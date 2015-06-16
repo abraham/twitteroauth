@@ -10,10 +10,7 @@ class Request
     protected $parameters;
     protected $httpMethod;
     protected $httpUrl;
-    // for debug purposes
-    public $baseString;
     public static $version = '1.0';
-    public static $POST_INPUT = 'php://input';
 
     /**
      * Constructor
