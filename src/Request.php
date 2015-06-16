@@ -168,16 +168,10 @@ class Request
     {
         $parts = parse_url($this->httpUrl);
 
-        $scheme = (isset($parts['scheme'])) ? $parts['scheme'] : 'http';
-        $port = (isset($parts['port'])) ? $parts['port'] : (($scheme == 'https') ? '443' : '80');
-        $host = (isset($parts['host'])) ? strtolower($parts['host']) : '';
-        $path = (isset($parts['path'])) ? $parts['path'] : '';
+        $scheme = $parts['scheme'];
+        $host = strtolower($parts['host']);
+        $path = $parts['path'];
 
-        if (($scheme == 'https' && $port != '443')
-            || ($scheme == 'http' && $port != '80')
-        ) {
-            $host = "$host:$port";
-        }
         return "$scheme://$host$path";
     }
 
