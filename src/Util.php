@@ -14,13 +14,13 @@ class Util
      */
     public static function urlencodeRfc3986($input)
     {
+        $output = '';
         if (is_array($input)) {
-            return array_map(array(__NAMESPACE__ . '\Util', 'urlencodeRfc3986'), $input);
+            $output = array_map(array(__NAMESPACE__ . '\Util', 'urlencodeRfc3986'), $input);
         } elseif (is_scalar($input)) {
-            return rawurlencode($input);
-        } else {
-            return '';
+            $output = rawurlencode($input);
         }
+        return $output;
     }
 
     /**
