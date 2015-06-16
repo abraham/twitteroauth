@@ -63,22 +63,10 @@ class Request
     /**
      * @param string $name
      * @param string $value
-     * @param bool   $allowDuplicates
      */
-    public function setParameter($name, $value, $allowDuplicates = true)
+    public function setParameter($name, $value)
     {
-        if ($allowDuplicates && isset($this->parameters[$name])) {
-            // We have already added parameter(s) with this name, so add to the list
-            if (is_scalar($this->parameters[$name])) {
-                // This is the first duplicate, so transform scalar (string)
-                // into an array so we can add the duplicates
-                $this->parameters[$name] = array($this->parameters[$name]);
-            }
-
-            $this->parameters[$name][] = $value;
-        } else {
-            $this->parameters[$name] = $value;
-        }
+        $this->parameters[$name] = $value;
     }
 
     /**
@@ -239,9 +227,9 @@ class Request
      */
     public function signRequest(SignatureMethod $signatureMethod, Consumer $consumer, Token $token = null)
     {
-        $this->setParameter("oauth_signature_method", $signatureMethod->getName(), false);
+        $this->setParameter("oauth_signature_method", $signatureMethod->getName());
         $signature = $this->buildSignature($signatureMethod, $consumer, $token);
-        $this->setParameter("oauth_signature", $signature, false);
+        $this->setParameter("oauth_signature", $signature);
     }
 
     /**
