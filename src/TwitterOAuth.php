@@ -317,9 +317,6 @@ class TwitterOAuth extends Config
 
         switch ($method) {
             case 'GET':
-                if (!empty($postfields)) {
-                    $options[CURLOPT_URL] .= '?' . Util::buildHttpQuery($postfields);
-                }
                 break;
             case 'POST':
                 $options[CURLOPT_POST] = true;
@@ -327,15 +324,16 @@ class TwitterOAuth extends Config
                 break;
             case 'DELETE':
                 $options[CURLOPT_CUSTOMREQUEST] = 'DELETE';
-                if (!empty($postfields)) {
-                    $options[CURLOPT_URL] .= '?' . Util::buildHttpQuery($postfields);
-                }
+                break;
             case 'PUT':
                 $options[CURLOPT_CUSTOMREQUEST] = 'PUT';
-                if (!empty($postfields)) {
-                    $options[CURLOPT_URL] .= '?' . Util::buildHttpQuery($postfields);
-                }
+                break;
         }
+
+        if (in_array($method, ['GET', 'PUT', 'DELETE']) && !empty($postfields)) {
+            $options[CURLOPT_URL] .= '?' . Util::buildHttpQuery($postfields);
+        }
+
 
         $curlHandle = curl_init();
         curl_setopt_array($curlHandle, $options);
