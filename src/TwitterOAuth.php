@@ -367,7 +367,7 @@ class TwitterOAuth extends Config
     private function parseHeaders($header)
     {
         $headers = array();
-        foreach (explode("\r\n", $header) as $i => $line) {
+        foreach (explode("\r\n", $header) as $line) {
             if (strpos($line, ':') !== false) {
                 list ($key, $value) = explode(': ', $line);
                 $key = str_replace('-', '_', strtolower($key));
