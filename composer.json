@@ -22,9 +22,9 @@
         "ext-curl": "*"
     },
     "require-dev": {
-        "phpunit/phpunit": "4.*",
-        "squizlabs/php_codesniffer": "2.*",
-        "phpmd/phpmd": "2.*"
+        "phpunit/phpunit": "4.7.*",
+        "squizlabs/php_codesniffer": "2.3.*",
+        "phpmd/phpmd": "2.2.*"
     },
     "autoload": {
         "psr-4": {
