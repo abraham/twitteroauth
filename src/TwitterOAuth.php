@@ -132,14 +132,15 @@ class TwitterOAuth extends Config
         $this->response->setApiPath($path);
         $url = sprintf('%s/%s', self::API_HOST, $path);
         $result = $this->oAuthRequest($url, 'POST', $parameters);
-        if ($this->getLastHttpCode() == 200) {
-            parse_str($result, $response);
-            $this->response->setBody($response);
 
-            return $response;
-        } else {
+        if ($this->getLastHttpCode() != 200) {
             throw new TwitterOAuthException($result);
         }
+
+        parse_str($result, $response);
+        $this->response->setBody($response);
+
+        return $response;
     }
 
     /**
