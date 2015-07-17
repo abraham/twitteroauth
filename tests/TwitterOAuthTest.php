@@ -236,4 +236,28 @@ class TwitterOAuthTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(0, $this->twitter->getLastHttpCode());
         $this->assertEquals(array(), $this->twitter->getLastBody());
     }
+
+    // Only Works for Application which have "developer/basic/standard" access from Twitter
+    // Details read: https://dev.twitter.com/ads/overview
+    public function testGetAdAccount()
+    {
+        $accountResponse = $this->twitter->getWithHost("https://ads-api-sandbox.twitter.com","0","accounts");
+        $this->assertEquals(200, $this->twitter->getLastHttpCode());
+        return $accountResponse;
+    }
+
+    /**
+     * @depends testGetAdAccount
+     * The App-List created by Ads account test is not possible to delete, for the same purpose sandbox url is used
+     */
+    public function testPostAppListForAdAccount($accountResponse)
+    {
+        $id = $accountResponse->data[0]->id;
+        $params = [
+                "name" => "Test App from Test Case",
+                "app_store_identifiers" => "com.twitter.android,333903271"
+        ];
+        $appListsPost = $this->twitter->postWithHost("https://ads-api-sandbox.twitter.com","0", "accounts/$id/app_lists", $params);
+        $this->assertEquals(200, $this->twitter->getLastHttpCode());
+    }
 }
