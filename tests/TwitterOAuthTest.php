@@ -202,6 +202,23 @@ class TwitterOAuthTest extends \PHPUnit_Framework_TestCase
         return $result;
     }
 
+    public function testPostStatusesUpdateWithMediaChunked()
+    {
+        $this->twitter->setTimeouts(60, 30);
+        // Video source http://www.sample-videos.com/
+        $file_path = __DIR__ . '/video.mp4';
+        $result = $this->twitter->upload('media/upload', array('media' => $file_path, 'media_type' => 'video/mp4'), true);
+        $this->assertEquals(201, $this->twitter->getLastHttpCode());
+        $this->assertObjectHasAttribute('media_id_string', $result);
+        $parameters = array('status' => 'Hello World ' . time(), 'media_ids' => $result->media_id_string);
+        $result = $this->twitter->post('statuses/update', $parameters);
+        $this->assertEquals(200, $this->twitter->getLastHttpCode());
+        if ($this->twitter->getLastHttpCode() == 200) {
+            $result = $this->twitter->post('statuses/destroy/' . $result->id_str);
+        }
+        return $result;
+    }
+
     public function testPostStatusesUpdateUtf8()
     {
         $result = $this->twitter->post('statuses/update', array('status' => 'xこんにちは世界 ' . time()));
