@@ -4,6 +4,7 @@ php:
   - 5.5
   - 5.4
   - hhvm
+sudo: false
 before_script:
     - composer self-update
     - composer install --prefer-source --no-interaction
