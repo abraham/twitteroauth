@@ -226,37 +226,28 @@ class TwitterOAuth extends Config
      *
      * @return array|object
      */
-    public function upload($path, array $parameters = array())
+    public function upload($path, array $parameters = array(), $chunked = false)
     {
-        $file = file_get_contents($parameters['media']);
-        $base = base64_encode($file);
-        $parameters['media'] = $base;
-        return $this->http('POST', self::UPLOAD_HOST, $path, $parameters);
-    }
-
-    /**
-     * Upload media (chunked) to upload.twitter.com.
-     *
-     * @param string $path
-     * @param array  $parameters
-     *
-     * @return array|object
-     */
-    public function uploadChunked($path, array $parameters = array())
-    {
-        // Init
-        $init = $this->http('POST', self::UPLOAD_HOST, $path, ['command' => 'INIT', 'media_type' => $parameters['media_type'], 'total_bytes' => filesize($parameters['media'])]);
-        // Append
-        $segment_index = 0;
-        $media = fopen($parameters['media'], 'rb');
-        while (!feof($media))
-        {
-            $append = $this->http('POST', self::UPLOAD_HOST, 'media/upload', ['command' => 'APPEND', 'media_id' => $init->media_id_string, 'segment_index' => $segment_index++, 'media' => base64_encode(fread($media, self::UPLOAD_CHUNK))]);
+        if ($chunked) {
+            // Init
+            $init = $this->http('POST', self::UPLOAD_HOST, $path, ['command' => 'INIT', 'media_type' => $parameters['media_type'], 'total_bytes' => filesize($parameters['media'])]);
+            // Append
+            $segment_index = 0;
+            $media = fopen($parameters['media'], 'rb');
+            while (!feof($media))
+            {
+                $this->http('POST', self::UPLOAD_HOST, 'media/upload', ['command' => 'APPEND', 'media_id' => $init->media_id_string, 'segment_index' => $segment_index++, 'media' => base64_encode(fread($media, self::UPLOAD_CHUNK))]);
+            }
+            fclose($media);
+            // Finalize
+            $finalize = $this->http('POST', self::UPLOAD_HOST, 'media/upload', ['command' => 'FINALIZE', 'media_id' => $init->media_id_string]);
+            return $finalize;
+        } else {
+            $file = file_get_contents($parameters['media']);
+            $base = base64_encode($file);
+            $parameters['media'] = $base;
+            return $this->http('POST', self::UPLOAD_HOST, $path, $parameters);
         }
-        fclose($media);
-        // Finalize
-        $finalize = $this->http('POST', self::UPLOAD_HOST, 'media/upload', ['command' => 'FINALIZE', 'media_id' => $init->media_id_string]);
-        return $finalize;
     }
 
     /**
