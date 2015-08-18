@@ -223,31 +223,70 @@ class TwitterOAuth extends Config
      *
      * @param string $path
      * @param array  $parameters
+     * @param boolean  $chunked
      *
      * @return array|object
      */
     public function upload($path, array $parameters = array(), $chunked = false)
     {
         if ($chunked) {
-            // Init
-            $init = $this->http('POST', self::UPLOAD_HOST, $path, ['command' => 'INIT', 'media_type' => $parameters['media_type'], 'total_bytes' => filesize($parameters['media'])]);
-            // Append
-            $segment_index = 0;
-            $media = fopen($parameters['media'], 'rb');
-            while (!feof($media))
-            {
-                $this->http('POST', self::UPLOAD_HOST, 'media/upload', ['command' => 'APPEND', 'media_id' => $init->media_id_string, 'segment_index' => $segment_index++, 'media' => base64_encode(fread($media, self::UPLOAD_CHUNK))]);
-            }
-            fclose($media);
-            // Finalize
-            $finalize = $this->http('POST', self::UPLOAD_HOST, 'media/upload', ['command' => 'FINALIZE', 'media_id' => $init->media_id_string]);
-            return $finalize;
+            return $this->uploadMediaChunked($path, $parameters);
         } else {
-            $file = file_get_contents($parameters['media']);
-            $base = base64_encode($file);
-            $parameters['media'] = $base;
-            return $this->http('POST', self::UPLOAD_HOST, $path, $parameters);
+            return $this->uploadMediaNotChunked($path, $parameters);
         }
+    }
+
+    /**
+     * Private method to upload media (not chunked) to upload.twitter.com.
+     *
+     * @param string $path
+     * @param array  $parameters
+     *
+     * @return array|object
+     */
+    private function uploadMediaNotChunked($path, $parameters)
+    {
+        $file = file_get_contents($parameters['media']);
+        $base = base64_encode($file);
+        $parameters['media'] = $base;
+        return $this->http('POST', self::UPLOAD_HOST, $path, $parameters);
+    }
+
+    /**
+     * Private method to upload media (chunked) to upload.twitter.com.
+     *
+     * @param string $path
+     * @param array  $parameters
+     *
+     * @return array|object
+     */
+    private function uploadMediaChunked($path, $parameters)
+    {
+        // Init
+        $init = $this->http('POST', self::UPLOAD_HOST, $path, [
+            'command' => 'INIT',
+            'media_type' => $parameters['media_type'],
+            'total_bytes' => filesize($parameters['media'])
+        ]);
+        // Append
+        $segment_index = 0;
+        $media = fopen($parameters['media'], 'rb');
+        while (!feof($media))
+        {
+            $this->http('POST', self::UPLOAD_HOST, 'media/upload', [
+                'command' => 'APPEND',
+                'media_id' => $init->media_id_string,
+                'segment_index' => $segment_index++,
+                'media' => base64_encode(fread($media, self::UPLOAD_CHUNK))
+            ]);
+        }
+        fclose($media);
+        // Finalize
+        $finalize = $this->http('POST', self::UPLOAD_HOST, 'media/upload', [
+            'command' => 'FINALIZE',
+            'media_id' => $init->media_id_string
+        ]);
+        return $finalize;
     }
 
     /**
