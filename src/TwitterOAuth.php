@@ -20,6 +20,9 @@ class TwitterOAuth extends Config
     const UPLOAD_HOST = 'https://upload.twitter.com';
     const UPLOAD_CHUNK = 40960; // 1024 * 40
 
+    const ADS_API_VERSION = '0';
+    const ADS_API_HOST = 'https://ads-api.twitter.com';
+
     /** @var Response details about the result of the last request */
     private $response;
     /** @var string|null Application bearer token */
@@ -290,6 +293,33 @@ class TwitterOAuth extends Config
     }
 
     /**
+     * Make GET requests to the ADS API.
+     *
+     * @param string $path
+     * @param array  $parameters
+     *
+     * @return array|object
+     */
+    public function getAds($path, array $parameters = array())
+    {
+        return $this->http('GET', self::ADS_API_HOST, $path, $parameters);
+    }
+
+    /**
+     * Make POST requests to the API.
+     *
+     * @param string $path
+     * @param array  $parameters
+     *
+     * @return array|object
+     */
+    public function postAds($path, array $parameters = array())
+    {
+        return $this->http('POST', self::ADS_API_HOST, $path, $parameters);
+    }
+
+
+    /**
      * @param string $method
      * @param string $host
      * @param string $path
@@ -300,6 +330,12 @@ class TwitterOAuth extends Config
     private function http($method, $host, $path, array $parameters)
     {
         $this->resetLastResponse();
+        if ($host == self::ADS_API_HOST){
+            $url = sprintf('%s/%s/%s', $host, self::ADS_API_VERSION, $path);
+        }
+        else{
+            $url = sprintf('%s/%s/%s.json', $host, self::API_VERSION, $path);
+        }
         $url = sprintf('%s/%s/%s.json', $host, self::API_VERSION, $path);
         $this->response->setApiPath($path);
         $result = $this->oAuthRequest($url, $method, $parameters);
