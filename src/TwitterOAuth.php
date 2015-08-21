@@ -336,7 +336,6 @@ class TwitterOAuth extends Config
         else{
             $url = sprintf('%s/%s/%s.json', $host, self::API_VERSION, $path);
         }
-        $url = sprintf('%s/%s/%s.json', $host, self::API_VERSION, $path);
         $this->response->setApiPath($path);
         $result = $this->oAuthRequest($url, $method, $parameters);
         $response = JsonDecoder::decode($result, $this->decodeJsonAsArray);
