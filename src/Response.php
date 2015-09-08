@@ -14,11 +14,11 @@ class Response
     /** @var int HTTP status code from the most recent request */
     private $httpCode = 0;
     /** @var array HTTP headers from the most recent request */
-    private $headers = array();
+    private $headers = [];
     /** @var array|object Response body from the most recent request */
-    private $body = array();
+    private $body = [];
     /** @var array HTTP headers from the most recent request that start with X */
-    private $xHeaders = array();
+    private $xHeaders = [];
 
     /**
      * @param string $apiPath

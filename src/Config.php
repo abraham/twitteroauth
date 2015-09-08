@@ -24,7 +24,7 @@ class Config
     /** @var string User-Agent header */
     protected $userAgent = 'TwitterOAuth (+https://twitteroauth.com)';
     /** @var array Store proxy connection details */
-    protected $proxy = array();
+    protected $proxy = [];
 
     /**
      * Set the connection and response timeouts.

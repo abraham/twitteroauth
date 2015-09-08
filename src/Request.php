@@ -19,7 +19,7 @@ class Request
      * @param string     $httpUrl
      * @param array|null $parameters
      */
-    public function __construct($httpMethod, $httpUrl, array $parameters = array())
+    public function __construct($httpMethod, $httpUrl, array $parameters = [])
     {
         $parameters = array_merge(Util::parseParameters(parse_url($httpUrl, PHP_URL_QUERY)), $parameters);
         $this->parameters = $parameters;
@@ -43,14 +43,14 @@ class Request
         Token $token = null,
         $httpMethod,
         $httpUrl,
-        array $parameters = array()
+        array $parameters = []
     ) {
-        $defaults = array(
+        $defaults = [
             "oauth_version" => Request::$version,
             "oauth_nonce" => Request::generateNonce(),
             "oauth_timestamp" => time(),
             "oauth_consumer_key" => $consumer->key
-        );
+        ];
         if (null !== $token) {
             $defaults['oauth_token'] = $token->key;
         }
@@ -125,11 +125,11 @@ class Request
      */
     public function getSignatureBaseString()
     {
-        $parts = array(
+        $parts = [
             $this->getNormalizedHttpMethod(),
             $this->getNormalizedHttpUrl(),
             $this->getSignableParameters()
-        );
+        ];
 
         $parts = Util::urlencodeRfc3986($parts);
 
