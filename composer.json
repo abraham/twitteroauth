@@ -1,5 +1,5 @@
-{       
-    "name": "abraham/twitteroauth", 
+{
+    "name": "iviamontes/twitter",
     "type": "library",
     "description": "The most popular PHP library for use with the Twitter OAuth REST API.",
     "keywords": ["twitter", "api", "oauth", "rest", "social", "twitter api", "twitter oauth"],
@@ -7,9 +7,9 @@
     "homepage": "https://twitteroauth.com",
     "authors": [
         {
-            "name": "Abraham Williams",
-            "email": "abraham@abrah.am",
-            "homepage": "https://abrah.am",
+            "name": "Ismael Viamontes",
+            "email": "ismael@aconcaguaestudio.com",
+            "homepage": "",
             "role": "Developer"
         }
     ],
