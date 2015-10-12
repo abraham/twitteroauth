@@ -9,6 +9,9 @@ namespace Abraham\TwitterOAuth;
  */
 class Config
 {
+    const API_HOST = 'https://api.twitter.com';
+    const UPLOAD_HOST = 'https://upload.twitter.com';
+
     /** @var int How long to wait for a response from the API */
     protected $timeout = 5;
     /** @var int how long to wait while connecting to the API */
@@ -25,6 +28,32 @@ class Config
     protected $userAgent = 'TwitterOAuth (+https://twitteroauth.com)';
     /** @var array Store proxy connection details */
     protected $proxy = [];
+
+    /** @var string Twitter api host */
+    protected $apiHost = self::API_HOST;
+
+    /** @var string Twitter upload host */
+    protected $uploadHost = self::UPLOAD_HOST;
+
+    /**
+     * Set the api endpoint used
+     *
+     * @param string $host
+     */
+    public function setApiHost($host)
+    {
+        $this->apiHost = $host;
+    }
+
+    /**
+     * Set the api endpoint for uploads
+     *
+     * @param string $host
+     */
+    public function setUploadHost($host)
+    {
+        $this->uploadHost = $host;
+    }
 
     /**
      * Set the connection and response timeouts.
