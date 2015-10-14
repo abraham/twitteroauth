@@ -16,8 +16,6 @@ use Abraham\TwitterOAuth\Util\JsonDecoder;
 class TwitterOAuth extends Config
 {
     const API_VERSION = '1.1';
-    const API_HOST = 'https://api.twitter.com';
-    const UPLOAD_HOST = 'https://upload.twitter.com';
     const UPLOAD_CHUNK = 40960; // 1024 * 40
 
     /** @var Response details about the result of the last request */
@@ -114,7 +112,7 @@ class TwitterOAuth extends Config
         $this->resetLastResponse();
         $this->response->setApiPath($path);
         $query = http_build_query($parameters);
-        return sprintf('%s/%s?%s', self::API_HOST, $path, $query);
+        return sprintf('%s/%s?%s', $this->apiHost, $path, $query);
     }
 
     /**
@@ -131,7 +129,7 @@ class TwitterOAuth extends Config
         $response = [];
         $this->resetLastResponse();
         $this->response->setApiPath($path);
-        $url = sprintf('%s/%s', self::API_HOST, $path);
+        $url = sprintf('%s/%s', $this->apiHost, $path);
         $result = $this->oAuthRequest($url, 'POST', $parameters);
 
         if ($this->getLastHttpCode() != 200) {
@@ -157,7 +155,7 @@ class TwitterOAuth extends Config
         $method = 'POST';
         $this->resetLastResponse();
         $this->response->setApiPath($path);
-        $url = sprintf('%s/%s', self::API_HOST, $path);
+        $url = sprintf('%s/%s', $this->apiHost, $path);
         $request = Request::fromConsumerAndToken($this->consumer, $this->token, $method, $url, $parameters);
         $authorization = 'Authorization: Basic ' . $this->encodeAppAuthorization($this->consumer);
         $result = $this->request($request->getNormalizedHttpUrl(), $method, $authorization, $parameters);
@@ -176,7 +174,7 @@ class TwitterOAuth extends Config
      */
     public function get($path, array $parameters = [])
     {
-        return $this->http('GET', self::API_HOST, $path, $parameters);
+        return $this->http('GET', $this->apiHost, $path, $parameters);
     }
 
     /**
@@ -189,7 +187,7 @@ class TwitterOAuth extends Config
      */
     public function post($path, array $parameters = [])
     {
-        return $this->http('POST', self::API_HOST, $path, $parameters);
+        return $this->http('POST', $this->apiHost, $path, $parameters);
     }
 
     /**
@@ -202,7 +200,7 @@ class TwitterOAuth extends Config
      */
     public function delete($path, array $parameters = [])
     {
-        return $this->http('DELETE', self::API_HOST, $path, $parameters);
+        return $this->http('DELETE', $this->apiHost, $path, $parameters);
     }
 
     /**
@@ -215,7 +213,7 @@ class TwitterOAuth extends Config
      */
     public function put($path, array $parameters = [])
     {
-        return $this->http('PUT', self::API_HOST, $path, $parameters);
+        return $this->http('PUT', $this->apiHost, $path, $parameters);
     }
 
     /**
@@ -249,7 +247,7 @@ class TwitterOAuth extends Config
         $file = file_get_contents($parameters['media']);
         $base = base64_encode($file);
         $parameters['media'] = $base;
-        return $this->http('POST', self::UPLOAD_HOST, $path, $parameters);
+        return $this->http('POST', $this->uploadHost, $path, $parameters);
     }
 
     /**
@@ -263,7 +261,7 @@ class TwitterOAuth extends Config
     private function uploadMediaChunked($path, $parameters)
     {
         // Init
-        $init = $this->http('POST', self::UPLOAD_HOST, $path, [
+        $init = $this->http('POST', $this->uploadHost, $path, [
             'command' => 'INIT',
             'media_type' => $parameters['media_type'],
             'total_bytes' => filesize($parameters['media'])
@@ -273,7 +271,7 @@ class TwitterOAuth extends Config
         $media = fopen($parameters['media'], 'rb');
         while (!feof($media))
         {
-            $this->http('POST', self::UPLOAD_HOST, 'media/upload', [
+            $this->http('POST', $this->uploadHost, 'media/upload', [
                 'command' => 'APPEND',
                 'media_id' => $init->media_id_string,
                 'segment_index' => $segment_index++,
@@ -282,7 +280,7 @@ class TwitterOAuth extends Config
         }
         fclose($media);
         // Finalize
-        $finalize = $this->http('POST', self::UPLOAD_HOST, 'media/upload', [
+        $finalize = $this->http('POST', $this->uploadHost, 'media/upload', [
             'command' => 'FINALIZE',
             'media_id' => $init->media_id_string
         ]);
