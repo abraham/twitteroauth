@@ -159,8 +159,12 @@ class Request
         $scheme = $parts['scheme'];
         $host = strtolower($parts['host']);
         $path = $parts['path'];
+        $port = '';
+        if (!empty($parts['port']) && 0 != ($port = intval($parts['port']))) {
+            $port = ':' . $port;
+        }
 
-        return "$scheme://$host$path";
+        return "$scheme://$host$port$path";
     }
 
     /**
