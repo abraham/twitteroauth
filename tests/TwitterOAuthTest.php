@@ -202,6 +202,22 @@ class TwitterOAuthTest extends \PHPUnit_Framework_TestCase
         return $result;
     }
 
+    public function testPostStatusesUpdateWithMediaUsingCurlFileHandling()
+    {
+        $this->twitter->setTimeouts(60, 30);
+        $file_path = '@' . __DIR__ . '/kitten.jpg';
+        $result = $this->twitter->upload('media/upload', array('media' => $file_path));
+        $this->assertEquals(200, $this->twitter->getLastHttpCode());
+        $this->assertObjectHasAttribute('media_id_string', $result);
+        $parameters = array('status' => 'Hello World ' . time(), 'media_ids' => $result->media_id_string);
+        $result = $this->twitter->post('statuses/update', $parameters);
+        $this->assertEquals(200, $this->twitter->getLastHttpCode());
+        if ($this->twitter->getLastHttpCode() == 200) {
+            $result = $this->twitter->post('statuses/destroy/' . $result->id_str);
+        }
+        return $result;
+    }
+
     public function testPostStatusesUpdateWithMediaChunked()
     {
         $this->twitter->setTimeouts(60, 30);
