@@ -219,6 +219,27 @@ class TwitterOAuthTest extends \PHPUnit_Framework_TestCase
         return $result;
     }
 
+    public function testPostStatusesUpdateWithMediaInSamePost()
+    {
+        $this->twitter->setTimeouts(60, 30);
+        // Image source https://www.flickr.com/photos/titrans/8548825587/
+        $file_path = __DIR__ . '/kitten.jpg';
+        $parameters = array('status' => 'Hello World with a kitten ' . time(), 'media[]' => '@' . $file_path);
+        $result = $this->twitter->post('statuses/update_with_media', $parameters, true);
+        $this->assertEquals(200, $this->twitter->getLastHttpCode());
+        if ($this->twitter->getLastHttpCode() == 200) {
+            $result = $this->twitter->post('statuses/destroy/' . $result->id_str);
+        }
+        $this->assertObjectNotHasAttribute('errors', $result);
+        $this->assertObjectHasAttribute('entities', $result);
+        $this->assertObjectHasAttribute('media', $result->entities);
+        $this->assertArrayHasKey(0, $result->entities->media);
+        $media = $result->entities->media[0];
+        $this->assertNotEmpty($media->media_url);
+        $this->assertNotEmpty($media->media_url_https);
+        return $result;
+    }
+
     public function testPostStatusesUpdateUtf8()
     {
         $result = $this->twitter->post('statuses/update', array('status' => 'xこんにちは世界 ' . time()));
