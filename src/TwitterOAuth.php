@@ -219,6 +219,20 @@ class TwitterOAuth extends Config
     }
 
     /**
+     * Upload media as stream upload.twitter.com
+     *
+     * @param string $path
+     * @param array  $parameters
+     * @param boolean  $chunked
+     *
+     * @return array|object
+     */
+    public function uploadStream($path, array $parameters = [])
+    {
+        return $this->http('POST', self::UPLOAD_HOST, $path, $parameters);
+    }
+
+    /**
      * Upload media to upload.twitter.com.
      *
      * @param string $path
