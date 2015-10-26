@@ -248,8 +248,8 @@ class TwitterOAuth extends Config
     {
         if ((!isset($parameters['media_data'])) && isset($parameters['media'])) {
             $fileName = $parameters['media'];
-            // Allow curl to handle the file if the filename starts with @ or is an instance of CURLFile
-            if (!($fileName instanceof \CURLFile || '@' === substr($fileName, 0 ,1))) {
+            // Allow curl to handle the file if the filename starts with @ or is not a string
+            if (is_string($fileName) && '@' !== substr($fileName, 0 ,1)) {
                 $file = file_get_contents($parameters['media']);
                 $base = base64_encode($file);
                 // When base64 encoding the parameter name must be 'media_data'
