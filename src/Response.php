@@ -71,7 +71,7 @@ class Response
     /**
      * @param array $headers
      */
-    public function setHeaders(array $headers = [])
+    public function setHeaders(array $headers)
     {
         foreach ($headers as $key => $value) {
             if (substr($key, 0, 1) == 'x') {
