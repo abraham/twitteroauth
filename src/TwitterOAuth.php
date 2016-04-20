@@ -178,6 +178,17 @@ class TwitterOAuth extends Config
     {
         return $this->http('GET', self::API_HOST, $path, $parameters);
     }
+    
+    /**
+     * get image from DM.
+     *
+     * @param string $url
+     *
+     * @return image data
+     */
+    public function getimg($url) {
+        return $this->http('GET', $url, "", $parameters);
+    }
 
     /**
      * Make POST requests to the API.
@@ -300,10 +311,20 @@ class TwitterOAuth extends Config
     private function http($method, $host, $path, array $parameters)
     {
         $this->resetLastResponse();
-        $url = sprintf('%s/%s/%s.json', $host, self::API_VERSION, $path);
+        $img = false;
+        if(strlen($path)==0) {
+            $url = $host;
+            $img = true;
+        } else {
+            $url = sprintf('%s/%s/%s.json', $host, self::API_VERSION, $path);
+        }
         $this->response->setApiPath($path);
         $result = $this->oAuthRequest($url, $method, $parameters);
-        $response = JsonDecoder::decode($result, $this->decodeJsonAsArray);
+        if($img) {
+            $response = $result;
+        } else {
+            $response = JsonDecoder::decode($result, $this->decodeJsonAsArray);
+        }
         $this->response->setBody($response);
         return $response;
     }
