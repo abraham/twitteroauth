@@ -244,7 +244,7 @@ class TwitterOAuth extends Config
      *
      * @return array|object
      */
-    private function uploadMediaNotChunked($path, $parameters)
+    private function uploadMediaNotChunked($path, array $parameters)
     {
         $file = file_get_contents($parameters['media']);
         $base = base64_encode($file);
@@ -260,7 +260,7 @@ class TwitterOAuth extends Config
      *
      * @return array|object
      */
-    private function uploadMediaChunked($path, $parameters)
+    private function uploadMediaChunked($path, array $parameters)
     {
         // Init
         $init = $this->http('POST', self::UPLOAD_HOST, $path, [
@@ -345,7 +345,7 @@ class TwitterOAuth extends Config
      * @return string
      * @throws TwitterOAuthException
      */
-    private function request($url, $method, $authorization, $postfields)
+    private function request($url, $method, $authorization, array $postfields)
     {
         /* Curl settings */
         $options = [
@@ -441,7 +441,7 @@ class TwitterOAuth extends Config
      *
      * @return string
      */
-    private function encodeAppAuthorization($consumer)
+    private function encodeAppAuthorization(Consumer $consumer)
     {
         // TODO: key and secret should be rfc 1738 encoded
         $key = $consumer->key;

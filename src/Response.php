@@ -71,7 +71,7 @@ class Response
     /**
      * @param array $headers
      */
-    public function setHeaders($headers)
+    public function setHeaders(array $headers)
     {
         foreach ($headers as $key => $value) {
             if (substr($key, 0, 1) == 'x') {
@@ -92,7 +92,7 @@ class Response
     /**
      * @param array $xHeaders
      */
-    public function setXHeaders($xHeaders)
+    public function setXHeaders(array $xHeaders = [])
     {
         $this->xHeaders = $xHeaders;
     }
