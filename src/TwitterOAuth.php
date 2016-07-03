@@ -443,9 +443,8 @@ class TwitterOAuth extends Config
      */
     private function encodeAppAuthorization(Consumer $consumer)
     {
-        // TODO: key and secret should be rfc 1738 encoded
-        $key = $consumer->key;
-        $secret = $consumer->secret;
+        $key = rawurlencode($consumer->key);
+        $secret = rawurlencode($consumer->secret);
         return base64_encode($key . ':' . $secret);
     }
 }
