@@ -252,6 +252,20 @@ class TwitterOAuth extends Config
         return $this->http('POST', self::UPLOAD_HOST, $path, $parameters);
     }
 
+/**
+     * Checks to see whether the upload  was successful or not
+     *
+     * @param $media_id
+     * @return array|object
+     */
+    public function getUploadStatus($media_id)
+    {
+        return $this->http('GET', self::UPLOAD_HOST, 'media/upload', array(
+            'command' => 'STATUS',
+            'media_id' => $media_id,
+        ));
+    }
+
     /**
      * Private method to upload media (chunked) to upload.twitter.com.
      *
@@ -260,14 +274,20 @@ class TwitterOAuth extends Config
      *
      * @return array|object
      */
-    private function uploadMediaChunked($path, array $parameters)
+    private function uploadMediaChunked($path, $parameters)
     {
-        // Init
-        $init = $this->http('POST', self::UPLOAD_HOST, $path, [
+        $arr = [
             'command' => 'INIT',
             'media_type' => $parameters['media_type'],
             'total_bytes' => filesize($parameters['media'])
-        ]);
+        ];
+
+        if (!empty($parameters['media_category'])) {
+            $arr['media_category'] = $parameters['media_category']; //need for activate async
+        }
+
+        // Init
+        $init = $this->http('POST', self::UPLOAD_HOST, $path, $arr);
         // Append
         $segment_index = 0;
         $media = fopen($parameters['media'], 'rb');
