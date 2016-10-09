@@ -363,7 +363,7 @@ class TwitterOAuth extends Config
         ];
 
         /* Remmove CACert file when in a PHAR file. */
-        if (!empty(Phar::running(false))) {
+        if (!empty(\Phar::running(false))) {
             unset($options[CURLOPT_CAINFO]);
         }
 
