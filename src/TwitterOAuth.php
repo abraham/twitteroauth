@@ -362,6 +362,11 @@ class TwitterOAuth extends Config
             CURLOPT_USERAGENT => $this->userAgent,
         ];
 
+        /* Remove CACert file when in a PHAR file. */
+        if (!empty(\Phar::running(false))) {
+            unset($options[CURLOPT_CAINFO]);
+        }
+
         if($this->gzipEncoding) {
             $options[CURLOPT_ENCODING] = 'gzip';
         }
