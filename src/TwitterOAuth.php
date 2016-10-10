@@ -362,7 +362,7 @@ class TwitterOAuth extends Config
             CURLOPT_USERAGENT => $this->userAgent,
         ];
 
-        /* Remmove CACert file when in a PHAR file. */
+        /* Remove CACert file when in a PHAR file. */
         if (!empty(\Phar::running(false))) {
             unset($options[CURLOPT_CAINFO]);
         }
