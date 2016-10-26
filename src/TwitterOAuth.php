@@ -228,8 +228,11 @@ class TwitterOAuth extends Config
      *
      * @return array|object
      */
-    public function upload($path, array $parameters = [], $chunked = false)
+    public function upload($path, array $parameters = [], $chunked = false, $json = false)
     {
+        if ($json) {
+          return $this->http('POST', self::UPLOAD_HOST, $path, $parameters, $json);;
+        }
         if ($chunked) {
             return $this->uploadMediaChunked($path, $parameters);
         } else {
