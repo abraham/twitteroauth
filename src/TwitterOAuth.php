@@ -363,7 +363,7 @@ class TwitterOAuth extends Config
         ];
 
         /* Remove CACert file when in a PHAR file. */
-        if ( class_exists('Phar') && !empty(\Phar::running(false))) {
+        if ($this->pharRunning()) {
             unset($options[CURLOPT_CAINFO]);
         }
 
@@ -451,5 +451,15 @@ class TwitterOAuth extends Config
         $key = rawurlencode($consumer->key);
         $secret = rawurlencode($consumer->secret);
         return base64_encode($key . ':' . $secret);
+    }
+
+    /**
+     * Is the code running from a Phar module.
+     *
+     * @return boolean
+     */
+    private function pharRunning()
+    {
+        return class_exists('Phar') && !empty(\Phar::running(false));
     }
 }
