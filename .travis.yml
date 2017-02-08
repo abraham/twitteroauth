@@ -8,4 +8,5 @@ sudo: false
 before_script:
     - composer self-update
     - composer install --prefer-source --no-interaction
-script: phpunit
+script:
+  - vendor/bin/phpunit
