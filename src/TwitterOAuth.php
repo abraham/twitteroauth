@@ -263,11 +263,16 @@ class TwitterOAuth extends Config
     private function uploadMediaChunked($path, array $parameters)
     {
         // Init
-        $init = $this->http('POST', self::UPLOAD_HOST, $path, [
+        $init_parameters = [
             'command' => 'INIT',
             'media_type' => $parameters['media_type'],
             'total_bytes' => filesize($parameters['media'])
-        ]);
+        ];
+        if (isset($parameters['media_category']))
+        {
+            $init_parameters['media_category'] = $parameters['media_category'];
+        }
+        $init = $this->http('POST', self::UPLOAD_HOST, $path, $init_parameters);
         // Append
         $segment_index = 0;
         $media = fopen($parameters['media'], 'rb');
