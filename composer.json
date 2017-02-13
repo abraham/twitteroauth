@@ -1,7 +1,7 @@
 {
-    "name": "abraham/twitteroauth",
+    "name": "fossar/twitteroauth-php54",
     "type": "library",
-    "description": "The most popular PHP library for use with the Twitter OAuth REST API.",
+    "description": "TwitterOAuth library backported to PHP 5.4, see abraham/twitteroauth",
     "keywords": ["twitter", "api", "oauth", "rest", "social", "twitter api", "twitter oauth"],
     "license": "MIT",
     "homepage": "https://twitteroauth.com",
@@ -14,15 +14,15 @@
         }
     ],
     "support": {
-        "source": "https://github.com/abraham/twitteroauth",
-        "issues": "https://github.com/abraham/twitteroauth/issues"
+        "source": "https://github.com/fossar/twitteroauth-php54",
+        "issues": "https://github.com/fossar/twitteroauth-php54/issues"
     },
     "require": {
-        "php": "^5.6 || ^7.0",
+        "php": "^5.4 || ^7.0",
         "ext-curl": "*"
     },
     "require-dev": {
-        "phpunit/phpunit": "~5.6",
+        "phpunit/phpunit": "~5 || ~4",
         "squizlabs/php_codesniffer": "~2.7",
         "phpmd/phpmd": "~2.4"
     },
