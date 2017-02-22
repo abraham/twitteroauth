@@ -3,6 +3,7 @@
  * The MIT License
  * Copyright (c) 2007 Andy Smith
  */
+
 namespace Abraham\TwitterOAuth;
 
 class Util
@@ -20,6 +21,7 @@ class Util
         } elseif (is_scalar($input)) {
             $output = rawurlencode($input);
         }
+
         return $output;
     }
 
@@ -53,8 +55,8 @@ class Util
         $parameters = [];
         foreach ($pairs as $pair) {
             $split = explode('=', $pair, 2);
-            $parameter = Util::urldecodeRfc3986($split[0]);
-            $value = isset($split[1]) ? Util::urldecodeRfc3986($split[1]) : '';
+            $parameter = self::urldecodeRfc3986($split[0]);
+            $value = isset($split[1]) ? self::urldecodeRfc3986($split[1]) : '';
 
             if (isset($parameters[$parameter])) {
                 // We have already recieved parameter(s) with this name, so add to the list
@@ -71,6 +73,7 @@ class Util
                 $parameters[$parameter] = $value;
             }
         }
+
         return $parameters;
     }
 
@@ -86,8 +89,8 @@ class Util
         }
 
         // Urlencode both keys and values
-        $keys = Util::urlencodeRfc3986(array_keys($params));
-        $values = Util::urlencodeRfc3986(array_values($params));
+        $keys = self::urlencodeRfc3986(array_keys($params));
+        $values = self::urlencodeRfc3986(array_values($params));
         $params = array_combine($keys, $values);
 
         // Parameters are sorted by name, using lexicographical byte value ordering.

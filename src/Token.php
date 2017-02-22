@@ -3,6 +3,7 @@
  * The MIT License
  * Copyright (c) 2007 Andy Smith
  */
+
 namespace Abraham\TwitterOAuth;
 
 class Token
@@ -30,7 +31,7 @@ class Token
      */
     public function __toString()
     {
-        return sprintf("oauth_token=%s&oauth_token_secret=%s",
+        return sprintf('oauth_token=%s&oauth_token_secret=%s',
             Util::urlencodeRfc3986($this->key),
             Util::urlencodeRfc3986($this->secret)
         );

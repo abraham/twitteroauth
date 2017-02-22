@@ -3,6 +3,7 @@
  * The MIT License
  * Copyright (c) 2007 Andy Smith
  */
+
 namespace Abraham\TwitterOAuth;
 
 /**
@@ -24,9 +25,9 @@ abstract class SignatureMethod
      * the encoding is handled in OAuthRequest when the final
      * request is serialized
      *
-     * @param Request $request
+     * @param Request  $request
      * @param Consumer $consumer
-     * @param Token $token
+     * @param Token    $token
      *
      * @return string
      */
@@ -35,10 +36,10 @@ abstract class SignatureMethod
     /**
      * Verifies that a given signature is correct
      *
-     * @param Request $request
+     * @param Request  $request
      * @param Consumer $consumer
-     * @param Token $token
-     * @param string $signature
+     * @param Token    $token
+     * @param string   $signature
      *
      * @return bool
      */
@@ -57,8 +58,8 @@ abstract class SignatureMethod
 
         // Avoid a timing leak with a (hopefully) time insensitive compare
         $result = 0;
-        for ($i = 0; $i < strlen($signature); $i++) {
-            $result |= ord($built{$i}) ^ ord($signature{$i});
+        for ($i = 0; $i < strlen($signature); ++$i) {
+            $result |= ord($built[$i]) ^ ord($signature[$i]);
         }
 
         return $result == 0;
