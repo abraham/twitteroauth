@@ -8,6 +8,7 @@ class JsonDecoderTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @dataProvider jsonProvider
+     *
      * @param mixed $input
      * @param mixed $asArray
      * @param mixed $expected

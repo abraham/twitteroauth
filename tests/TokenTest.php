@@ -8,6 +8,7 @@ class TokenTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @dataProvider tokenProvider
+     *
      * @param mixed $expected
      * @param mixed $key
      * @param mixed $secret

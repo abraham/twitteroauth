@@ -7,7 +7,7 @@ return PhpCsFixer\Config::create()
         'full_opening_tag' => true,
 
         // PSR1 - Modified
-        /*'blank_line_after_namespace' => true,
+        'blank_line_after_namespace' => true,
         'braces' => true,
         //'class_definition' => true,
         'elseif' => true,
@@ -29,7 +29,7 @@ return PhpCsFixer\Config::create()
         'switch_case_semicolon_to_colon' => true,
         'switch_case_space' => true,
         'visibility_required' => true,
-        */
+
         // PSR2 - Modified
         'binary_operator_spaces' => [
                 'align_double_arrow' => false,
@@ -82,24 +82,24 @@ return PhpCsFixer\Config::create()
         'object_operator_without_whitespace' => true,
         'php_unit_fqcn_annotation' => true,
 
-                    'pre_increment' => true,
-            'return_type_declaration' => true,
-            'self_accessor' => true,
-            'short_scalar_cast' => true,
-            'single_blank_line_before_namespace' => true,
-            'single_class_element_per_statement' => true,
-            'single_quote' => true,
-            'space_after_semicolon' => true,
-            'standardize_not_equals' => true,
-            'ternary_operator_spaces' => true,
-            'trailing_comma_in_multiline_array' => true,
-            'trim_array_spaces' => true,
-            'unary_operator_spaces' => true,
-            'whitespace_after_comma_in_array' => true,
+        'pre_increment' => true,
+        'return_type_declaration' => true,
+        'self_accessor' => true,
+        'short_scalar_cast' => true,
+        'single_blank_line_before_namespace' => true,
+        'single_class_element_per_statement' => true,
+        'single_quote' => true,
+        'space_after_semicolon' => true,
+        'standardize_not_equals' => true,
+        'ternary_operator_spaces' => true,
+        'trailing_comma_in_multiline_array' => true,
+        'trim_array_spaces' => true,
+        'unary_operator_spaces' => true,
+        'whitespace_after_comma_in_array' => true,
 
-            'php_unit_construct' => true,
-            'php_unit_dedicate_assert' => true,
-            'silenced_deprecation_error' => true,
+        'php_unit_construct' => true,
+        'php_unit_dedicate_assert' => true,
+        'silenced_deprecation_error' => true,
 
         'array_syntax' => ['syntax' => 'short'],
 

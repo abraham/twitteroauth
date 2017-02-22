@@ -47,6 +47,7 @@ class TwitterOAuthTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @depends testOauth2Token
+     *
      * @param mixed $accessToken
      */
     public function testBearerToken($accessToken)
@@ -164,6 +165,7 @@ class TwitterOAuthTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @depends testGetSearchTweets
+     *
      * @param mixed $statuses
      */
     public function testGetSearchTweetsWithMaxId($statuses)
@@ -239,6 +241,7 @@ class TwitterOAuthTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @depends testPostStatusesUpdateUtf8
+     *
      * @param mixed $status
      */
     public function testPostStatusesDestroy($status)

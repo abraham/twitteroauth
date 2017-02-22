@@ -276,8 +276,7 @@ class TwitterOAuth extends Config
         // Append
         $segment_index = 0;
         $media = fopen($parameters['media'], 'rb');
-        while (!feof($media))
-        {
+        while (!feof($media)) {
             $this->http('POST', self::UPLOAD_HOST, 'media/upload', [
                 'command' => 'APPEND',
                 'media_id' => $init->media_id_string,
@@ -377,7 +376,7 @@ class TwitterOAuth extends Config
             unset($options[CURLOPT_CAINFO]);
         }
 
-        if($this->gzipEncoding) {
+        if ($this->gzipEncoding) {
             $options[CURLOPT_ENCODING] = 'gzip';
         }
 
@@ -440,7 +439,7 @@ class TwitterOAuth extends Config
         $headers = [];
         foreach (explode("\r\n", $header) as $line) {
             if (strpos($line, ':') !== false) {
-                list ($key, $value) = explode(': ', $line);
+                list($key, $value) = explode(': ', $line);
                 $key = str_replace('-', '_', strtolower($key));
                 $headers[$key] = trim($value);
             }

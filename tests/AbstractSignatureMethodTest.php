@@ -22,6 +22,7 @@ abstract class AbstractSignatureMethodTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @dataProvider signatureDataProvider
+     *
      * @param mixed $expected
      * @param mixed $request
      * @param mixed $consumer
