@@ -1,12 +1,35 @@
 language: php
+
 php:
   - '5.6'
   - '7.0'
   - '7.1'
   - hhvm
+
 sudo: false
+
+cache:
+  directories:
+    - $HOME/.composer/cache
+    - $HOME/.php-cs-fixer
+
+before_install:
+  - composer self-update
+  - composer validate
+
+install:
+  - composer install --no-interaction --prefer-dist --no-progress --profile
+
 before_script:
-    - composer self-update
-    - composer install --prefer-source --no-interaction
+  - mkdir -p "$HOME/.php-cs-fixer"
+  - composer self-update
+  - composer install --prefer-source --no-interaction
+
 script:
-  - vendor/bin/phpunit
+  - mkdir -p build/logs
+  - vendor/bin/phpunit -c phpunit.xml.dist --verbose
+  - vendor/bin/php-cs-fixer fix --config=.php_cs --verbose --diff --dry-run
+
+after_script:
+  - wget https://scrutinizer-ci.com/ocular.phar
+  - php ocular.phar code-coverage:upload --format=php-clover build/logs/coverage.clover
