@@ -1,10 +1,11 @@
 <?php
+
 return PhpCsFixer\Config::create()
     ->setRiskyAllowed(true)
     ->setRules([
     	'encoding' => true,
         'full_opening_tag' => true,
-        
+
         // PSR1 - Modified
         /*'blank_line_after_namespace' => true,
         'braces' => true,
@@ -30,10 +31,10 @@ return PhpCsFixer\Config::create()
         'visibility_required' => true,
         */
         // PSR2 - Modified
-        'binary_operator_spaces' => array(
+        'binary_operator_spaces' => [
                 'align_double_arrow' => false,
                 'align_equals' => false,
-            ),
+            ],
         'blank_line_after_opening_tag' => true,
         'blank_line_before_return' => true,
         'cast_spaces' => true,
@@ -54,18 +55,18 @@ return PhpCsFixer\Config::create()
         'no_empty_comment' => true,
         'no_empty_phpdoc' => true,
         'no_empty_statement' => true,
-        'no_extra_consecutive_blank_lines' => array(
+        'no_extra_consecutive_blank_lines' => [
                 'curly_brace_block',
                 'extra',
                 'parenthesis_brace_block',
                 'square_brace_block',
                 'throw',
                 'use',
-            ),
+            ],
         'no_leading_import_slash' => true,
         'no_leading_namespace_whitespace' => true,
-        'no_mixed_echo_print' => array('use' => 'echo'),
-        
+        'no_mixed_echo_print' => ['use' => 'echo'],
+
         'no_multiline_whitespace_around_double_arrow' => true,
         'no_short_bool_cast' => true,
         'no_singleline_whitespace_before_semicolons' => true,
@@ -80,8 +81,7 @@ return PhpCsFixer\Config::create()
         'normalize_index_brace' => true,
         'object_operator_without_whitespace' => true,
         'php_unit_fqcn_annotation' => true,
-        
-        
+
                     'pre_increment' => true,
             'return_type_declaration' => true,
             'self_accessor' => true,
@@ -96,14 +96,13 @@ return PhpCsFixer\Config::create()
             'trim_array_spaces' => true,
             'unary_operator_spaces' => true,
             'whitespace_after_comma_in_array' => true,
-      
+
             'php_unit_construct' => true,
             'php_unit_dedicate_assert' => true,
             'silenced_deprecation_error' => true,
-        
-    
+
         'array_syntax' => ['syntax' => 'short'],
- 
+
         'no_mixed_echo_print' => true,
         'no_spaces_around_offset' => true,
         'no_spaces_inside_parenthesis' => true,
@@ -126,10 +125,9 @@ return PhpCsFixer\Config::create()
         'single_quote' => true,
         'space_after_semicolon' => true,
         'standardize_not_equals' => true,
-        
-        
+
         'ternary_operator_spaces' => true,
-        
+
         'whitespace_after_comma_in_array' => true,
 
         // PHP70Migration
