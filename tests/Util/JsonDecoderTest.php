@@ -16,24 +16,24 @@ class JsonDecoderTest extends \PHPUnit_Framework_TestCase
 
     public function jsonProvider()
     {
-        return array(
-            array('[]', true, array()),
-            array('[1,2,3]', true, array(1, 2, 3)),
-            array('[{"id": 556179961825226750}]', true, array(array('id' => 556179961825226750))),
-            array('[]', false, array()),
-            array('[1,2,3]', false, array(1, 2, 3)),
-            array(
+        return [
+            ['[]', true, []],
+            ['[1,2,3]', true, [1, 2, 3]],
+            ['[{"id": 556179961825226750}]', true, [['id' => 556179961825226750]]],
+            ['[]', false, []],
+            ['[1,2,3]', false, [1, 2, 3]],
+            [
                 '[{"id": 556179961825226750}]',
                 false,
-                array(
+                [
                     $this->getClass(function ($object) {
                         $object->id = 556179961825226750;
                         return $object;
                     })
-                )
-            ),
+                ]
+            ],
 
-        );
+        ];
     }
 
     /**
