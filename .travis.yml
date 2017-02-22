@@ -16,6 +16,7 @@ cache:
 before_install:
   - composer self-update
   - composer validate
+  - composer global require 'hirak/prestissimo:@dev'
 
 install:
   - composer install --no-interaction --prefer-dist --no-progress --profile
