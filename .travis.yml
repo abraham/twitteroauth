@@ -27,7 +27,7 @@ before_script:
 
 script:
   - mkdir -p build/logs
-  - php vendor/bin/phpunit -c phpunit.xml.dist --verbose
+  - php vendor/bin/phpunit -c phpunit.xml.dist --verbose --check-version
   - php vendor/bin/php-cs-fixer fix --config=.php_cs --verbose --diff --dry-run
 
 after_script:
