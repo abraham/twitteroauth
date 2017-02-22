@@ -24,14 +24,11 @@ before_script:
   - mkdir -p "$HOME/.php-cs-fixer"
   - composer self-update
   - composer install --prefer-source --no-interaction
-  - wget https://github.com/FriendsOfPHP/PHP-CS-Fixer/releases/download/v2.1.0/php-cs-fixer.phar -O php-cs-fixer
-  - chmod a+x php-cs-fixer
-  - mv php-cs-fixer vendor/bin/php-cs-fixer
 
 script:
   - mkdir -p build/logs
-  - vendor/bin/phpunit -c phpunit.xml.dist --verbose
-  - vendor/bin/php-cs-fixer fix --config=.php_cs --verbose --diff --dry-run
+  - php vendor/bin/phpunit -c phpunit.xml.dist --verbose
+  - php vendor/bin/php-cs-fixer fix --config=.php_cs --verbose --diff --dry-run
 
 after_script:
   - wget https://scrutinizer-ci.com/ocular.phar
