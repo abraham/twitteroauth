@@ -38,14 +38,14 @@ abstract class AbstractSignatureMethodTest extends \PHPUnit_Framework_TestCase
     protected function getConsumer($key = null, $secret = null, $callbackUrl = null)
     {
         return $this->getMockBuilder('Abraham\TwitterOAuth\Consumer')
-            ->setConstructorArgs(array($key, $secret, $callbackUrl))
+            ->setConstructorArgs([$key, $secret, $callbackUrl])
             ->getMock();
     }
 
     protected function getToken($key = null, $secret = null)
     {
         return $this->getMockBuilder('Abraham\TwitterOAuth\Token')
-            ->setConstructorArgs(array($key, $secret))
+            ->setConstructorArgs([$key, $secret])
             ->getMock();
     }
 }

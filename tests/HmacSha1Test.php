@@ -15,21 +15,21 @@ class HmacSha1Test extends AbstractSignatureMethodTest
 
     public function signatureDataProvider()
     {
-        return array(
-            array('5CoEcoq7XoKFjwYCieQvuzadeUA=', $this->getRequest(), $this->getConsumer(), $this->getToken()),
-            array(
+        return [
+            ['5CoEcoq7XoKFjwYCieQvuzadeUA=', $this->getRequest(), $this->getConsumer(), $this->getToken()],
+            [
                 'EBw0gHngam3BTx8kfPfNNSyKem4=',
                 $this->getRequest(),
                 $this->getConsumer('key', 'secret'),
                 $this->getToken()
-            ),
-            array(
+            ],
+            [
                 'kDsHFZzws2a5M6cAQjfpdNBo+v8=',
                 $this->getRequest(),
                 $this->getConsumer('key', 'secret'),
                 $this->getToken('key', 'secret')
-            ),
-            array('EBw0gHngam3BTx8kfPfNNSyKem4=', $this->getRequest(), $this->getConsumer('key', 'secret'), null),
-        );
+            ],
+            ['EBw0gHngam3BTx8kfPfNNSyKem4=', $this->getRequest(), $this->getConsumer('key', 'secret'), null],
+        ];
     }
 }
