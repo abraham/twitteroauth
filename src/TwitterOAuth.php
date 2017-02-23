@@ -262,12 +262,7 @@ class TwitterOAuth extends Config
      */
     private function uploadMediaChunked($path, array $parameters)
     {
-        // Init
-        $init = $this->http('POST', self::UPLOAD_HOST, $path, [
-            'command' => 'INIT',
-            'media_type' => $parameters['media_type'],
-            'total_bytes' => filesize($parameters['media'])
-        ]);
+        $init = $this->http('POST', self::UPLOAD_HOST, $path, $this->mediaInitParameters($parameters));
         // Append
         $segment_index = 0;
         $media = fopen($parameters['media'], 'rb');
@@ -287,6 +282,30 @@ class TwitterOAuth extends Config
             'media_id' => $init->media_id_string
         ]);
         return $finalize;
+    }
+
+    /**
+     * Private method to get params for upload media chunked init.
+     * Twitter docs: https://dev.twitter.com/rest/reference/post/media/upload-init.html
+     *
+     * @param array  $parameters
+     *
+     * @return array
+     */
+    private function mediaInitParameters(array $parameters)
+    {
+        $return = [
+            'command' => 'INIT',
+            'media_type' => $parameters['media_type'],
+            'total_bytes' => filesize($parameters['media'])
+        ];
+        if (isset($parameters['additional_owners'])) {
+            $return['additional_owners'] = $parameters['additional_owners'];
+        }
+        if (isset($parameters['media_category'])) {
+            $return['media_category'] = $parameters['media_category'];
+        }
+        return $return;
     }
 
     /**
