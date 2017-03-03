@@ -262,7 +262,7 @@ class TwitterOAuth extends Config
 		}else{
 			$base = base64_encode($parameters['media']);
 		}
-		unset $parameters['media'];
+		unset($parameters['media']);
 		
         $parameters['media_data'] = $base;
         return $this->http('POST', self::UPLOAD_HOST, $path, $parameters);
