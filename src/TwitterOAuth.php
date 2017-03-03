@@ -364,7 +364,7 @@ class TwitterOAuth extends Config
      * @return string
      * @throws TwitterOAuthException
      */
-    private function request($url, $method, $authorization, array $postfields)
+    protected function request($url, $method, $authorization, array $postfields)
     {
         /* Curl settings */
         $options = [
