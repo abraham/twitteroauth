@@ -252,11 +252,15 @@ class TwitterOAuth extends Config
     {
 		
 		$base = "";
-		if(file_exists($parameters['media'])){
-			$file = file_get_contents($parameters['media']);
-			$base = base64_encode($file);
+		if(ctype_print($parameters['media'])){
+			if(file_exists($parameters['media'])){
+				$file = file_get_contents($parameters['media']);
+				$base = base64_encode($file);
+			}else{
+				$base = $parameters['media'];
+			}
 		}else{
-			$base = $parameters['media'];
+			$base = base64_encode($parameters['media']);
 		}
 		unset $parameters['media'];
 		
