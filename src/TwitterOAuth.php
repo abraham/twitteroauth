@@ -238,17 +238,29 @@ class TwitterOAuth extends Config
 
     /**
      * Private method to upload media (not chunked) to upload.twitter.com.
+	 * UPDATE per https://dev.twitter.com/rest/reference/post/media/upload to use media_data for base64 encoded filesize
+	 * and check if parameter is a file path if not assume it's base64_encode already
      *
      * @param string $path
      * @param array  $parameters
      *
      * @return array|object
+	 * @updatedby Martin Barker 
+	 * @updated 3rd March 2017
      */
     private function uploadMediaNotChunked($path, array $parameters)
     {
-        $file = file_get_contents($parameters['media']);
-        $base = base64_encode($file);
-        $parameters['media'] = $base;
+		
+		$base = "";
+		if(file_exists($parameters['media'])){
+			$file = file_get_contents($parameters['media']);
+			$base = base64_encode($file);
+		}else{
+			$base = $parameters['media'];
+		}
+		unset $parameters['media'];
+		
+        $parameters['media_data'] = $base;
         return $this->http('POST', self::UPLOAD_HOST, $path, $parameters);
     }
 
