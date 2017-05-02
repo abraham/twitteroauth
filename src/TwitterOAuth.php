@@ -347,6 +347,11 @@ class TwitterOAuth extends Config
         if ($this->bearer === null) {
             $request->signRequest($this->signatureMethod, $this->consumer, $this->token);
             $authorization = $request->toHeader();
+            if (array_key_exists('oauth_verifier', $parameters)) {
+                // Twitter doesn't always work with oauth in the body and in the header
+                // and it's already included in the $authorization header
+                unset($parameters['oauth_verifier']);
+            }
         } else {
             $authorization = 'Authorization: Bearer ' . $this->bearer;
         }
