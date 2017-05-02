@@ -4,9 +4,14 @@ namespace Abraham\TwitterOAuth\Tests;
 
 use Abraham\TwitterOAuth\Token;
 
-class TokenTest extends \PHPUnit_Framework_TestCase {
+class TokenTest extends \PHPUnit_Framework_TestCase
+{
     /**
      * @dataProvider tokenProvider
+     *
+     * @param mixed $expected
+     * @param mixed $key
+     * @param mixed $secret
      */
     public function testToString($expected, $key, $secret)
     {

@@ -3,6 +3,7 @@
  * The MIT License
  * Copyright (c) 2007 Andy Smith
  */
+
 namespace Abraham\TwitterOAuth;
 
 class Request
@@ -46,10 +47,10 @@ class Request
         array $parameters = []
     ) {
         $defaults = [
-            "oauth_version" => Request::$version,
-            "oauth_nonce" => Request::generateNonce(),
-            "oauth_timestamp" => time(),
-            "oauth_consumer_key" => $consumer->key
+            'oauth_version' => self::$version,
+            'oauth_nonce' => self::generateNonce(),
+            'oauth_timestamp' => time(),
+            'oauth_consumer_key' => $consumer->key,
         ];
         if (null !== $token) {
             $defaults['oauth_token'] = $token->key;
@@ -57,7 +58,7 @@ class Request
 
         $parameters = array_merge($defaults, $parameters);
 
-        return new Request($httpMethod, $httpUrl, $parameters);
+        return new self($httpMethod, $httpUrl, $parameters);
     }
 
     /**
@@ -128,7 +129,7 @@ class Request
         $parts = [
             $this->getNormalizedHttpMethod(),
             $this->getNormalizedHttpUrl(),
-            $this->getSignableParameters()
+            $this->getSignableParameters(),
         ];
 
         $parts = Util::urlencodeRfc3986($parts);
@@ -175,6 +176,7 @@ class Request
         if ($postData) {
             $out .= '?' . $postData;
         }
+
         return $out;
     }
 
@@ -191,15 +193,16 @@ class Request
     /**
      * Builds the Authorization: header
      *
-     * @return string
      * @throws TwitterOAuthException
+     *
+     * @return string
      */
     public function toHeader()
     {
         $first = true;
         $out = 'Authorization: OAuth';
         foreach ($this->parameters as $k => $v) {
-            if (substr($k, 0, 5) != "oauth") {
+            if (substr($k, 0, 5) != 'oauth') {
                 continue;
             }
             if (is_array($v)) {
@@ -209,6 +212,7 @@ class Request
             $out .= Util::urlencodeRfc3986($k) . '="' . Util::urlencodeRfc3986($v) . '"';
             $first = false;
         }
+
         return $out;
     }
 
@@ -227,9 +231,9 @@ class Request
      */
     public function signRequest(SignatureMethod $signatureMethod, Consumer $consumer, Token $token = null)
     {
-        $this->setParameter("oauth_signature_method", $signatureMethod->getName());
+        $this->setParameter('oauth_signature_method', $signatureMethod->getName());
         $signature = $this->buildSignature($signatureMethod, $consumer, $token);
-        $this->setParameter("oauth_signature", $signature);
+        $this->setParameter('oauth_signature', $signature);
     }
 
     /**

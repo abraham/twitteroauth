@@ -2,6 +2,7 @@
 /**
  * WARNING: Running these tests will post and delete through the actual Twitter account.
  */
+
 namespace Abraham\TwitterOAuth\Test;
 
 use Abraham\TwitterOAuth\TwitterOAuth;
@@ -40,11 +41,14 @@ class TwitterOAuthTest extends \PHPUnit_Framework_TestCase
         $this->assertObjectHasAttribute('token_type', $result);
         $this->assertObjectHasAttribute('access_token', $result);
         $this->assertEquals('bearer', $result->token_type);
+
         return $result;
     }
 
     /**
      * @depends testOauth2Token
+     *
+     * @param mixed $accessToken
      */
     public function testBearerToken($accessToken)
     {
@@ -55,6 +59,7 @@ class TwitterOAuthTest extends \PHPUnit_Framework_TestCase
             $this->assertEquals('foo', print_r($result, true));
         }
         $this->assertEquals(200, $twitter->getLastHttpCode());
+
         return $accessToken;
     }
 
@@ -84,6 +89,7 @@ class TwitterOAuthTest extends \PHPUnit_Framework_TestCase
         $this->assertArrayHasKey('oauth_token_secret', $result);
         $this->assertArrayHasKey('oauth_callback_confirmed', $result);
         $this->assertEquals('true', $result['oauth_callback_confirmed']);
+
         return $result;
     }
 
@@ -95,6 +101,7 @@ class TwitterOAuthTest extends \PHPUnit_Framework_TestCase
     {
         $twitter = new TwitterOAuth('CONSUMER_KEY', 'CONSUMER_SECRET');
         $result = $twitter->oauth('oauth/request_token', ['oauth_callback' => OAUTH_CALLBACK]);
+
         return $result;
     }
 
@@ -112,7 +119,7 @@ class TwitterOAuthTest extends \PHPUnit_Framework_TestCase
             $requestToken['oauth_token'],
             $requestToken['oauth_token_secret']
         );
-        $twitter->oauth("oauth/access_token", ["oauth_verifier" => "fake_oauth_verifier"]);
+        $twitter->oauth('oauth/access_token', ['oauth_verifier' => 'fake_oauth_verifier']);
     }
 
     public function testUrl()
@@ -124,7 +131,7 @@ class TwitterOAuthTest extends \PHPUnit_Framework_TestCase
     public function testGetAccountVerifyCredentials()
     {
         // Include entities boolean added to test parameter value cohearsion
-        $this->twitter->get('account/verify_credentials', ["include_entities" => false]);
+        $this->twitter->get('account/verify_credentials', ['include_entities' => false]);
         $this->assertEquals(200, $this->twitter->getLastHttpCode());
     }
 
@@ -152,11 +159,14 @@ class TwitterOAuthTest extends \PHPUnit_Framework_TestCase
     {
         $result = $this->twitter->get('search/tweets', ['q' => 'twitter']);
         $this->assertEquals(200, $this->twitter->getLastHttpCode());
+
         return $result->statuses;
     }
 
     /**
      * @depends testGetSearchTweets
+     *
+     * @param mixed $statuses
      */
     public function testGetSearchTweetsWithMaxId($statuses)
     {
@@ -199,6 +209,7 @@ class TwitterOAuthTest extends \PHPUnit_Framework_TestCase
         if ($this->twitter->getLastHttpCode() == 200) {
             $result = $this->twitter->post('statuses/destroy/' . $result->id_str);
         }
+
         return $result;
     }
 
@@ -216,6 +227,7 @@ class TwitterOAuthTest extends \PHPUnit_Framework_TestCase
         if ($this->twitter->getLastHttpCode() == 200) {
             $result = $this->twitter->post('statuses/destroy/' . $result->id_str);
         }
+
         return $result;
     }
 
@@ -223,11 +235,14 @@ class TwitterOAuthTest extends \PHPUnit_Framework_TestCase
     {
         $result = $this->twitter->post('statuses/update', ['status' => 'xこんにちは世界 ' . time()]);
         $this->assertEquals(200, $this->twitter->getLastHttpCode());
+
         return $result;
     }
 
     /**
      * @depends testPostStatusesUpdateUtf8
+     *
+     * @param mixed $status
      */
     public function testPostStatusesDestroy($status)
     {

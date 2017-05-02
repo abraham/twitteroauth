@@ -8,6 +8,10 @@ class JsonDecoderTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @dataProvider jsonProvider
+     *
+     * @param mixed $input
+     * @param mixed $asArray
+     * @param mixed $expected
      */
     public function testDecode($input, $asArray, $expected)
     {
@@ -28,11 +32,11 @@ class JsonDecoderTest extends \PHPUnit_Framework_TestCase
                 [
                     $this->getClass(function ($object) {
                         $object->id = 556179961825226750;
-                        return $object;
-                    })
-                ]
-            ],
 
+                        return $object;
+                    }),
+                ],
+            ],
         ];
     }
 
