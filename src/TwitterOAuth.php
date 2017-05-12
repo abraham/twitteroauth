@@ -249,6 +249,19 @@ class TwitterOAuth extends Config
         $file = file_get_contents($parameters['media']);
         $base = base64_encode($file);
         $parameters['media'] = $base;
+        return $this->upload_data($path, $parameters);
+    }
+
+    /**
+     * Upload base64 encoded media to upload.twitter.com.
+     *
+     * @param string $path
+     * @param array  $parameters
+     *
+     * @return array|object
+     */
+    public function upload_data($path, array $parameters = array())
+    {
         return $this->http('POST', self::UPLOAD_HOST, $path, $parameters);
     }
 
