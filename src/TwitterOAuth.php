@@ -272,7 +272,7 @@ class TwitterOAuth extends Config
                 'command' => 'APPEND',
                 'media_id' => $init->media_id_string,
                 'segment_index' => $segment_index++,
-                'media_data' => base64_encode(fread($media, self::UPLOAD_CHUNK))
+                'media_data' => base64_encode(fread($media, $parameters['upload_chunk'] ?: self::UPLOAD_CHUNK))
             ]);
         }
         fclose($media);
