@@ -18,8 +18,7 @@ class TwitterOAuth extends Config
     const API_VERSION = '1.1';
     const API_HOST = 'https://api.twitter.com';
     const UPLOAD_HOST = 'https://upload.twitter.com';
-    const UPLOAD_CHUNK = 40960; // 1024 * 40
-
+    
     /** @var Response details about the result of the last request */
     private $response;
     /** @var string|null Application bearer token */
@@ -272,7 +271,7 @@ class TwitterOAuth extends Config
                 'command' => 'APPEND',
                 'media_id' => $init->media_id_string,
                 'segment_index' => $segment_index++,
-                'media_data' => base64_encode(fread($media, self::UPLOAD_CHUNK))
+                'media_data' => base64_encode(fread($media, $this->chunkSize))
             ]);
         }
         fclose($media);
