@@ -407,7 +407,7 @@ class TwitterOAuth extends Config
      */
     private function request($url, $method, $authorization, array $postfields)
     {
-        $options = $this->curlOptions($url, $authorization);
+        $options = $this->curlOptions();
         $options[CURLOPT_URL] = $url;
         $options[CURLOPT_HTTPHEADER] = ['Accept: application/json', $authorization, 'Expect:'];
 
