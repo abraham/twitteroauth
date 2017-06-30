@@ -358,19 +358,15 @@ class TwitterOAuth extends Config
     }
 
     /**
-     * Make an HTTP request
+     * Configure Curl options
      *
      * @param string $url
-     * @param string $method
      * @param string $authorization
-     * @param array $postfields
      *
-     * @return string
-     * @throws TwitterOAuthException
+     * @return array
      */
-    private function request($url, $method, $authorization, array $postfields)
+    private function curlOptions($url, $authorization)
     {
-        /* Curl settings */
         $options = [
             // CURLOPT_VERBOSE => true,
             CURLOPT_CAINFO => __DIR__ . DIRECTORY_SEPARATOR . 'cacert.pem',
@@ -401,6 +397,24 @@ class TwitterOAuth extends Config
             $options[CURLOPT_PROXYAUTH] = CURLAUTH_BASIC;
             $options[CURLOPT_PROXYTYPE] = CURLPROXY_HTTP;
         }
+
+        return $options;
+    }
+
+    /**
+     * Make an HTTP request
+     *
+     * @param string $url
+     * @param string $method
+     * @param string $authorization
+     * @param array $postfields
+     *
+     * @return string
+     * @throws TwitterOAuthException
+     */
+    private function request($url, $method, $authorization, array $postfields)
+    {
+        $options = $this->curlOptions($url, $authorization);
 
         switch ($method) {
             case 'GET':
