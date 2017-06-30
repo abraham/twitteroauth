@@ -358,32 +358,25 @@ class TwitterOAuth extends Config
     }
 
     /**
-     * Configure Curl options
-     *
-     * @param string $url
-     * @param string $authorization
+     * Set Curl options.
      *
      * @return array
      */
-    private function curlOptions($url, $authorization)
+    private function curlOptions()
     {
         $options = [
             // CURLOPT_VERBOSE => true,
-            CURLOPT_CAINFO => __DIR__ . DIRECTORY_SEPARATOR . 'cacert.pem',
             CURLOPT_CONNECTTIMEOUT => $this->connectionTimeout,
             CURLOPT_HEADER => true,
-            CURLOPT_HTTPHEADER => ['Accept: application/json', $authorization, 'Expect:'],
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_SSL_VERIFYHOST => 2,
             CURLOPT_SSL_VERIFYPEER => true,
             CURLOPT_TIMEOUT => $this->timeout,
-            CURLOPT_URL => $url,
             CURLOPT_USERAGENT => $this->userAgent,
         ];
 
-        /* Remove CACert file when in a PHAR file. */
-        if ($this->pharRunning()) {
-            unset($options[CURLOPT_CAINFO]);
+        if ($this->useCAFile()) {
+            $options[CURLOPT_CAINFO] = __DIR__ . DIRECTORY_SEPARATOR . 'cacert.pem';
         }
 
         if($this->gzipEncoding) {
@@ -415,6 +408,8 @@ class TwitterOAuth extends Config
     private function request($url, $method, $authorization, array $postfields)
     {
         $options = $this->curlOptions($url, $authorization);
+        $options[CURLOPT_URL] = $url;
+        $options[CURLOPT_HTTPHEADER] = ['Accept: application/json', $authorization, 'Expect:'];
 
         switch ($method) {
             case 'GET':
@@ -498,5 +493,16 @@ class TwitterOAuth extends Config
     private function pharRunning()
     {
         return class_exists('Phar') && \Phar::running(false) !== '';
+    }
+
+    /**
+     * Use included CA file instead of OS provided list.
+     *
+     * @return boolean
+     */
+    private function useCAFile()
+    {
+        /* Use CACert file when not in a PHAR file. */
+        return !$this->pharRunning();
     }
 }
