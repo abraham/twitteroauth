@@ -18,7 +18,7 @@ class TwitterOAuth extends Config
     const API_VERSION = '1.1';
     const API_HOST = 'https://api.twitter.com';
     const UPLOAD_HOST = 'https://upload.twitter.com';
-    
+
     /** @var Response details about the result of the last request */
     private $response;
     /** @var string|null Application bearer token */
@@ -263,14 +263,14 @@ class TwitterOAuth extends Config
     {
         $init = $this->http('POST', self::UPLOAD_HOST, $path, $this->mediaInitParameters($parameters));
         // Append
-        $segment_index = 0;
+        $segmentIndex = 0;
         $media = fopen($parameters['media'], 'rb');
         while (!feof($media))
         {
             $this->http('POST', self::UPLOAD_HOST, 'media/upload', [
                 'command' => 'APPEND',
                 'media_id' => $init->media_id_string,
-                'segment_index' => $segment_index++,
+                'segment_index' => $segmentIndex++,
                 'media_data' => base64_encode(fread($media, $this->chunkSize))
             ]);
         }
