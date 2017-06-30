@@ -18,7 +18,7 @@ class TwitterOAuth extends Config
     const API_VERSION = '1.1';
     const API_HOST = 'https://api.twitter.com';
     const UPLOAD_HOST = 'https://upload.twitter.com';
-    
+
     /** @var Response details about the result of the last request */
     private $response;
     /** @var string|null Application bearer token */
@@ -263,14 +263,14 @@ class TwitterOAuth extends Config
     {
         $init = $this->http('POST', self::UPLOAD_HOST, $path, $this->mediaInitParameters($parameters));
         // Append
-        $segment_index = 0;
+        $segmentIndex = 0;
         $media = fopen($parameters['media'], 'rb');
         while (!feof($media))
         {
             $this->http('POST', self::UPLOAD_HOST, 'media/upload', [
                 'command' => 'APPEND',
                 'media_id' => $init->media_id_string,
-                'segment_index' => $segment_index++,
+                'segment_index' => $segmentIndex++,
                 'media_data' => base64_encode(fread($media, $this->chunkSize))
             ]);
         }
@@ -358,36 +358,25 @@ class TwitterOAuth extends Config
     }
 
     /**
-     * Make an HTTP request
+     * Set Curl options.
      *
-     * @param string $url
-     * @param string $method
-     * @param string $authorization
-     * @param array $postfields
-     *
-     * @return string
-     * @throws TwitterOAuthException
+     * @return array
      */
-    private function request($url, $method, $authorization, array $postfields)
+    private function curlOptions()
     {
-        /* Curl settings */
         $options = [
             // CURLOPT_VERBOSE => true,
-            CURLOPT_CAINFO => __DIR__ . DIRECTORY_SEPARATOR . 'cacert.pem',
             CURLOPT_CONNECTTIMEOUT => $this->connectionTimeout,
             CURLOPT_HEADER => true,
-            CURLOPT_HTTPHEADER => ['Accept: application/json', $authorization, 'Expect:'],
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_SSL_VERIFYHOST => 2,
             CURLOPT_SSL_VERIFYPEER => true,
             CURLOPT_TIMEOUT => $this->timeout,
-            CURLOPT_URL => $url,
             CURLOPT_USERAGENT => $this->userAgent,
         ];
 
-        /* Remove CACert file when in a PHAR file. */
-        if ($this->pharRunning()) {
-            unset($options[CURLOPT_CAINFO]);
+        if ($this->useCAFile()) {
+            $options[CURLOPT_CAINFO] = __DIR__ . DIRECTORY_SEPARATOR . 'cacert.pem';
         }
 
         if($this->gzipEncoding) {
@@ -401,6 +390,26 @@ class TwitterOAuth extends Config
             $options[CURLOPT_PROXYAUTH] = CURLAUTH_BASIC;
             $options[CURLOPT_PROXYTYPE] = CURLPROXY_HTTP;
         }
+
+        return $options;
+    }
+
+    /**
+     * Make an HTTP request
+     *
+     * @param string $url
+     * @param string $method
+     * @param string $authorization
+     * @param array $postfields
+     *
+     * @return string
+     * @throws TwitterOAuthException
+     */
+    private function request($url, $method, $authorization, array $postfields)
+    {
+        $options = $this->curlOptions($url, $authorization);
+        $options[CURLOPT_URL] = $url;
+        $options[CURLOPT_HTTPHEADER] = ['Accept: application/json', $authorization, 'Expect:'];
 
         switch ($method) {
             case 'GET':
@@ -484,5 +493,16 @@ class TwitterOAuth extends Config
     private function pharRunning()
     {
         return class_exists('Phar') && \Phar::running(false) !== '';
+    }
+
+    /**
+     * Use included CA file instead of OS provided list.
+     *
+     * @return boolean
+     */
+    private function useCAFile()
+    {
+        /* Use CACert file when not in a PHAR file. */
+        return !$this->pharRunning();
     }
 }
