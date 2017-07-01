@@ -175,7 +175,7 @@ class TwitterOAuth extends Config
      */
     public function get($path, array $parameters = [])
     {
-        return $this->http('GET', self::API_HOST, $path, $parameters);
+        return $this->http('GET', self::API_HOST, self::API_VERSION, $path, $parameters);
     }
 
     /**
@@ -188,7 +188,33 @@ class TwitterOAuth extends Config
      */
     public function post($path, array $parameters = [])
     {
-        return $this->http('POST', self::API_HOST, $path, $parameters);
+        return $this->http('POST', self::API_HOST, self::API_VERSION, $path, $parameters);
+    }
+
+    /**
+     * Make GET requests to the API with Given Host and Version.
+     * Useful for calling Ads API by twitter
+     * @param string $path
+     * @param array  $parameters
+     *
+     * @return array|object
+     */
+    public function getWithHost($apiHost , $apiVersion, $path, array $parameters = array() )
+    {
+        return $this->http('GET', $apiHost, $apiVersion, $path, $parameters);
+    }
+    
+    /**
+     * Make POST requests to the API with given Host and Version.
+     * Useful for calling Ads API by twitter
+     * @param string $path
+     * @param array  $parameters
+     *
+     * @return array|object
+     */
+    public function postWithHost($apiHost , $apiVersion, $path, array $parameters = array() )
+    {
+        return $this->http('POST', $apiHost, $apiVersion, $path, $parameters);
     }
 
     /**
@@ -248,7 +274,7 @@ class TwitterOAuth extends Config
         $file = file_get_contents($parameters['media']);
         $base = base64_encode($file);
         $parameters['media'] = $base;
-        return $this->http('POST', self::UPLOAD_HOST, $path, $parameters);
+        return $this->http('POST', self::UPLOAD_HOST, self::API_VERSION, $path, $parameters);
     }
 
     /**
@@ -315,10 +341,10 @@ class TwitterOAuth extends Config
      *
      * @return array|object
      */
-    private function http($method, $host, $path, array $parameters)
+    private function http($method, $host, $apiVersion, $path, array $parameters)
     {
         $this->resetLastResponse();
-        $url = sprintf('%s/%s/%s.json', $host, self::API_VERSION, $path);
+        $url = sprintf('%s/%s/%s.json', $host, $apiVersion, $path);
         $this->response->setApiPath($path);
         $result = $this->oAuthRequest($url, $method, $parameters);
         $response = JsonDecoder::decode($result, $this->decodeJsonAsArray);
