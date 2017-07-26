@@ -13,7 +13,7 @@ class Config
     protected $timeout = 5;
     /** @var int how long to wait while connecting to the API */
     protected $connectionTimeout = 5;
-    /** @var int How many times we retry the request before throwing an exception */
+    /** @var int How many times we retry request when API is down */
     protected $maxRetries = 3;
     /** @var int Delay in seconds before we retry the request */
     protected $retriesDelay = 1;
