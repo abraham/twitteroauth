@@ -364,11 +364,20 @@ class TwitterOAuth extends Config
             $this->response->setBody($response);
             $this->attempts++;
             // Retry up to our $maxRetries number if we get errors greater than 500 (over capacity etc)
-        } while ($this->maxRetries && ($this->attempts <= $this->maxRetries) && $this->getLastHttpCode() < 500);
+        } while ($this->requestsAvailable());
 
         return $response;
     }
 
+    /**
+     * Checks if we have to retry request if API is down.
+     *
+     * @return bool
+     */
+    private function requestsAvailable()
+    {
+        return ($this->maxRetries && ($this->attempts <= $this->maxRetries) && $this->getLastHttpCode() < 500);
+    }
 
     /**
      * Format and sign an OAuth / API request
