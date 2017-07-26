@@ -105,10 +105,21 @@ class TwitterOAuth extends Config
     /**
      * Resets the attempts number.
      */
-    public function resetAttemptsNumber()
+    private function resetAttemptsNumber()
     {
         $this->attempts = 0;
     }
+
+    /**
+     * Delays the retries when they're activated.
+     */
+    private function sleepIfNeeded()
+    {
+        if ($this->maxRetries && $this->attempts) {
+            sleep($this->retriesDelay);
+        }
+    }
+
 
     /**
      * Make URLs for user browser navigation.
@@ -327,23 +338,37 @@ class TwitterOAuth extends Config
     private function http($method, $host, $path, array $parameters)
     {
         $this->resetLastResponse();
+        $this->resetAttemptsNumber();
         $url = sprintf('%s/%s/%s.json', $host, self::API_VERSION, $path);
         $this->response->setApiPath($path);
+        return $this->makeRequests($url, $method, $parameters);
+    }
 
+    /**
+     *
+     * Make requests and retry them (if enabled) in case of Twitter's problems.
+     *
+     * @param string $method
+     * @param string $url
+     * @param string $method
+     * @param array  $parameters
+     *
+     * @return array|object
+     */
+    private function makeRequests($url, $method, array $parameters)
+    {
         do {
-            // Only sleep on retry, not on initial request
-            sleep($this->attempts ? 0 : $this->retriesDelay);
+            $this->sleepIfNeeded();
             $result = $this->oAuthRequest($url, $method, $parameters);
             $response = JsonDecoder::decode($result, $this->decodeJsonAsArray);
             $this->response->setBody($response);
             $this->attempts++;
             // Retry up to our $maxRetries number if we get errors greater than 500 (over capacity etc)
-        } while ($this->attempts <= $this->maxRetries && $this->getLastHttpCode() < 500);
-
-        $this->resetAttemptsNumber();
+        } while ($this->maxRetries && ($this->attempts <= $this->maxRetries) && $this->getLastHttpCode() < 500);
 
         return $response;
     }
+
 
     /**
      * Format and sign an OAuth / API request
