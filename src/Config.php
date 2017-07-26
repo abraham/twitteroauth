@@ -13,7 +13,7 @@ class Config
     protected $timeout = 5;
     /** @var int how long to wait while connecting to the API */
     protected $connectionTimeout = 5;
-    /** @var int How many we retry request if we get 500's errors  */
+    /** @var int How many times we retry the request before throwing an exception */
     protected $maxRetries = 3;
     /** @var int Delay in seconds before we retry the request */
     protected $retriesDelay = 1;
@@ -54,8 +54,8 @@ class Config
     /**
      *  Set the number of times to retry on error and how long between each.
      *
-     * @param [type] $maxRetries   [description]
-     * @param [type] $retriesDelay [description]
+     * @param int $maxRetries
+     * @param int $retriesDelay
      */
     public function setRetries($maxRetries, $retriesDelay)
     {
