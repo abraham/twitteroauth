@@ -29,6 +29,8 @@ class TwitterOAuth extends Config
     private $token;
     /** @var HmacSha1 OAuth 1 signature type used by Twitter */
     private $signatureMethod;
+    /** @var int Number of attempts we made for the request */
+    private $attempts = 0;
 
     /**
      * Constructor
@@ -99,6 +101,25 @@ class TwitterOAuth extends Config
     {
         $this->response = new Response();
     }
+
+    /**
+     * Resets the attempts number.
+     */
+    private function resetAttemptsNumber()
+    {
+        $this->attempts = 0;
+    }
+
+    /**
+     * Delays the retries when they're activated.
+     */
+    private function sleepIfNeeded()
+    {
+        if ($this->maxRetries && $this->attempts) {
+            sleep($this->retriesDelay);
+        }
+    }
+
 
     /**
      * Make URLs for user browser navigation.
@@ -265,8 +286,7 @@ class TwitterOAuth extends Config
         // Append
         $segmentIndex = 0;
         $media = fopen($parameters['media'], 'rb');
-        while (!feof($media))
-        {
+        while (!feof($media)) {
             $this->http('POST', self::UPLOAD_HOST, 'media/upload', [
                 'command' => 'APPEND',
                 'media_id' => $init->media_id_string,
@@ -318,12 +338,45 @@ class TwitterOAuth extends Config
     private function http($method, $host, $path, array $parameters)
     {
         $this->resetLastResponse();
+        $this->resetAttemptsNumber();
         $url = sprintf('%s/%s/%s.json', $host, self::API_VERSION, $path);
         $this->response->setApiPath($path);
-        $result = $this->oAuthRequest($url, $method, $parameters);
-        $response = JsonDecoder::decode($result, $this->decodeJsonAsArray);
-        $this->response->setBody($response);
+        return $this->makeRequests($url, $method, $parameters);
+    }
+
+    /**
+     *
+     * Make requests and retry them (if enabled) in case of Twitter's problems.
+     *
+     * @param string $method
+     * @param string $url
+     * @param string $method
+     * @param array  $parameters
+     *
+     * @return array|object
+     */
+    private function makeRequests($url, $method, array $parameters)
+    {
+        do {
+            $this->sleepIfNeeded();
+            $result = $this->oAuthRequest($url, $method, $parameters);
+            $response = JsonDecoder::decode($result, $this->decodeJsonAsArray);
+            $this->response->setBody($response);
+            $this->attempts++;
+            // Retry up to our $maxRetries number if we get errors greater than 500 (over capacity etc)
+        } while ($this->requestsAvailable());
+
         return $response;
+    }
+
+    /**
+     * Checks if we have to retry request if API is down.
+     *
+     * @return bool
+     */
+    private function requestsAvailable()
+    {
+        return ($this->maxRetries && ($this->attempts <= $this->maxRetries) && $this->getLastHttpCode() < 500);
     }
 
     /**
@@ -379,7 +432,7 @@ class TwitterOAuth extends Config
             $options[CURLOPT_CAINFO] = __DIR__ . DIRECTORY_SEPARATOR . 'cacert.pem';
         }
 
-        if($this->gzipEncoding) {
+        if ($this->gzipEncoding) {
             $options[CURLOPT_ENCODING] = 'gzip';
         }
 
