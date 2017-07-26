@@ -103,6 +103,14 @@ class TwitterOAuth extends Config
     }
 
     /**
+     * Resets the attempts number.
+     */
+    public function resetAttemptsNumber()
+    {
+        $this->attempts = 0;
+    }
+
+    /**
      * Make URLs for user browser navigation.
      *
      * @param string $path
@@ -331,6 +339,8 @@ class TwitterOAuth extends Config
             $this->attempts++;
             // Retry up to our $maxRetries number if we get errors greater than 500 (over capacity etc)
         } while ($this->attempts <= $this->maxRetries && $this->getLastHttpCode() < 500);
+
+        $this->resetAttemptsNumber();
 
         return $response;
     }
