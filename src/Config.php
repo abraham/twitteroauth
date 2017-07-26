@@ -13,6 +13,13 @@ class Config
     protected $timeout = 5;
     /** @var int how long to wait while connecting to the API */
     protected $connectionTimeout = 5;
+    /** @var int How many times we retry the request before throwing an exception */
+    protected $maxRetries = 3;
+    /** @var int Delay in seconds before we retry the request */
+    protected $retriesDelay = 1;
+
+
+
     /**
      * Decode JSON Response as associative Array
      *
@@ -42,6 +49,18 @@ class Config
     {
         $this->connectionTimeout = (int)$connectionTimeout;
         $this->timeout = (int)$timeout;
+    }
+
+    /**
+     *  Set the number of times to retry on error and how long between each.
+     *
+     * @param [type] $maxRetries   [description]
+     * @param [type] $retriesDelay [description]
+     */
+    public function setRetries($maxRetries, $retriesDelay)
+    {
+        $this->maxRetries = (int)$maxRetries;
+        $this->retriesDelay = (int)$retriesDelay;
     }
 
     /**

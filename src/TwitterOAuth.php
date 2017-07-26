@@ -29,6 +29,8 @@ class TwitterOAuth extends Config
     private $token;
     /** @var HmacSha1 OAuth 1 signature type used by Twitter */
     private $signatureMethod;
+    /** @var int Number of attempts we made for the request */
+    private $attempts = 0;
 
     /**
      * Constructor
@@ -265,8 +267,7 @@ class TwitterOAuth extends Config
         // Append
         $segmentIndex = 0;
         $media = fopen($parameters['media'], 'rb');
-        while (!feof($media))
-        {
+        while (!feof($media)) {
             $this->http('POST', self::UPLOAD_HOST, 'media/upload', [
                 'command' => 'APPEND',
                 'media_id' => $init->media_id_string,
@@ -320,9 +321,17 @@ class TwitterOAuth extends Config
         $this->resetLastResponse();
         $url = sprintf('%s/%s/%s.json', $host, self::API_VERSION, $path);
         $this->response->setApiPath($path);
-        $result = $this->oAuthRequest($url, $method, $parameters);
-        $response = JsonDecoder::decode($result, $this->decodeJsonAsArray);
-        $this->response->setBody($response);
+
+        do {
+            // Only sleep on retry, not on initial request
+            sleep($this->attempts ? 0 : $this->retriesDelay);
+            $result = $this->oAuthRequest($url, $method, $parameters);
+            $response = JsonDecoder::decode($result, $this->decodeJsonAsArray);
+            $this->response->setBody($response);
+            $this->attempts++;
+            // Retry up to our $maxRetries number if we get errors greater than 500 (over capacity etc)
+        } while ($this->attempts <= $this->maxRetries && $this->getLastHttpCode() < 500);
+
         return $response;
     }
 
@@ -379,7 +388,7 @@ class TwitterOAuth extends Config
             $options[CURLOPT_CAINFO] = __DIR__ . DIRECTORY_SEPARATOR . 'cacert.pem';
         }
 
-        if($this->gzipEncoding) {
+        if ($this->gzipEncoding) {
             $options[CURLOPT_ENCODING] = 'gzip';
         }
 
