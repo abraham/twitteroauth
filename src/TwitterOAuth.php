@@ -376,7 +376,7 @@ class TwitterOAuth extends Config
      */
     private function requestsAvailable()
     {
-        return ($this->maxRetries && ($this->attempts <= $this->maxRetries) && $this->getLastHttpCode() < 500);
+        return ($this->maxRetries && ($this->attempts <= $this->maxRetries) && $this->getLastHttpCode() >= 500);
     }
 
     /**
