@@ -14,7 +14,7 @@ class Config
     /** @var int how long to wait while connecting to the API */
     protected $connectionTimeout = 5;
     /** @var int How many times we retry request when API is down */
-    protected $maxRetries = 0;
+    protected $maxRetries = 5;
     /** @var int Delay in seconds before we retry the request */
     protected $retriesDelay = 1;
 
