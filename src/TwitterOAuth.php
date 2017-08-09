@@ -17,7 +17,9 @@ class TwitterOAuth extends Config
 {
     const API_VERSION = '1.1';
     const API_HOST = 'https://api.twitter.com';
+    const API_EXTENSION = 'json';
     const UPLOAD_HOST = 'https://upload.twitter.com';
+    const STATUS_SUCCES = 200;
 
     /** @var Response details about the result of the last request */
     private $response;
@@ -31,6 +33,12 @@ class TwitterOAuth extends Config
     private $signatureMethod;
     /** @var int Number of attempts we made for the request */
     private $attempts = 0;
+    /** @var string|null Version of the API */
+    private $apiVersion;
+    /** @var string|null Host of the API */
+    private $apiHost;
+    /** @var string|null Extension of the API */
+    private $apiExtension;
 
     /**
      * Constructor
@@ -42,6 +50,9 @@ class TwitterOAuth extends Config
      */
     public function __construct($consumerKey, $consumerSecret, $oauthToken = null, $oauthTokenSecret = null)
     {
+        $this->setApiVersion(self::API_VERSION);
+        $this->setApiHost(self::API_HOST);
+        $this->setApiExtension(self::API_EXTENSION);
         $this->resetLastResponse();
         $this->signatureMethod = new HmacSha1();
         $this->consumer = new Consumer($consumerKey, $consumerSecret);
@@ -60,6 +71,54 @@ class TwitterOAuth extends Config
     public function setOauthToken($oauthToken, $oauthTokenSecret)
     {
         $this->token = new Token($oauthToken, $oauthTokenSecret);
+    }
+
+    /**
+     * @param string $version
+     */
+    public function setApiVersion($version)
+    {
+        $this->apiVersion = $version;
+    }
+
+    /**
+     * @return string
+     */
+    public function getApiVersion()
+    {
+        return $this->apiVersion;
+    }
+
+    /**
+     * @param string $host
+     */
+    public function setApiHost($host)
+    {
+        $this->apiHost = $host;
+    }
+
+    /**
+     * @return string
+     */
+    public function getApiHost()
+    {
+        return $this->apiHost;
+    }
+
+    /**
+     * @param string $extension
+     */
+    public function setApiExtension($extension)
+    {
+        $this->apiExtension = $extension;
+    }
+
+    /**
+     * @return string
+     */
+    public function getApiExtension()
+    {
+        return $this->apiExtension;
     }
 
     /**
@@ -120,6 +179,34 @@ class TwitterOAuth extends Config
         }
     }
 
+    /**
+     * Make URLs for user browser navigation.
+     *
+     * @param integer $code
+     *
+     * @return string
+     */
+    private function getError($code)
+    {
+        $error = array(
+            304 => 'Not Modified',
+            400 => 'Bad Request',
+            401 => 'Unauthorized',
+            403 => 'Forbidden',
+            404 => 'Not Found',
+            406 => 'Not Acceptable',
+            410 => 'Gone',
+            420 => 'Enhance Your Calm',
+            422 => 'Unprocessable Entity',
+            429 => 'Too Many Requests',
+            500 => 'Internal Server Error',
+            502 => 'Bad Gateway',
+            503 => 'Service Unavailable',
+            504 => 'Gateway timeout',
+        );
+
+        return array_key_exists($code, $error) ? $error[$code] : 'Unknown error';
+    }
 
     /**
      * Make URLs for user browser navigation.
@@ -133,8 +220,9 @@ class TwitterOAuth extends Config
     {
         $this->resetLastResponse();
         $this->response->setApiPath($path);
+        $host = $this->getApiHost();
         $query = http_build_query($parameters);
-        return sprintf('%s/%s?%s', self::API_HOST, $path, $query);
+        return sprintf('%s/%s?%s', $host, $path, $query);
     }
 
     /**
@@ -151,10 +239,11 @@ class TwitterOAuth extends Config
         $response = [];
         $this->resetLastResponse();
         $this->response->setApiPath($path);
-        $url = sprintf('%s/%s', self::API_HOST, $path);
+        $host = $this->getApiHost();
+        $url = sprintf('%s/%s', $host, $path);
         $result = $this->oAuthRequest($url, 'POST', $parameters);
 
-        if ($this->getLastHttpCode() != 200) {
+        if ($this->getLastHttpCode() != self::STATUS_SUCCES) {
             throw new TwitterOAuthException($result);
         }
 
@@ -177,7 +266,8 @@ class TwitterOAuth extends Config
         $method = 'POST';
         $this->resetLastResponse();
         $this->response->setApiPath($path);
-        $url = sprintf('%s/%s', self::API_HOST, $path);
+        $host = $this->getApiHost();
+        $url = sprintf('%s/%s', $host, $path);
         $request = Request::fromConsumerAndToken($this->consumer, $this->token, $method, $url, $parameters);
         $authorization = 'Authorization: Basic ' . $this->encodeAppAuthorization($this->consumer);
         $result = $this->request($request->getNormalizedHttpUrl(), $method, $authorization, $parameters);
@@ -196,7 +286,9 @@ class TwitterOAuth extends Config
      */
     public function get($path, array $parameters = [])
     {
-        return $this->http('GET', self::API_HOST, $path, $parameters);
+        $host = $this->getApiHost();
+
+        return $this->http('GET', $host, $path, $parameters);
     }
 
     /**
@@ -209,7 +301,9 @@ class TwitterOAuth extends Config
      */
     public function post($path, array $parameters = [])
     {
-        return $this->http('POST', self::API_HOST, $path, $parameters);
+        $host = $this->getApiHost();
+
+        return $this->http('POST', $host, $path, $parameters);
     }
 
     /**
@@ -222,7 +316,9 @@ class TwitterOAuth extends Config
      */
     public function delete($path, array $parameters = [])
     {
-        return $this->http('DELETE', self::API_HOST, $path, $parameters);
+        $host = $this->getApiHost();
+
+        return $this->http('DELETE', $host, $path, $parameters);
     }
 
     /**
@@ -235,7 +331,9 @@ class TwitterOAuth extends Config
      */
     public function put($path, array $parameters = [])
     {
-        return $this->http('PUT', self::API_HOST, $path, $parameters);
+        $host = $this->getApiHost();
+
+        return $this->http('PUT', $host, $path, $parameters);
     }
 
     /**
@@ -339,7 +437,13 @@ class TwitterOAuth extends Config
     {
         $this->resetLastResponse();
         $this->resetAttemptsNumber();
-        $url = sprintf('%s/%s/%s.json', $host, self::API_VERSION, $path);
+        $version = $this->getApiVersion();
+        $extension = $this->getApiExtension();
+        $pathWithExtension = $path;
+        if ($extension !== null) {
+            $pathWithExtension .= '.'.$extension;
+        }
+        $url = sprintf('%s/%s/%s', $host, $version, $pathWithExtension);
         $this->response->setApiPath($path);
         return $this->makeRequests($url, $method, $parameters);
     }
@@ -354,6 +458,7 @@ class TwitterOAuth extends Config
      * @param array  $parameters
      *
      * @return array|object
+     * @throws TwitterOAuthException
      */
     private function makeRequests($url, $method, array $parameters)
     {
@@ -365,6 +470,14 @@ class TwitterOAuth extends Config
             $this->attempts++;
             // Retry up to our $maxRetries number if we get errors greater than 500 (over capacity etc)
         } while ($this->requestsAvailable());
+
+        $httpCode = $this->getLastHttpCode();
+
+        if ($httpCode !== self::STATUS_SUCCES) {
+            $error = $this->getError($httpCode);
+
+            throw new TwitterOAuthException($error);
+        }
 
         return $response;
     }
