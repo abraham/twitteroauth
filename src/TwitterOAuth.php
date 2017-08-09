@@ -122,6 +122,22 @@ class TwitterOAuth extends Config
     }
 
     /**
+     * @param boolean $decodeJsonAsArray
+     */
+    public function setDecodeJsonAsArray($decodeJsonAsArray)
+    {
+        $this->decodeJsonAsArray = $decodeJsonAsArray;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isDecodeJsonAsArray()
+    {
+        return $this->decodeJsonAsArray;
+    }
+
+    /**
      * @return string|null
      */
     public function getLastApiPath()
