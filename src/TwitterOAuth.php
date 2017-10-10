@@ -283,6 +283,11 @@ class TwitterOAuth extends Config
     private function uploadMediaChunked($path, array $parameters)
     {
         $init = $this->http('POST', self::UPLOAD_HOST, $path, $this->mediaInitParameters($parameters));
+        // If there are errors with the file, like gif or video requirements are not met
+        if (!isset($init->media_id_string)) {
+            // Return the object with the error from the API just like not chunked method
+            return $init;
+        }
         // Append
         $segmentIndex = 0;
         $media = fopen($parameters['media'], 'rb');
