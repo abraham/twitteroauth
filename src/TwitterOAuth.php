@@ -46,10 +46,10 @@ class TwitterOAuth extends Config
         $this->signatureMethod = new HmacSha1();
         $this->consumer = new Consumer($consumerKey, $consumerSecret);
         if (!empty($oauthToken) && !empty($oauthTokenSecret)) {
-            $this->token = new Token($oauthToken, $oauthTokenSecret);
+            $this->setOauthToken($oauthToken, $oauthTokenSecret);
         }
         if (empty($oauthToken) && !empty($oauthTokenSecret)) {
-            $this->bearer = $oauthTokenSecret;
+            $this->setBearer($oauthTokenSecret);
         }
     }
 
@@ -60,6 +60,16 @@ class TwitterOAuth extends Config
     public function setOauthToken($oauthToken, $oauthTokenSecret)
     {
         $this->token = new Token($oauthToken, $oauthTokenSecret);
+        $this->bearer = null;
+    }
+
+    /**
+     * @param string $oauthTokenSecret
+     */
+    public function setBearer($oauthTokenSecret)
+    {
+        $this->bearer = $oauthTokenSecret;
+        $this->token = null;
     }
 
     /**
