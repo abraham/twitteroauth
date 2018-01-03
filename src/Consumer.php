@@ -1,23 +1,24 @@
 <?php
 /**
  * The MIT License
- * Copyright (c) 2007 Andy Smith
+ * Copyright (c) 2007 Andy Smith.
  */
+
 namespace Abraham\TwitterOAuth;
 
 class Consumer
 {
-    /** @var string  */
+    /** @var string */
     public $key;
-    /** @var string  */
+    /** @var string */
     public $secret;
-    /** @var string|null  */
+    /** @var string|null */
     public $callbackUrl;
 
     /**
      * @param string $key
      * @param string $secret
-     * @param null $callbackUrl
+     * @param null   $callbackUrl
      */
     public function __construct($key, $secret, $callbackUrl = null)
     {

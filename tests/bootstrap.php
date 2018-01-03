@@ -1,6 +1,6 @@
 <?php
 
-require __DIR__ . '/../vendor/autoload.php';
+require __DIR__.'/../vendor/autoload.php';
 
 define('CONSUMER_KEY', getenv('TEST_CONSUMER_KEY'));
 define('CONSUMER_SECRET', getenv('TEST_CONSUMER_SECRET'));

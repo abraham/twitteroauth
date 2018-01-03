@@ -1,8 +1,9 @@
 <?php
 /**
  * The MIT License
- * Copyright (c) 2007 Andy Smith
+ * Copyright (c) 2007 Andy Smith.
  */
+
 namespace Abraham\TwitterOAuth;
 
 class Util
@@ -16,10 +17,11 @@ class Util
     {
         $output = '';
         if (is_array($input)) {
-            $output = array_map([__NAMESPACE__ . '\Util', 'urlencodeRfc3986'], $input);
+            $output = array_map([__NAMESPACE__.'\Util', 'urlencodeRfc3986'], $input);
         } elseif (is_scalar($input)) {
             $output = rawurlencode($input);
         }
+
         return $output;
     }
 
@@ -36,7 +38,7 @@ class Util
     /**
      * This function takes a input like a=b&a=c&d=e and returns the parsed
      * parameters like this
-     * array('a' => array('b','c'), 'd' => 'e')
+     * array('a' => array('b','c'), 'd' => 'e').
      *
      * @param string $input
      *
@@ -53,8 +55,8 @@ class Util
         $parameters = [];
         foreach ($pairs as $pair) {
             $split = explode('=', $pair, 2);
-            $parameter = Util::urldecodeRfc3986($split[0]);
-            $value = isset($split[1]) ? Util::urldecodeRfc3986($split[1]) : '';
+            $parameter = self::urldecodeRfc3986($split[0]);
+            $value = isset($split[1]) ? self::urldecodeRfc3986($split[1]) : '';
 
             if (isset($parameters[$parameter])) {
                 // We have already recieved parameter(s) with this name, so add to the list
@@ -71,6 +73,7 @@ class Util
                 $parameters[$parameter] = $value;
             }
         }
+
         return $parameters;
     }
 
@@ -86,8 +89,8 @@ class Util
         }
 
         // Urlencode both keys and values
-        $keys = Util::urlencodeRfc3986(array_keys($params));
-        $values = Util::urlencodeRfc3986(array_values($params));
+        $keys = self::urlencodeRfc3986(array_keys($params));
+        $values = self::urlencodeRfc3986(array_values($params));
         $params = array_combine($keys, $values);
 
         // Parameters are sorted by name, using lexicographical byte value ordering.
@@ -102,10 +105,10 @@ class Util
                 // June 12th, 2010 - changed to sort because of issue 164 by hidetaka
                 sort($value, SORT_STRING);
                 foreach ($value as $duplicateValue) {
-                    $pairs[] = $parameter . '=' . $duplicateValue;
+                    $pairs[] = $parameter.'='.$duplicateValue;
                 }
             } else {
-                $pairs[] = $parameter . '=' . $value;
+                $pairs[] = $parameter.'='.$value;
             }
         }
         // For each parameter, the name is separated from the corresponding value by an '=' character (ASCII code 61)

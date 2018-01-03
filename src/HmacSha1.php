@@ -1,8 +1,9 @@
 <?php
 /**
  * The MIT License
- * Copyright (c) 2007 Andy Smith
+ * Copyright (c) 2007 Andy Smith.
  */
+
 namespace Abraham\TwitterOAuth;
 
 /**
@@ -10,26 +11,26 @@ namespace Abraham\TwitterOAuth;
  * where the Signature Base String is the text and the key is the concatenated values (each first
  * encoded per Parameter Encoding) of the Consumer Secret and Token Secret, separated by an '&'
  * character (ASCII code 38) even if empty.
- *   - Chapter 9.2 ("HMAC-SHA1")
+ *   - Chapter 9.2 ("HMAC-SHA1").
  */
 class HmacSha1 extends SignatureMethod
 {
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getName()
     {
-        return "HMAC-SHA1";
+        return 'HMAC-SHA1';
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function buildSignature(Request $request, Consumer $consumer, Token $token = null)
     {
         $signatureBase = $request->getSignatureBaseString();
 
-        $parts = [$consumer->secret, null !== $token ? $token->secret : ""];
+        $parts = [$consumer->secret, null !== $token ? $token->secret : ''];
 
         $parts = Util::urlencodeRfc3986($parts);
         $key = implode('&', $parts);

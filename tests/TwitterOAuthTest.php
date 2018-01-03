@@ -2,6 +2,7 @@
 /**
  * WARNING: Running these tests will post and delete through the actual Twitter account.
  */
+
 namespace Abraham\TwitterOAuth\Test;
 
 use Abraham\TwitterOAuth\TwitterOAuth;
@@ -40,6 +41,7 @@ class TwitterOAuthTest extends \PHPUnit_Framework_TestCase
         $this->assertObjectHasAttribute('token_type', $result);
         $this->assertObjectHasAttribute('access_token', $result);
         $this->assertEquals('bearer', $result->token_type);
+
         return $result;
     }
 
@@ -55,6 +57,7 @@ class TwitterOAuthTest extends \PHPUnit_Framework_TestCase
             $this->assertEquals('foo', print_r($result, true));
         }
         $this->assertEquals(200, $twitter->getLastHttpCode());
+
         return $accessToken;
     }
 
@@ -84,6 +87,7 @@ class TwitterOAuthTest extends \PHPUnit_Framework_TestCase
         $this->assertArrayHasKey('oauth_token_secret', $result);
         $this->assertArrayHasKey('oauth_callback_confirmed', $result);
         $this->assertEquals('true', $result['oauth_callback_confirmed']);
+
         return $result;
     }
 
@@ -95,6 +99,7 @@ class TwitterOAuthTest extends \PHPUnit_Framework_TestCase
     {
         $twitter = new TwitterOAuth('CONSUMER_KEY', 'CONSUMER_SECRET');
         $result = $twitter->oauth('oauth/request_token', ['oauth_callback' => OAUTH_CALLBACK]);
+
         return $result;
     }
 
@@ -112,7 +117,7 @@ class TwitterOAuthTest extends \PHPUnit_Framework_TestCase
             $requestToken['oauth_token'],
             $requestToken['oauth_token_secret']
         );
-        $twitter->oauth("oauth/access_token", ["oauth_verifier" => "fake_oauth_verifier"]);
+        $twitter->oauth('oauth/access_token', ['oauth_verifier' => 'fake_oauth_verifier']);
     }
 
     public function testUrl()
@@ -124,7 +129,7 @@ class TwitterOAuthTest extends \PHPUnit_Framework_TestCase
     public function testGetAccountVerifyCredentials()
     {
         // Include entities boolean added to test parameter value cohearsion
-        $this->twitter->get('account/verify_credentials', ["include_entities" => false]);
+        $this->twitter->get('account/verify_credentials', ['include_entities' => false]);
         $this->assertEquals(200, $this->twitter->getLastHttpCode());
     }
 
@@ -152,6 +157,7 @@ class TwitterOAuthTest extends \PHPUnit_Framework_TestCase
     {
         $result = $this->twitter->get('search/tweets', ['q' => 'twitter']);
         $this->assertEquals(200, $this->twitter->getLastHttpCode());
+
         return $result->statuses;
     }
 
@@ -189,16 +195,17 @@ class TwitterOAuthTest extends \PHPUnit_Framework_TestCase
     {
         $this->twitter->setTimeouts(60, 30);
         // Image source https://www.flickr.com/photos/titrans/8548825587/
-        $file_path = __DIR__ . '/kitten.jpg';
+        $file_path = __DIR__.'/kitten.jpg';
         $result = $this->twitter->upload('media/upload', ['media' => $file_path]);
         $this->assertEquals(200, $this->twitter->getLastHttpCode());
         $this->assertObjectHasAttribute('media_id_string', $result);
-        $parameters = ['status' => 'Hello World ' . time(), 'media_ids' => $result->media_id_string];
+        $parameters = ['status' => 'Hello World '.time(), 'media_ids' => $result->media_id_string];
         $result = $this->twitter->post('statuses/update', $parameters);
         $this->assertEquals(200, $this->twitter->getLastHttpCode());
         if ($this->twitter->getLastHttpCode() == 200) {
-            $result = $this->twitter->post('statuses/destroy/' . $result->id_str);
+            $result = $this->twitter->post('statuses/destroy/'.$result->id_str);
         }
+
         return $result;
     }
 
@@ -206,23 +213,25 @@ class TwitterOAuthTest extends \PHPUnit_Framework_TestCase
     {
         $this->twitter->setTimeouts(60, 30);
         // Video source http://www.sample-videos.com/
-        $file_path = __DIR__ . '/video.mp4';
+        $file_path = __DIR__.'/video.mp4';
         $result = $this->twitter->upload('media/upload', ['media' => $file_path, 'media_type' => 'video/mp4'], true);
         $this->assertEquals(201, $this->twitter->getLastHttpCode());
         $this->assertObjectHasAttribute('media_id_string', $result);
-        $parameters = ['status' => 'Hello World ' . time(), 'media_ids' => $result->media_id_string];
+        $parameters = ['status' => 'Hello World '.time(), 'media_ids' => $result->media_id_string];
         $result = $this->twitter->post('statuses/update', $parameters);
         $this->assertEquals(200, $this->twitter->getLastHttpCode());
         if ($this->twitter->getLastHttpCode() == 200) {
-            $result = $this->twitter->post('statuses/destroy/' . $result->id_str);
+            $result = $this->twitter->post('statuses/destroy/'.$result->id_str);
         }
+
         return $result;
     }
 
     public function testPostStatusesUpdateUtf8()
     {
-        $result = $this->twitter->post('statuses/update', ['status' => 'xこんにちは世界 ' . time()]);
+        $result = $this->twitter->post('statuses/update', ['status' => 'xこんにちは世界 '.time()]);
         $this->assertEquals(200, $this->twitter->getLastHttpCode());
+
         return $result;
     }
 
@@ -231,7 +240,7 @@ class TwitterOAuthTest extends \PHPUnit_Framework_TestCase
      */
     public function testPostStatusesDestroy($status)
     {
-        $this->twitter->post('statuses/destroy/' . $status->id_str);
+        $this->twitter->post('statuses/destroy/'.$status->id_str);
         $this->assertEquals(200, $this->twitter->getLastHttpCode());
     }
 
