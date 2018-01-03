@@ -252,11 +252,6 @@ class TwitterOAuth extends Config
         return $this->http('PUT', self::API_HOST, $path, $parameters);
     }
 
-    public function postData()
-    {
-        return $this->http('POST', self::DATA_API_HOST, $path, $parameters);
-    }
-
     /**
      * Upload media to upload.twitter.com.
      *
