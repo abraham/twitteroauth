@@ -18,10 +18,8 @@ class Config
     /** @var int Delay in seconds before we retry the request */
     protected $retriesDelay = 1;
 
-
-
     /**
-     * Decode JSON Response as associative Array
+     * Decode JSON Response as associative Array.
      *
      * @see http://php.net/manual/en/function.json-decode.php
      *
@@ -36,7 +34,7 @@ class Config
     /** @var bool Whether to encode the curl requests with gzip or not */
     protected $gzipEncoding = true;
 
-    /** @var integer Size for Chunked Uploads */
+    /** @var int Size for Chunked Uploads */
     protected $chunkSize = 250000; // 0.25 MegaByte
 
     /**
@@ -47,8 +45,8 @@ class Config
      */
     public function setTimeouts($connectionTimeout, $timeout)
     {
-        $this->connectionTimeout = (int)$connectionTimeout;
-        $this->timeout = (int)$timeout;
+        $this->connectionTimeout = (int) $connectionTimeout;
+        $this->timeout = (int) $timeout;
     }
 
     /**
@@ -59,8 +57,8 @@ class Config
      */
     public function setRetries($maxRetries, $retriesDelay)
     {
-        $this->maxRetries = (int)$maxRetries;
-        $this->retriesDelay = (int)$retriesDelay;
+        $this->maxRetries = (int) $maxRetries;
+        $this->retriesDelay = (int) $retriesDelay;
     }
 
     /**
@@ -68,7 +66,7 @@ class Config
      */
     public function setDecodeJsonAsArray($value)
     {
-        $this->decodeJsonAsArray = (bool)$value;
+        $this->decodeJsonAsArray = (bool) $value;
     }
 
     /**
@@ -76,7 +74,7 @@ class Config
      */
     public function setUserAgent($userAgent)
     {
-        $this->userAgent = (string)$userAgent;
+        $this->userAgent = (string) $userAgent;
     }
 
     /**
@@ -90,11 +88,11 @@ class Config
     /**
      * Whether to encode the curl requests with gzip or not.
      *
-     * @param boolean $gzipEncoding
+     * @param bool $gzipEncoding
      */
     public function setGzipEncoding($gzipEncoding)
     {
-        $this->gzipEncoding = (bool)$gzipEncoding;
+        $this->gzipEncoding = (bool) $gzipEncoding;
     }
 
     /**
@@ -104,6 +102,6 @@ class Config
      */
     public function setChunkSize($value)
     {
-        $this->chunkSize = (int)$value;
+        $this->chunkSize = (int) $value;
     }
 }

@@ -4,7 +4,8 @@ namespace Abraham\TwitterOAuth\Tests;
 
 use Abraham\TwitterOAuth\Consumer;
 
-class ConsumerTest extends \PHPUnit_Framework_TestCase {
+class ConsumerTest extends \PHPUnit_Framework_TestCase
+{
     public function testToString()
     {
         $key = uniqid();
