@@ -214,12 +214,13 @@ class TwitterOAuth extends Config
      *
      * @param string $path
      * @param array  $parameters
+     * @param string $host
      *
      * @return array|object
      */
-    public function post($path, array $parameters = [])
+    public function post($path, array $parameters = [], $host = self::API_HOST)
     {
-        return $this->http('POST', self::API_HOST, $path, $parameters);
+        return $this->http('POST', $host, $path, $parameters);
     }
 
     /**
@@ -246,6 +247,11 @@ class TwitterOAuth extends Config
     public function put($path, array $parameters = [])
     {
         return $this->http('PUT', self::API_HOST, $path, $parameters);
+    }
+
+    public function postData()
+    {
+        return $this->http('POST', self::DATA_API_HOST, $path, $parameters);
     }
 
     /**
