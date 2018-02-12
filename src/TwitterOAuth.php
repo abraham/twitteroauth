@@ -244,7 +244,7 @@ class TwitterOAuth extends Config
      *
      * @return array|object
      */
-    public function put($path, array $parameters = [], $json = false)
+    public function put($path, array $parameters = [])
     {
         return $this->http('PUT', self::API_HOST, $path, $parameters, $json);
     }
