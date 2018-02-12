@@ -10,6 +10,7 @@ class Request
     protected $parameters;
     protected $httpMethod;
     protected $httpUrl;
+    protected $json;
     public static $version = '1.0';
 
     /**
@@ -43,7 +44,8 @@ class Request
         Token $token = null,
         $httpMethod,
         $httpUrl,
-        array $parameters = []
+        array $parameters = [],
+        $json = false
     ) {
         $defaults = [
             "oauth_version" => Request::$version,
@@ -55,7 +57,12 @@ class Request
             $defaults['oauth_token'] = $token->key;
         }
 
-        $parameters = array_merge($defaults, $parameters);
+        //The json payload is not included in the signature on json requests, therefore it shouldn't be included in the parameters array
+        if($json) {
+            $parameters = $defaults;
+        } else {
+            $parameters = array_merge($defaults, $parameters);
+        }
 
         return new Request($httpMethod, $httpUrl, $parameters);
     }
