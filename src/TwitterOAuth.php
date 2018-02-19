@@ -267,6 +267,21 @@ class TwitterOAuth extends Config
     }
 
     /**
+     * Progression of media upload
+     *
+     * @param string $media_id
+     *
+     * @return array|object
+     */
+    public function mediaStatus($media_id)
+    {
+        return $this->http('GET', self::UPLOAD_HOST, 'media/upload', [
+            'command' => 'STATUS',
+            'media_id' => $media_id
+        ]);
+    }
+
+    /**
      * Private method to upload media (not chunked) to upload.twitter.com.
      *
      * @param string $path
