@@ -202,6 +202,14 @@ class TwitterOAuthTest extends \PHPUnit_Framework_TestCase
         return $result;
     }
 
+    public function testPostStatusUpdateWithInvalidMediaThrowsException()
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $file_path = __DIR__ . '/12345678900987654321.jpg';
+        $this->assertFalse(\is_readable($file_path));
+        $result = $this->twitter->upload('media/upload', ['media' => $file_path]);
+    }
+
     public function testPostStatusesUpdateWithMediaChunked()
     {
         $this->twitter->setTimeouts(60, 30);
