@@ -267,6 +267,19 @@ class TwitterOAuth extends Config
     }
 
     /**
+     * Make GET requests to the Upload API
+     *
+     * @param string $path
+     * @param array $parameters
+     *
+     * @return array|object
+     */
+    public function getUpload($path, array $parameters = [])
+    {
+        return $this->http('GET', self::UPLOAD_HOST, $path, $parameters);
+    }
+
+    /**
      * Private method to upload media (not chunked) to upload.twitter.com.
      *
      * @param string $path
