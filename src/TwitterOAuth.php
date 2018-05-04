@@ -388,8 +388,6 @@ class TwitterOAuth extends Config
         }
 
         switch ($method) {
-            //case 'GET':
-            //    break;
             case 'POST':
                 $options[CURLOPT_POST] = true;
                 if ($json) {
