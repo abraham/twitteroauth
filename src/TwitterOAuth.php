@@ -231,7 +231,7 @@ class TwitterOAuth extends Config
     public function upload($path, array $parameters = [], $chunked = false, $json = false)
     {
         if ($json) {
-          return $this->http('POST', self::UPLOAD_HOST, $path, $parameters, $json);;
+            return $this->http('POST', self::UPLOAD_HOST, $path, $parameters, $json);
         }
         if ($chunked) {
             return $this->uploadMediaChunked($path, $parameters);
@@ -326,7 +326,8 @@ class TwitterOAuth extends Config
      */
     private function oAuthRequest($url, $method, array $parameters, $json)
     {
-        $request = Request::fromConsumerAndToken($this->consumer, $this->token, $method, $url, $json ? [] : $parameters);
+        $request = Request::fromConsumerAndToken($this->consumer, $this->token, $method, $url, $json ? []
+                                                                                                     : $parameters);
         if (array_key_exists('oauth_callback', $parameters)) {
             // Twitter doesn't like oauth_callback as a parameter.
             unset($parameters['oauth_callback']);
@@ -387,30 +388,26 @@ class TwitterOAuth extends Config
         }
 
         switch ($method) {
-            case 'GET':
-                break;
             case 'POST':
                 $options[CURLOPT_POST] = true;
                 if ($json) {
-                  $data = json_encode($postfields);
-                  array_push($options[CURLOPT_HTTPHEADER], 'Content-Type: application/json');
+                    $data = json_encode($postfields);
+                    array_push($options[CURLOPT_HTTPHEADER], 'Content-Type: application/json');
                 } else {
-                  $data = Util::buildHttpQuery($postfields);
+                    $data = Util::buildHttpQuery($postfields);
                 }
                 $options[CURLOPT_POSTFIELDS] = $data;
                 break;
             case 'DELETE':
-                $options[CURLOPT_CUSTOMREQUEST] = 'DELETE';
-                break;
             case 'PUT':
-                $options[CURLOPT_CUSTOMREQUEST] = 'PUT';
+                $options[CURLOPT_CUSTOMREQUEST] = $method;
+                // no break intentional
+            case 'GET':
+                if (!empty($postfields)) {
+                    $options[CURLOPT_URL] .= '?' . Util::buildHttpQuery($postfields);
+                }
                 break;
         }
-
-        if (in_array($method, ['GET', 'PUT', 'DELETE']) && !empty($postfields)) {
-            $options[CURLOPT_URL] .= '?' . Util::buildHttpQuery($postfields);
-        }
-
 
         $curlHandle = curl_init();
         curl_setopt_array($curlHandle, $options);
