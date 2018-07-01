@@ -200,13 +200,15 @@ class TwitterOAuth extends Config
      * Make GET requests to the API.
      *
      * @param string $path
-     * @param array  $parameters
+     * @param array $parameters
      *
      * @return array|object
      */
     public function get($path, array $parameters = [])
     {
-        return $this->http('GET', self::API_HOST, $path, $parameters);
+        $host = ($path === 'media/upload') ? self::UPLOAD_HOST : self::API_HOST;
+
+        return $this->http('GET', $host, $path, $parameters);
     }
 
     /**
