@@ -14,6 +14,7 @@ class TwitterOAuthTest extends \PHPUnit_Framework_TestCase
     protected function setUp()
     {
         $this->twitter = new TwitterOAuth(CONSUMER_KEY, CONSUMER_SECRET, ACCESS_TOKEN, ACCESS_TOKEN_SECRET);
+        $this->userId = explode('-', ACCESS_TOKEN)[0];
     }
 
     public function testBuildClient()
@@ -192,7 +193,7 @@ class TwitterOAuthTest extends \PHPUnit_Framework_TestCase
                 'type' => 'message_create',
                 'message_create' => [
                     'target' => [
-                        'recipient_id' => '18548072'
+                        'recipient_id' => $this->userId
                     ],
                     'message_data' => [
                         'text' => 'Hello World!'
