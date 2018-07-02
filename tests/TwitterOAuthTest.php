@@ -14,6 +14,7 @@ class TwitterOAuthTest extends \PHPUnit_Framework_TestCase
     protected function setUp()
     {
         $this->twitter = new TwitterOAuth(CONSUMER_KEY, CONSUMER_SECRET, ACCESS_TOKEN, ACCESS_TOKEN_SECRET);
+        $this->userId = explode('-', ACCESS_TOKEN)[0];
     }
 
     public function testBuildClient()
@@ -183,6 +184,35 @@ class TwitterOAuthTest extends \PHPUnit_Framework_TestCase
     {
         $this->twitter->post('favorites/destroy', ['id' => '6242973112']);
         $this->assertEquals(200, $this->twitter->getLastHttpCode());
+    }
+
+    public function testPostDirectMessagesEventsNew()
+    {
+        $data = [
+            'event' => [
+                'type' => 'message_create',
+                'message_create' => [
+                    'target' => [
+                        'recipient_id' => $this->userId
+                    ],
+                    'message_data' => [
+                        'text' => 'Hello World!'
+                    ]
+                ]
+            ]
+        ];
+        $result = $this->twitter->post('direct_messages/events/new', $data, true);
+        $this->assertEquals(200, $this->twitter->getLastHttpCode());
+        return $result;
+    }
+
+    /**
+     * @depends testPostDirectMessagesEventsNew
+     */
+    public function testDeleteDirectMessagesEventsDestroy($message)
+    {
+        $this->twitter->delete('direct_messages/events/destroy', ['id' => $message->event->id]);
+        $this->assertEquals(204, $this->twitter->getLastHttpCode());
     }
 
     public function testPostStatusesUpdateWithMedia()
