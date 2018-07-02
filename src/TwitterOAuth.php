@@ -206,7 +206,7 @@ class TwitterOAuth extends Config
      */
     public function get($path, array $parameters = [])
     {
-        return $this->http('GET', self::API_HOST, $path, $parameters);
+        return $this->http('GET', self::API_HOST, $path, $parameters, false);
     }
 
     /**
@@ -233,7 +233,7 @@ class TwitterOAuth extends Config
      */
     public function delete($path, array $parameters = [])
     {
-        return $this->http('DELETE', self::API_HOST, $path, $parameters);
+        return $this->http('DELETE', self::API_HOST, $path, $parameters, false);
     }
 
     /**
@@ -246,7 +246,7 @@ class TwitterOAuth extends Config
      */
     public function put($path, array $parameters = [])
     {
-        return $this->http('PUT', self::API_HOST, $path, $parameters, $json);
+        return $this->http('PUT', self::API_HOST, $path, $parameters, false);
     }
 
     /**
@@ -279,7 +279,7 @@ class TwitterOAuth extends Config
         return $this->http('GET', self::UPLOAD_HOST, 'media/upload', [
             'command' => 'STATUS',
             'media_id' => $media_id
-        ]);
+        ], false);
     }
 
     /**
@@ -297,7 +297,7 @@ class TwitterOAuth extends Config
             throw new \InvalidArgumentException('You must supply a readable file');
         }
         $parameters['media'] = base64_encode($file);
-        return $this->http('POST', self::UPLOAD_HOST, $path, $parameters);
+        return $this->http('POST', self::UPLOAD_HOST, $path, $parameters, false);
     }
 
     /**
@@ -310,7 +310,7 @@ class TwitterOAuth extends Config
      */
     private function uploadMediaChunked($path, array $parameters)
     {
-        $init = $this->http('POST', self::UPLOAD_HOST, $path, $this->mediaInitParameters($parameters));
+        $init = $this->http('POST', self::UPLOAD_HOST, $path, $this->mediaInitParameters($parameters), false);
         // Append
         $segmentIndex = 0;
         $media = fopen($parameters['media'], 'rb');
@@ -320,14 +320,14 @@ class TwitterOAuth extends Config
                 'media_id' => $init->media_id_string,
                 'segment_index' => $segmentIndex++,
                 'media_data' => base64_encode(fread($media, $this->chunkSize))
-            ]);
+            ], false);
         }
         fclose($media);
         // Finalize
         $finalize = $this->http('POST', self::UPLOAD_HOST, 'media/upload', [
             'command' => 'FINALIZE',
             'media_id' => $init->media_id_string
-        ]);
+        ], false);
         return $finalize;
     }
 
@@ -364,7 +364,7 @@ class TwitterOAuth extends Config
      *
      * @return array|object
      */
-    private function http($method, $host, $path, array $parameters, $json = false)
+    private function http($method, $host, $path, array $parameters, $json)
     {
         $this->resetLastResponse();
         $this->resetAttemptsNumber();
@@ -385,7 +385,7 @@ class TwitterOAuth extends Config
      *
      * @return array|object
      */
-    private function makeRequests($url, $method, array $parameters, $json = false)
+    private function makeRequests($url, $method, array $parameters, $json)
     {
         do {
             $this->sleepIfNeeded();
