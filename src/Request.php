@@ -57,8 +57,9 @@ class Request
             $defaults['oauth_token'] = $token->key;
         }
 
-        //The json payload is not included in the signature on json requests, therefore it shouldn't be included in the parameters array
-        if($json) {
+        // The json payload is not included in the signature on json requests,
+        // therefore it shouldn't be included in the parameters array.
+        if ($json) {
             $parameters = $defaults;
         } else {
             $parameters = array_merge($defaults, $parameters);

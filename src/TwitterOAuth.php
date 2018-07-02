@@ -501,7 +501,7 @@ class TwitterOAuth extends Config
                 break;
             case 'POST':
                 $options[CURLOPT_POST] = true;
-                if($json) {
+                if ($json) {
                     $options[CURLOPT_HTTPHEADER][] = 'Content-type: application/json';
                     $options[CURLOPT_POSTFIELDS] = json_encode($postfields);
                 } else {
