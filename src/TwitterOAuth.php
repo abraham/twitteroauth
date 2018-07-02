@@ -495,9 +495,6 @@ class TwitterOAuth extends Config
         $options = $this->curlOptions();
         $options[CURLOPT_URL] = $url;
         $options[CURLOPT_HTTPHEADER] = ['Accept: application/json', $authorization, 'Expect:'];
-        if($json) {
-            $options[CURLOPT_HTTPHEADER][] = 'Content-type: application/json';
-        }
 
         switch ($method) {
             case 'GET':
@@ -505,6 +502,7 @@ class TwitterOAuth extends Config
             case 'POST':
                 $options[CURLOPT_POST] = true;
                 if($json) {
+                    $options[CURLOPT_HTTPHEADER][] = 'Content-type: application/json';
                     $options[CURLOPT_POSTFIELDS] = json_encode($postfields);
                 } else {
                     $options[CURLOPT_POSTFIELDS] = Util::buildHttpQuery($postfields);
