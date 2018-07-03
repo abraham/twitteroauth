@@ -13,4 +13,5 @@ before_script:
     - composer install --prefer-source --no-interaction
 script:
   - vendor/bin/phpcs src tests --standard=PSR2
+  - tests/scripts/cacert.sh
   - vendor/bin/phpunit
