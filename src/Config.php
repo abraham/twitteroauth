@@ -18,8 +18,6 @@ class Config
     /** @var int Delay in seconds before we retry the request */
     protected $retriesDelay = 1;
 
-
-
     /**
      * Decode JSON Response as associative Array
      *
