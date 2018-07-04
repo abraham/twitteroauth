@@ -356,6 +356,24 @@ class TwitterOAuth extends Config
     }
 
     /**
+     * Cleanup any parameters that are known not to work.
+     *
+     * @param array  $parameters
+     *
+     * @return array
+     */
+    private function cleanUpParameters(array $parameters)
+    {
+        foreach ($parameters as $key => $value) {
+            // PHP coerces `true` to `"1"` which some Twitter APIs don't like.
+            if (is_bool($value)) {
+                $parameters[$key] = var_export($value, true);
+            }
+        }
+        return $parameters;
+    }
+
+    /**
      * @param string $method
      * @param string $host
      * @param string $path
@@ -370,6 +388,9 @@ class TwitterOAuth extends Config
         $this->resetAttemptsNumber();
         $url = sprintf('%s/%s/%s.json', $host, self::API_VERSION, $path);
         $this->response->setApiPath($path);
+        if (!$json) {
+            $parameters = $this->cleanUpParameters($parameters);
+        }
         return $this->makeRequests($url, $method, $parameters, $json);
     }
 
