@@ -344,7 +344,7 @@ class TwitterOAuth extends Config
         $return = [
             'command' => 'INIT',
             'media_type' => $parameters['media_type'],
-            'total_bytes' => filesize($parameters['media'])
+            'total_bytes' => isset($parameters['total_bytes']) ? $parameters['total_bytes'] : filesize($parameters['media'])
         ];
         if (isset($parameters['additional_owners'])) {
             $return['additional_owners'] = $parameters['additional_owners'];
