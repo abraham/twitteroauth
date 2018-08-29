@@ -343,9 +343,13 @@ class TwitterOAuth extends Config
     {
         $return = [
             'command' => 'INIT',
-            'media_type' => $parameters['media_type'],
-            'total_bytes' => isset($parameters['total_bytes']) ? $parameters['total_bytes'] : filesize($parameters['media'])
+            'media_type' => $parameters['media_type']
         ];
+        if (isset($parameters['total_bytes'])) {
+            $return['total_bytes'] = $parameters['total_bytes'];
+        } else {
+            $return['total_bytes'] = filesize($parameters['media']);
+        }
         if (isset($parameters['additional_owners'])) {
             $return['additional_owners'] = $parameters['additional_owners'];
         }
