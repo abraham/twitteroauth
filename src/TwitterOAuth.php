@@ -6,6 +6,8 @@
  * @license MIT
  */
 
+declare(strict_types=1);
+
 namespace Abraham\TwitterOAuth;
 
 use Abraham\TwitterOAuth\Util\JsonDecoder;
@@ -43,10 +45,10 @@ class TwitterOAuth extends Config
      * @param string|null $oauthTokenSecret The Client Token Secret (optional)
      */
     public function __construct(
-        $consumerKey,
-        $consumerSecret,
-        $oauthToken = null,
-        $oauthTokenSecret = null
+        string $consumerKey,
+        string $consumerSecret,
+        ?string $oauthToken = null,
+        ?string $oauthTokenSecret = null
     ) {
         $this->resetLastResponse();
         $this->signatureMethod = new HmacSha1();
@@ -63,8 +65,10 @@ class TwitterOAuth extends Config
      * @param string $oauthToken
      * @param string $oauthTokenSecret
      */
-    public function setOauthToken($oauthToken, $oauthTokenSecret)
-    {
+    public function setOauthToken(
+        string $oauthToken,
+        string $oauthTokenSecret
+    ): void {
         $this->token = new Token($oauthToken, $oauthTokenSecret);
         $this->bearer = null;
     }
@@ -72,7 +76,7 @@ class TwitterOAuth extends Config
     /**
      * @param string $oauthTokenSecret
      */
-    public function setBearer($oauthTokenSecret)
+    public function setBearer(string $oauthTokenSecret): void
     {
         $this->bearer = $oauthTokenSecret;
         $this->token = null;
@@ -81,7 +85,7 @@ class TwitterOAuth extends Config
     /**
      * @return string|null
      */
-    public function getLastApiPath()
+    public function getLastApiPath(): ?string
     {
         return $this->response->getApiPath();
     }
@@ -89,7 +93,7 @@ class TwitterOAuth extends Config
     /**
      * @return int
      */
-    public function getLastHttpCode()
+    public function getLastHttpCode(): int
     {
         return $this->response->getHttpCode();
     }
@@ -97,7 +101,7 @@ class TwitterOAuth extends Config
     /**
      * @return array
      */
-    public function getLastXHeaders()
+    public function getLastXHeaders(): array
     {
         return $this->response->getXHeaders();
     }
@@ -113,7 +117,7 @@ class TwitterOAuth extends Config
     /**
      * Resets the last response cache.
      */
-    public function resetLastResponse()
+    public function resetLastResponse(): void
     {
         $this->response = new Response();
     }
@@ -121,7 +125,7 @@ class TwitterOAuth extends Config
     /**
      * Resets the attempts number.
      */
-    private function resetAttemptsNumber()
+    private function resetAttemptsNumber(): void
     {
         $this->attempts = 0;
     }
@@ -129,7 +133,7 @@ class TwitterOAuth extends Config
     /**
      * Delays the retries when they're activated.
      */
-    private function sleepIfNeeded()
+    private function sleepIfNeeded(): void
     {
         if ($this->maxRetries && $this->attempts) {
             sleep($this->retriesDelay);
@@ -144,7 +148,7 @@ class TwitterOAuth extends Config
      *
      * @return string
      */
-    public function url($path, array $parameters)
+    public function url(string $path, array $parameters): string
     {
         $this->resetLastResponse();
         $this->response->setApiPath($path);
@@ -161,7 +165,7 @@ class TwitterOAuth extends Config
      * @return array
      * @throws TwitterOAuthException
      */
-    public function oauth($path, array $parameters = [])
+    public function oauth(string $path, array $parameters = []): array
     {
         $response = [];
         $this->resetLastResponse();
@@ -187,7 +191,7 @@ class TwitterOAuth extends Config
      *
      * @return array|object
      */
-    public function oauth2($path, array $parameters = [])
+    public function oauth2(string $path, array $parameters = [])
     {
         $method = 'POST';
         $this->resetLastResponse();
@@ -222,7 +226,7 @@ class TwitterOAuth extends Config
      *
      * @return array|object
      */
-    public function get($path, array $parameters = [])
+    public function get(string $path, array $parameters = [])
     {
         return $this->http('GET', self::API_HOST, $path, $parameters, false);
     }
@@ -236,8 +240,11 @@ class TwitterOAuth extends Config
      *
      * @return array|object
      */
-    public function post($path, array $parameters = [], $json = false)
-    {
+    public function post(
+        string $path,
+        array $parameters = [],
+        bool $json = false
+    ) {
         return $this->http('POST', self::API_HOST, $path, $parameters, $json);
     }
 
@@ -249,7 +256,7 @@ class TwitterOAuth extends Config
      *
      * @return array|object
      */
-    public function delete($path, array $parameters = [])
+    public function delete(string $path, array $parameters = [])
     {
         return $this->http('DELETE', self::API_HOST, $path, $parameters, false);
     }
@@ -262,7 +269,7 @@ class TwitterOAuth extends Config
      *
      * @return array|object
      */
-    public function put($path, array $parameters = [])
+    public function put(string $path, array $parameters = [])
     {
         return $this->http('PUT', self::API_HOST, $path, $parameters, false);
     }
@@ -276,8 +283,11 @@ class TwitterOAuth extends Config
      *
      * @return array|object
      */
-    public function upload($path, array $parameters = [], $chunked = false)
-    {
+    public function upload(
+        string $path,
+        array $parameters = [],
+        bool $chunked = false
+    ) {
         if ($chunked) {
             return $this->uploadMediaChunked($path, $parameters);
         } else {
@@ -292,7 +302,7 @@ class TwitterOAuth extends Config
      *
      * @return array|object
      */
-    public function mediaStatus($media_id)
+    public function mediaStatus(string $media_id)
     {
         return $this->http(
             'GET',
@@ -314,7 +324,7 @@ class TwitterOAuth extends Config
      *
      * @return array|object
      */
-    private function uploadMediaNotChunked($path, array $parameters)
+    private function uploadMediaNotChunked(string $path, array $parameters)
     {
         if (
             !is_readable($parameters['media']) ||
@@ -342,7 +352,7 @@ class TwitterOAuth extends Config
      *
      * @return array|object
      */
-    private function uploadMediaChunked($path, array $parameters)
+    private function uploadMediaChunked(string $path, array $parameters)
     {
         $init = $this->http(
             'POST',
@@ -393,7 +403,7 @@ class TwitterOAuth extends Config
      *
      * @return array
      */
-    private function mediaInitParameters(array $parameters)
+    private function mediaInitParameters(array $parameters): array
     {
         $allowed_keys = [
             'media_type',
@@ -439,8 +449,13 @@ class TwitterOAuth extends Config
      *
      * @return array|object
      */
-    private function http($method, $host, $path, array $parameters, $json)
-    {
+    private function http(
+        string $method,
+        string $host,
+        string $path,
+        array $parameters,
+        bool $json
+    ) {
         $this->resetLastResponse();
         $this->resetAttemptsNumber();
         $url = sprintf('%s/%s/%s.json', $host, self::API_VERSION, $path);
@@ -463,8 +478,12 @@ class TwitterOAuth extends Config
      *
      * @return array|object
      */
-    private function makeRequests($url, $method, array $parameters, $json)
-    {
+    private function makeRequests(
+        string $url,
+        string $method,
+        array $parameters,
+        bool $json
+    ) {
         do {
             $this->sleepIfNeeded();
             $result = $this->oAuthRequest($url, $method, $parameters, $json);
@@ -482,7 +501,7 @@ class TwitterOAuth extends Config
      *
      * @return bool
      */
-    private function requestsAvailable()
+    private function requestsAvailable(): bool
     {
         return $this->maxRetries &&
             $this->attempts <= $this->maxRetries &&
@@ -501,10 +520,10 @@ class TwitterOAuth extends Config
      * @throws TwitterOAuthException
      */
     private function oAuthRequest(
-        $url,
-        $method,
+        string $url,
+        string $method,
         array $parameters,
-        $json = false
+        bool $json = false
     ) {
         $request = Request::fromConsumerAndToken(
             $this->consumer,
@@ -547,7 +566,7 @@ class TwitterOAuth extends Config
      *
      * @return array
      */
-    private function curlOptions()
+    private function curlOptions(): array
     {
         $options = [
             // CURLOPT_VERBOSE => true,
@@ -594,12 +613,12 @@ class TwitterOAuth extends Config
      * @throws TwitterOAuthException
      */
     private function request(
-        $url,
-        $method,
-        $authorization,
+        string $url,
+        string $method,
+        string $authorization,
         array $postfields,
-        $json = false
-    ) {
+        bool $json = false
+    ): string {
         $options = $this->curlOptions();
         $options[CURLOPT_URL] = $url;
         $options[CURLOPT_HTTPHEADER] = [
@@ -670,7 +689,7 @@ class TwitterOAuth extends Config
      *
      * @return array
      */
-    private function parseHeaders($header)
+    private function parseHeaders(string $header): array
     {
         $headers = [];
         foreach (explode("\r\n", $header) as $line) {
@@ -690,7 +709,7 @@ class TwitterOAuth extends Config
      *
      * @return string
      */
-    private function encodeAppAuthorization(Consumer $consumer)
+    private function encodeAppAuthorization(Consumer $consumer): string
     {
         $key = rawurlencode($consumer->key);
         $secret = rawurlencode($consumer->secret);
@@ -702,7 +721,7 @@ class TwitterOAuth extends Config
      *
      * @return boolean
      */
-    private function pharRunning()
+    private function pharRunning(): bool
     {
         return class_exists('Phar') && \Phar::running(false) !== '';
     }
@@ -712,7 +731,7 @@ class TwitterOAuth extends Config
      *
      * @return boolean
      */
-    private function useCAFile()
+    private function useCAFile(): bool
     {
         /* Use CACert file when not in a PHAR file. */
         return !$this->pharRunning();

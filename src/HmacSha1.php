@@ -5,6 +5,8 @@
  * Copyright (c) 2007 Andy Smith
  */
 
+declare(strict_types=1);
+
 namespace Abraham\TwitterOAuth;
 
 /**
@@ -31,7 +33,7 @@ class HmacSha1 extends SignatureMethod
         Request $request,
         Consumer $consumer,
         Token $token = null
-    ) {
+    ): string {
         $signatureBase = $request->getSignatureBaseString();
 
         $parts = [$consumer->secret, null !== $token ? $token->secret : ''];

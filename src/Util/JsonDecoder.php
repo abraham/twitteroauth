@@ -15,7 +15,7 @@ class JsonDecoder
      *
      * @return array|object
      */
-    public static function decode($string, $asArray)
+    public static function decode(string $string, bool $asArray)
     {
         if (
             version_compare(PHP_VERSION, '5.4.0', '>=') &&
