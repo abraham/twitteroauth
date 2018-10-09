@@ -5,6 +5,8 @@
  * Copyright (c) 2007 Andy Smith
  */
 
+declare(strict_types=1);
+
 namespace Abraham\TwitterOAuth;
 
 /**
@@ -52,8 +54,8 @@ abstract class SignatureMethod
         Request $request,
         Consumer $consumer,
         Token $token,
-        $signature
-    ) {
+        string $signature
+    ): bool {
         $built = $this->buildSignature($request, $consumer, $token);
 
         // Check for zero length, although unlikely here

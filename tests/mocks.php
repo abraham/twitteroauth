@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Abraham\TwitterOAuth;
 
 // Mock time and random values for consistent tests with VCR

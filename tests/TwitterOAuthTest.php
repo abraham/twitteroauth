@@ -4,6 +4,8 @@
  * WARNING: Running tests will post and delete through the actual Twitter account when updating or saving VCR cassettes.
  */
 
+declare(strict_types=1);
+
 namespace Abraham\TwitterOAuth\Test;
 
 use PHPUnit\Framework\TestCase;

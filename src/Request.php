@@ -5,6 +5,8 @@
  * Copyright (c) 2007 Andy Smith
  */
 
+declare(strict_types=1);
+
 namespace Abraham\TwitterOAuth;
 
 class Request
@@ -22,8 +24,11 @@ class Request
      * @param string     $httpUrl
      * @param array|null $parameters
      */
-    public function __construct($httpMethod, $httpUrl, ?array $parameters = [])
-    {
+    public function __construct(
+        string $httpMethod,
+        string $httpUrl,
+        ?array $parameters = []
+    ) {
         $parameters = array_merge(
             Util::parseParameters(parse_url($httpUrl, PHP_URL_QUERY)),
             $parameters
@@ -47,8 +52,8 @@ class Request
     public static function fromConsumerAndToken(
         Consumer $consumer,
         Token $token = null,
-        $httpMethod,
-        $httpUrl,
+        string $httpMethod,
+        string $httpUrl,
         array $parameters = [],
         $json = false
     ) {
@@ -77,7 +82,7 @@ class Request
      * @param string $name
      * @param string $value
      */
-    public function setParameter($name, $value)
+    public function setParameter(string $name, string $value)
     {
         $this->parameters[$name] = $value;
     }
@@ -87,7 +92,7 @@ class Request
      *
      * @return string|null
      */
-    public function getParameter($name)
+    public function getParameter(string $name): ?string
     {
         return isset($this->parameters[$name])
             ? $this->parameters[$name]
@@ -97,7 +102,7 @@ class Request
     /**
      * @return array
      */
-    public function getParameters()
+    public function getParameters(): array
     {
         return $this->parameters;
     }
@@ -105,7 +110,7 @@ class Request
     /**
      * @param string $name
      */
-    public function removeParameter($name)
+    public function removeParameter(string $name): void
     {
         unset($this->parameters[$name]);
     }
@@ -115,7 +120,7 @@ class Request
      *
      * @return string
      */
-    public function getSignableParameters()
+    public function getSignableParameters(): string
     {
         // Grab all parameters
         $params = $this->parameters;
@@ -138,7 +143,7 @@ class Request
      *
      * @return string
      */
-    public function getSignatureBaseString()
+    public function getSignatureBaseString(): string
     {
         $parts = [
             $this->getNormalizedHttpMethod(),
@@ -156,7 +161,7 @@ class Request
      *
      * @return string
      */
-    public function getNormalizedHttpMethod()
+    public function getNormalizedHttpMethod(): string
     {
         return strtoupper($this->httpMethod);
     }
@@ -167,7 +172,7 @@ class Request
      *
      * @return string
      */
-    public function getNormalizedHttpUrl()
+    public function getNormalizedHttpUrl(): string
     {
         $parts = parse_url($this->httpUrl);
 
@@ -183,7 +188,7 @@ class Request
      *
      * @return string
      */
-    public function toUrl()
+    public function toUrl(): string
     {
         $postData = $this->toPostdata();
         $out = $this->getNormalizedHttpUrl();
@@ -198,7 +203,7 @@ class Request
      *
      * @return string
      */
-    public function toPostdata()
+    public function toPostdata(): string
     {
         return Util::buildHttpQuery($this->parameters);
     }
@@ -209,7 +214,7 @@ class Request
      * @return string
      * @throws TwitterOAuthException
      */
-    public function toHeader()
+    public function toHeader(): string
     {
         $first = true;
         $out = 'Authorization: OAuth';
@@ -236,7 +241,7 @@ class Request
     /**
      * @return string
      */
-    public function __toString()
+    public function __toString(): string
     {
         return $this->toUrl();
     }
@@ -270,14 +275,14 @@ class Request
         SignatureMethod $signatureMethod,
         Consumer $consumer,
         Token $token = null
-    ) {
+    ): string {
         return $signatureMethod->buildSignature($this, $consumer, $token);
     }
 
     /**
      * @return string
      */
-    public static function generateNonce()
+    public static function generateNonce(): string
     {
         return md5(microtime() . mt_rand());
     }

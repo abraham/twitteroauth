@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 // These keys have been revoked and are only valid for teh VCR cassettes.
 // To request new VCR cassettes please open an issue: https://github.com/abraham/twitteroauth/issues
 
