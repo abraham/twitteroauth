@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * The MIT License
  * Copyright (c) 2007 Andy Smith
@@ -18,7 +20,7 @@ class Util
         if (is_array($input)) {
             $output = array_map([__NAMESPACE__ . '\Util', 'urlencodeRfc3986'], $input);
         } elseif (is_scalar($input)) {
-            $output = rawurlencode($input);
+            $output = rawurlencode((string) $input);
         }
         return $output;
     }
@@ -28,7 +30,7 @@ class Util
      *
      * @return string
      */
-    public static function urldecodeRfc3986($string)
+    public static function urldecodeRfc3986($string): string
     {
         return urldecode($string);
     }
@@ -42,7 +44,7 @@ class Util
      *
      * @return array
      */
-    public static function parseParameters($input)
+    public static function parseParameters($input): array
     {
         if (!is_string($input)) {
             return [];
@@ -79,7 +81,7 @@ class Util
      *
      * @return string
      */
-    public static function buildHttpQuery(array $params)
+    public static function buildHttpQuery(array $params): string
     {
         if (empty($params)) {
             return '';

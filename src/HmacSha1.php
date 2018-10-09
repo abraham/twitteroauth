@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * The MIT License
  * Copyright (c) 2007 Andy Smith
@@ -25,7 +27,7 @@ class HmacSha1 extends SignatureMethod
     /**
      * {@inheritDoc}
      */
-    public function buildSignature(Request $request, Consumer $consumer, Token $token = null)
+    public function buildSignature(Request $request, Consumer $consumer, Token $token = null): string
     {
         $signatureBase = $request->getSignatureBaseString();
 

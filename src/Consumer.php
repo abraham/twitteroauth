@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * The MIT License
  * Copyright (c) 2007 Andy Smith
@@ -15,11 +17,11 @@ class Consumer
     public $callbackUrl;
 
     /**
-     * @param string $key
-     * @param string $secret
+     * @param string|null $key
+     * @param string|null $secret
      * @param null $callbackUrl
      */
-    public function __construct($key, $secret, $callbackUrl = null)
+    public function __construct(?string $key, ?string $secret, ?string $callbackUrl = null)
     {
         $this->key = $key;
         $this->secret = $secret;

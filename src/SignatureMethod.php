@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * The MIT License
  * Copyright (c) 2007 Andy Smith
@@ -42,7 +44,7 @@ abstract class SignatureMethod
      *
      * @return bool
      */
-    public function checkSignature(Request $request, Consumer $consumer, Token $token, $signature)
+    public function checkSignature(Request $request, Consumer $consumer, Token $token, string $signature): bool
     {
         $built = $this->buildSignature($request, $consumer, $token);
 
