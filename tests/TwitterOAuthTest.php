@@ -5,8 +5,9 @@
 namespace Abraham\TwitterOAuth\Test;
 
 use Abraham\TwitterOAuth\TwitterOAuth;
+use PHPUnit\Framework\TestCase;
 
-class TwitterOAuthTest extends \PHPUnit_Framework_TestCase
+class TwitterOAuthTest extends TestCase
 {
     /** @var TwitterOAuth */
     protected $twitter;
