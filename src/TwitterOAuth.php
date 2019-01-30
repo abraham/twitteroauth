@@ -310,7 +310,8 @@ class TwitterOAuth extends Config
      */
     private function uploadMediaChunked($path, array $parameters)
     {
-        $init = $this->http('POST', self::UPLOAD_HOST, $path, $this->mediaInitParameters($parameters), false);
+        // cast to object, because if user sets `decodeJsonAsArray` to true this breaks
+        $init = (object) $this->http('POST', self::UPLOAD_HOST, $path, $this->mediaInitParameters($parameters), false);
         // Append
         $segmentIndex = 0;
         $media = fopen($parameters['media'], 'rb');
