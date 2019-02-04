@@ -292,8 +292,7 @@ class TwitterOAuth extends Config
      */
     private function uploadMediaNotChunked($path, array $parameters)
     {
-        if (! is_readable($parameters['media']) ||
-            ($file = file_get_contents($parameters['media'])) === false) {
+        if (($file = file_get_contents($parameters['media'])) === false) {
             throw new \InvalidArgumentException('You must supply a readable file');
         }
         $parameters['media'] = base64_encode($file);
