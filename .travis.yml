@@ -6,12 +6,14 @@ php:
   - nightly
 sudo: false
 before_script:
-    - composer self-update
-    - composer install --prefer-source --no-interaction
-script:
-  - vendor/bin/phpcs src tests --standard=PSR2
-  - tests/scripts/cacert.sh
-  - vendor/bin/phpunit
+  - composer self-update
+  - composer install --prefer-source --no-interaction
+script: vendor/bin/phpunit
 matrix:
   allow_failures:
-  - php: nightly
+    - php: nightly
+  include:
+    - name: Lint
+      script: vendor/bin/phpcs src tests --standard=PSR2
+    - name: cacert.pem current
+      script: tests/scripts/cacert.sh
