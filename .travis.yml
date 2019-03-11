@@ -7,7 +7,7 @@ php:
 sudo: false
 before_script:
   - composer self-update
-  - composer install --prefer-source --no-interaction
+  - composer install --no-interaction
 script: vendor/bin/phpunit
 matrix:
   allow_failures:
