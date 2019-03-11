@@ -12,3 +12,6 @@ script:
   - vendor/bin/phpcs src tests --standard=PSR2
   - tests/scripts/cacert.sh
   - vendor/bin/phpunit
+matrix:
+  allow_failures:
+  - php: nightly
