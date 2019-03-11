@@ -17,3 +17,6 @@ matrix:
       script: vendor/bin/phpcs src tests --standard=PSR2
     - name: cacert.pem current
       script: tests/scripts/cacert.sh
+cache:
+  directories:
+    - $HOME/.composer/cache/files
