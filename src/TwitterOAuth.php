@@ -341,18 +341,14 @@ class TwitterOAuth extends Config
      */
     private function mediaInitParameters(array $parameters)
     {
-        $return = [
+        $allowed_keys = ['media_type', 'additional_owners', 'media_category', 'shared'];
+        $base = [
             'command' => 'INIT',
             'media_type' => $parameters['media_type'],
             'total_bytes' => filesize($parameters['media'])
         ];
-        if (isset($parameters['additional_owners'])) {
-            $return['additional_owners'] = $parameters['additional_owners'];
-        }
-        if (isset($parameters['media_category'])) {
-            $return['media_category'] = $parameters['media_category'];
-        }
-        return $return;
+        $allowed_parameters = array_intersect_key($parameters, array_flip($allowed_keys));
+        return array_merge($base, $allowed_parameters);
     }
 
     /**
