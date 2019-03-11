@@ -344,7 +344,6 @@ class TwitterOAuth extends Config
         $allowed_keys = ['media_type', 'additional_owners', 'media_category', 'shared'];
         $base = [
             'command' => 'INIT',
-            'media_type' => $parameters['media_type'],
             'total_bytes' => filesize($parameters['media'])
         ];
         $allowed_parameters = array_intersect_key($parameters, array_flip($allowed_keys));
