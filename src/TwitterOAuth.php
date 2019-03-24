@@ -250,6 +250,19 @@ class TwitterOAuth extends Config
     }
 
     /**
+     * Make requests to the any direct url.
+     *
+     * @param string $path       Direct url to the attachment
+     * @param array  $parameters
+     *
+     * @return array|object
+     */
+    public function file($path, array $parameters = [])
+    {
+        return $this->http('GET', null, $path, $parameters, false);
+    }
+
+    /**
      * Upload media to upload.twitter.com.
      *
      * @param string $path
@@ -369,11 +382,11 @@ class TwitterOAuth extends Config
     }
 
     /**
-     * @param string $method
-     * @param string $host
-     * @param string $path
-     * @param array  $parameters
-     * @param bool   $json
+     * @param string      $method
+     * @param string|null $host
+     * @param string      $path
+     * @param array       $parameters
+     * @param bool        $json
      *
      * @return array|object
      */
@@ -381,12 +394,31 @@ class TwitterOAuth extends Config
     {
         $this->resetLastResponse();
         $this->resetAttemptsNumber();
-        $url = sprintf('%s/%s/%s.json', $host, self::API_VERSION, $path);
+        $url = $this->buildUrl($host, $path);
+
         $this->response->setApiPath($path);
         if (!$json) {
             $parameters = $this->cleanUpParameters($parameters);
         }
         return $this->makeRequests($url, $method, $parameters, $json);
+    }
+
+    /**
+     * Returns fullqualified uri for further curl requests
+     *
+     * @param string $host
+     * @param string $path
+     *
+     * @return string
+     */
+    private function buildUrl($host, $path)
+    {
+        // If no host provided, only path will be returned
+        if(is_null($host)) {
+            return $path;
+        }
+
+        return sprintf('%s/%s/%s.json', $host, self::API_VERSION, $path);
     }
 
     /**
@@ -405,14 +437,45 @@ class TwitterOAuth extends Config
     {
         do {
             $this->sleepIfNeeded();
-            $result = $this->oAuthRequest($url, $method, $parameters, $json);
-            $response = JsonDecoder::decode($result, $this->decodeJsonAsArray);
+            $response = $this->oAuthRequest($url, $method, $parameters, $json);
+
+            try {
+                // Decode response only if decoding required (if string is json encoded)
+                $response = $this->decodeJsonResponseIfRequired($response);
+            } catch (\RuntimeException $exception) {
+                // If we catched RuntimeException, it means, response cannot be decoded
+                // This may be any attachment or binary string
+                // Do nothing for while
+            }
+
             $this->response->setBody($response);
             $this->attempts++;
             // Retry up to our $maxRetries number if we get errors greater than 500 (over capacity etc)
         } while ($this->requestsAvailable());
 
         return $response;
+    }
+
+    /**
+     * Returns decoded JSON, if input string is json-encoded.
+     * Otherwise throws an exception.
+     *
+     * @param string $response
+     *
+     * @return array
+     * @throws \RuntimeException
+     */
+    private function decodeJsonResponseIfRequired($response)
+    {
+        $response = JsonDecoder::decode($response, $this->decodeJsonAsArray);
+
+        $jsonLastError = json_last_error();
+        if ($jsonLastError === JSON_ERROR_NONE) {
+            return $response;
+        }
+
+        // Throws RuntimeException for compatibility with PHP 5
+        throw new \RuntimeException(json_last_error_msg(), $jsonLastError);
     }
 
     /**
