@@ -91,6 +91,14 @@ class TwitterOAuth extends Config
     /**
      * @return array
      */
+    public function getLastHeaders()
+    {
+        return $this->response->getsHeaders();
+    }
+
+    /**
+     * @return array
+     */
     public function getLastXHeaders()
     {
         return $this->response->getXHeaders();
