@@ -210,17 +210,18 @@ class TwitterOAuth extends Config
     }
 
     /**
-     * Make POST requests to the API.
+     * Make POST requests to the API or UPLOAD.
      *
      * @param string $path
      * @param array  $parameters
      * @param bool   $json
+     * @param bool   $upload
      *
      * @return array|object
      */
-    public function post($path, array $parameters = [], $json = false)
+    public function post($path, array $parameters = [], $json = false, $upload = false)
     {
-        return $this->http('POST', self::API_HOST, $path, $parameters, $json);
+        return $this->http('POST', $upload ? self::UPLOAD_HOST : self::API_HOST, $path, $parameters, $json);
     }
 
     /**
