@@ -341,18 +341,13 @@ class TwitterOAuth extends Config
      */
     private function mediaInitParameters(array $parameters)
     {
-        $return = [
+        $allowed_keys = ['media_type', 'additional_owners', 'media_category', 'shared'];
+        $base = [
             'command' => 'INIT',
-            'media_type' => $parameters['media_type'],
             'total_bytes' => filesize($parameters['media'])
         ];
-        if (isset($parameters['additional_owners'])) {
-            $return['additional_owners'] = $parameters['additional_owners'];
-        }
-        if (isset($parameters['media_category'])) {
-            $return['media_category'] = $parameters['media_category'];
-        }
-        return $return;
+        $allowed_parameters = array_intersect_key($parameters, array_flip($allowed_keys));
+        return array_merge($base, $allowed_parameters);
     }
 
     /**
@@ -548,7 +543,10 @@ class TwitterOAuth extends Config
 
         // Throw exceptions on cURL errors.
         if (curl_errno($curlHandle) > 0) {
-            throw new TwitterOAuthException(curl_error($curlHandle), curl_errno($curlHandle));
+            $error = curl_error($curlHandle);
+            $errorNo = curl_errno($curlHandle);
+            curl_close($curlHandle);
+            throw new TwitterOAuthException($error, $errorNo);
         }
 
         $this->response->setHttpCode(curl_getinfo($curlHandle, CURLINFO_HTTP_CODE));
