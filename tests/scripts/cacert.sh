@@ -4,7 +4,7 @@ CURRENT_COMMAND="$(curl -s "https://curl.haxx.se/ca/cacert.pem.sha256")"
 CURRENT_PARTS=($CURRENT_COMMAND)
 CURRENT_SHA="${CURRENT_PARTS[0]}"
 
-FILE_COMMAND="$(openssl sha -sha256 src/cacert.pem)"
+FILE_COMMAND="$(openssl dgst -sha256 src/cacert.pem)"
 FILE_PARTS=($FILE_COMMAND)
 FILE_SHA="${FILE_PARTS[1]}"
 
