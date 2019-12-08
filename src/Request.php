@@ -20,7 +20,7 @@ class Request
      * @param string     $httpUrl
      * @param array|null $parameters
      */
-    public function __construct($httpMethod, $httpUrl, array $parameters = [])
+    public function __construct($httpMethod, $httpUrl, ?array $parameters = [])
     {
         $parameters = array_merge(Util::parseParameters(parse_url($httpUrl, PHP_URL_QUERY)), $parameters);
         $this->parameters = $parameters;
@@ -78,7 +78,7 @@ class Request
     }
 
     /**
-     * @param $name
+     * @param string $name
      *
      * @return string|null
      */
@@ -96,7 +96,7 @@ class Request
     }
 
     /**
-     * @param $name
+     * @param string $name
      */
     public function removeParameter($name)
     {
