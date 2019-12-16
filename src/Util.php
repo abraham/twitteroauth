@@ -8,9 +8,9 @@ namespace Abraham\TwitterOAuth;
 class Util
 {
     /**
-     * @param $input
+     * @param mixed $input
      *
-     * @return array|mixed|string
+     * @return mixed
      */
     public static function urlencodeRfc3986($input)
     {
