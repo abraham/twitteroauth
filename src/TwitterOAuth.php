@@ -158,18 +158,16 @@ class TwitterOAuth extends Config
      */
     public function oauth($path, array $parameters = [])
     {
-        $response = [];
         $this->resetLastResponse();
-        $this->response->setApiPath($path);
+        
         $url = sprintf('%s/%s', self::API_HOST, $path);
-        $result = $this->oAuthRequest($url, 'POST', $parameters);
+        $response = $this->oAuthRequest($url, 'POST', $parameters);
 
         if ($this->getLastHttpCode() != 200) {
-            throw new TwitterOAuthException($result);
+            throw new TwitterOAuthException($response);
         }
 
-        parse_str($result, $response);
-        $this->response->setBody($response);
+        $this->response->setApiPath($path);
 
         return $response;
     }
@@ -190,9 +188,8 @@ class TwitterOAuth extends Config
         $url = sprintf('%s/%s', self::API_HOST, $path);
         $request = Request::fromConsumerAndToken($this->consumer, $this->token, $method, $url, $parameters);
         $authorization = 'Authorization: Basic ' . $this->encodeAppAuthorization($this->consumer);
-        $result = $this->request($request->getNormalizedHttpUrl(), $method, $authorization, $parameters);
-        $response = JsonDecoder::decode($result, $this->decodeJsonAsArray);
-        $this->response->setBody($response);
+        $response = $this->request($request->getNormalizedHttpUrl(), $method, $authorization, $parameters);
+
         return $response;
     }
 
@@ -405,9 +402,7 @@ class TwitterOAuth extends Config
     {
         do {
             $this->sleepIfNeeded();
-            $result = $this->oAuthRequest($url, $method, $parameters, $json);
-            $response = JsonDecoder::decode($result, $this->decodeJsonAsArray);
-            $this->response->setBody($response);
+            $response = $this->oAuthRequest($url, $method, $parameters, $json);
             $this->attempts++;
             // Retry up to our $maxRetries number if we get errors greater than 500 (over capacity etc)
         } while ($this->requestsAvailable());
@@ -549,15 +544,29 @@ class TwitterOAuth extends Config
             throw new TwitterOAuthException($error, $errorNo);
         }
 
-        $this->response->setHttpCode(curl_getinfo($curlHandle, CURLINFO_HTTP_CODE));
-        $parts = explode("\r\n\r\n", $response);
+        return  $this->responseHandler($response, $curlHandle);
+    }
+
+    /**
+     * Response Handler.
+     *
+     * @param string $curlResponse
+     * @param resource $curlHandle
+     * @return Response
+     */
+    private function responseHandler($curlResponse, $curlHandle): Response 
+    {
+        $parts = explode("\r\n\r\n", $curlResponse);
         $responseBody = array_pop($parts);
-        $responseHeader = array_pop($parts);
-        $this->response->setHeaders($this->parseHeaders($responseHeader));
+        ($decodedBody = JsonDecoder::decode($responseBody, $this->decodeJsonAsArray)) ?? parse_str($responseBody, $decodedBody);
+        
+        $this->response->setHttpCode(curl_getinfo($curlHandle, CURLINFO_HTTP_CODE));
+        $this->response->setHeaders($this->parseHeaders(array_pop($parts)));
+        $this->response->setBody($decodedBody);
 
         curl_close($curlHandle);
 
-        return $responseBody;
+        return $this->response;
     }
 
     /**

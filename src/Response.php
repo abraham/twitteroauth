@@ -2,6 +2,8 @@
 
 namespace Abraham\TwitterOAuth;
 
+use ArrayObject;
+
 /**
  * The result of the most recent API request.
  *
@@ -41,7 +43,7 @@ class Response
      */
     public function setBody($body)
     {
-        $this->body = $body;
+        $this->body = new ArrayObject($body, ArrayObject::ARRAY_AS_PROPS);
     }
 
     /**
@@ -103,5 +105,45 @@ class Response
     public function getXHeaders()
     {
         return $this->xHeaders;
+    }
+
+    /**
+     * Get Oauth2 Access Token .
+     *
+     * @return string
+     */
+    public function getAccessToken(): string
+    {
+        return $this->getBody()->access_token ?? '';
+    }
+
+    /**
+     * Get Oauth Token.
+     *
+     * @return string
+     */
+    public function getAuthToken(): string
+    {
+        return $this->getBody()->oauth_token ?? '';
+    }
+
+    /**
+     * Get Oauth Token Secret.
+     *
+     * @return string
+     */
+    public function getAuthTokenSecret(): string
+    {
+        return $this->getBody()->oauth_token_secret ?? '';
+    }
+
+    /**
+     * Check For Valid Callback.
+     *
+     * @return bool
+     */
+    public function checkAuthCallbackConfirmed(): bool
+    {
+        return $this->getBody()->oauth_callback_confirmed ?? false;
     }
 }
