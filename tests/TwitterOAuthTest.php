@@ -89,25 +89,22 @@ class TwitterOAuthTest extends TestCase
         return $result;
     }
 
-    /**
-     * @expectedException \Abraham\TwitterOAuth\TwitterOAuthException
-     * @expectedExceptionMessage Could not authenticate you
-     */
     public function testOauthRequestTokenException()
     {
+        $this->expectException(\Abraham\TwitterOAuth\TwitterOAuthException::class);
+        $this->expectErrorMessage('Could not authenticate you');
         $twitter = new TwitterOAuth('CONSUMER_KEY', 'CONSUMER_SECRET');
         $result = $twitter->oauth('oauth/request_token', ['oauth_callback' => OAUTH_CALLBACK]);
-        return $result;
     }
 
     /**
-     * @expectedException \Abraham\TwitterOAuth\TwitterOAuthException
-     * @expectedExceptionMessage Invalid oauth_verifier parameter
      * @depends testOauthRequestToken
      */
     public function testOauthAccessTokenTokenException(array $requestToken)
     {
         // Can't test this without a browser logging into Twitter so check for the correct error instead.
+        $this->expectException(\Abraham\TwitterOAuth\TwitterOAuthException::class);
+        $this->expectErrorMessage('Invalid oauth_verifier parameter');
         $twitter = new TwitterOAuth(
             CONSUMER_KEY,
             CONSUMER_SECRET,
