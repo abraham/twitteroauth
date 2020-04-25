@@ -5,12 +5,11 @@ php:
   - '7.3'
   - '7.4'
   - nightly
-sudo: false
 before_script:
   - composer self-update
   - composer install --no-interaction
 script: vendor/bin/phpunit
-matrix:
+jobs:
   allow_failures:
     - php: nightly
   include:
