@@ -1,0 +1,46 @@
+[{
+    "request": {
+        "method": "POST",
+        "url": "https:\/\/api.twitter.com\/1.1\/direct_messages\/events\/new.json",
+        "headers": {
+            "Host": "api.twitter.com",
+            "Accept": "application\/json",
+            "Authorization": "OAuth oauth_version=\"1.0\", oauth_nonce=\"2b67ebbeace76543f356ba8bbd59abde\", oauth_timestamp=\"1587861062\", oauth_consumer_key=\"awJfND4zFGapGOFKfdjg\", oauth_token=\"93915746-KjE3c27dCt8awONxuUAaJ00yishXXwcH5CdLBnO1x\", oauth_signature_method=\"HMAC-SHA1\", oauth_signature=\"3457NqeumGmcalZLF091L9lt7F8%3D\"",
+            "Expect": null,
+            "Content-type": "application\/json"
+        },
+        "body": "{\"event\":{\"type\":\"message_create\",\"message_create\":{\"target\":{\"recipient_id\":\"93915746\"},\"message_data\":{\"text\":\"Hello World!\"}}}}"
+    },
+    "response": {
+        "status": {
+            "http_version": "2",
+            "code": "200",
+            "message": ""
+        },
+        "headers": {
+            "cache-control": "no-cache, no-store, must-revalidate, pre-check=0, post-check=0",
+            "content-disposition": "attachment; filename=json.json",
+            "content-encoding": "gzip",
+            "content-length": "206",
+            "content-type": "application\/json;charset=utf-8",
+            "date": "Sun, 26 Apr 2020 00:31:51 GMT",
+            "expires": "Tue, 31 Mar 1981 05:00:00 GMT",
+            "last-modified": "Sun, 26 Apr 2020 00:31:51 GMT",
+            "pragma": "no-cache",
+            "server": "tsa_b",
+            "set-cookie": "personalization_id=\"v1_Tfqxs0gur2QR4FFIZ3Wq6w==\"; Max-Age=63072000; Expires=Tue, 26 Apr 2022 00:31:51 GMT; Path=\/; Domain=.twitter.com; Secure; SameSite=None, lang=en; Path=\/, guest_id=v1%3A158786111185015666; Max-Age=63072000; Expires=Tue, 26 Apr 2022 00:31:51 GMT; Path=\/; Domain=.twitter.com; Secure; SameSite=None",
+            "status": "200 OK",
+            "strict-transport-security": "max-age=631138519",
+            "x-access-level": "read-write-directmessages",
+            "x-connection-hash": "bb4f30d1c6406b2cd5d25f20fccfdc1a",
+            "x-content-type-options": "nosniff",
+            "x-frame-options": "SAMEORIGIN",
+            "x-response-time": "70",
+            "x-transaction": "0057fa4c00fb95a1",
+            "x-tsa-request-body-time": "0",
+            "x-twitter-response-tags": "BouncerCompliant",
+            "x-xss-protection": "0"
+        },
+        "body": "{\"event\":{\"type\":\"message_create\",\"id\":\"1254206523385032714\",\"created_timestamp\":\"1587861111862\",\"message_create\":{\"target\":{\"recipient_id\":\"93915746\"},\"sender_id\":\"93915746\",\"message_data\":{\"text\":\"Hello World!\",\"entities\":{\"hashtags\":[],\"symbols\":[],\"user_mentions\":[],\"urls\":[]}}}}}"
+    }
+}]

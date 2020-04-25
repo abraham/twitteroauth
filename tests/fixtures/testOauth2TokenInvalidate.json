@@ -1,0 +1,46 @@
+[{
+    "request": {
+        "method": "POST",
+        "url": "https:\/\/api.twitter.com\/oauth2\/invalidate_token",
+        "headers": {
+            "Host": "api.twitter.com",
+            "Accept": "application\/json",
+            "Authorization": "Basic YXdKZk5ENHpGR2FwR09GS2Zkamc6TGZrbU5TUlBJWHdrUWtaVUI5RE5XU3p4NUxJYWl2U2tuVjRyeG5nb2pKYw==",
+            "Expect": null
+        },
+        "body": "access_token=AAAAAAAAAAAAAAAAAAAAAFobAAAAAAAAjPes3FlPiFKh9HaIg%2Fw80waE0s8%3DQqxjhHDgZyjihGIK7olugzbpS0R1Gg8KNhzmer58a6oVbsSGc0"
+    },
+    "response": {
+        "status": {
+            "http_version": "2",
+            "code": "200",
+            "message": ""
+        },
+        "headers": {
+            "cache-control": "no-cache, no-store, must-revalidate, pre-check=0, post-check=0",
+            "content-disposition": "attachment; filename=json.json",
+            "content-encoding": "gzip",
+            "content-length": "135",
+            "content-type": "application\/json;charset=utf-8",
+            "date": "Sun, 26 Apr 2020 00:31:10 GMT",
+            "expires": "Tue, 31 Mar 1981 05:00:00 GMT",
+            "last-modified": "Sun, 26 Apr 2020 00:31:10 GMT",
+            "ml": "A",
+            "pragma": "no-cache",
+            "server": "tsa_b",
+            "set-cookie": "personalization_id=\"v1_8Iv+DqoXk8DVAVDoUVltSA==\"; Max-Age=63072000; Expires=Tue, 26 Apr 2022 00:31:10 GMT; Path=\/; Domain=.twitter.com; Secure; SameSite=None, guest_id=v1%3A158786107054950627; Max-Age=63072000; Expires=Tue, 26 Apr 2022 00:31:10 GMT; Path=\/; Domain=.twitter.com; Secure; SameSite=None",
+            "status": "200 OK",
+            "strict-transport-security": "max-age=631138519",
+            "x-connection-hash": "18b7327592f746230c1c016c344dd14d",
+            "x-content-type-options": "nosniff",
+            "x-frame-options": "DENY",
+            "x-response-time": "19",
+            "x-transaction": "00c5257f00b7d371",
+            "x-tsa-request-body-time": "0",
+            "x-twitter-response-tags": "BouncerCompliant",
+            "x-ua-compatible": "IE=edge,chrome=1",
+            "x-xss-protection": "0"
+        },
+        "body": "{\"access_token\":\"AAAAAAAAAAAAAAAAAAAAAFobAAAAAAAAjPes3FlPiFKh9HaIg%2Fw80waE0s8%3DQqxjhHDgZyjihGIK7olugzbpS0R1Gg8KNhzmer58a6oVbsSGc0\"}"
+    }
+}]
