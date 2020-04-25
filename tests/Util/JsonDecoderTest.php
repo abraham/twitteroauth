@@ -2,9 +2,10 @@
 
 namespace Abraham\TwitterOAuth\Tests;
 
+use PHPUnit\Framework\TestCase;
 use Abraham\TwitterOAuth\Util\JsonDecoder;
 
-class JsonDecoderTest extends \PHPUnit_Framework_TestCase
+class JsonDecoderTest extends TestCase
 {
     /**
      * @dataProvider jsonProvider

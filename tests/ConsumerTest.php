@@ -2,9 +2,10 @@
 
 namespace Abraham\TwitterOAuth\Tests;
 
+use PHPUnit\Framework\TestCase;
 use Abraham\TwitterOAuth\Consumer;
 
-class ConsumerTest extends \PHPUnit_Framework_TestCase
+class ConsumerTest extends TestCase
 {
     public function testToString()
     {

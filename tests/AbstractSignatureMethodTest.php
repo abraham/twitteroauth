@@ -2,9 +2,10 @@
 
 namespace Abraham\TwitterOAuth\Tests;
 
+use PHPUnit\Framework\TestCase;
 use Abraham\TwitterOAuth\SignatureMethod;
 
-abstract class AbstractSignatureMethodTest extends \PHPUnit_Framework_TestCase
+abstract class AbstractSignatureMethodTest extends TestCase
 {
     protected $name;
 

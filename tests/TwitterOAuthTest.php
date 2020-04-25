@@ -4,14 +4,15 @@
  */
 namespace Abraham\TwitterOAuth\Test;
 
+use PHPUnit\Framework\TestCase;
 use Abraham\TwitterOAuth\TwitterOAuth;
 
-class TwitterOAuthTest extends \PHPUnit_Framework_TestCase
+class TwitterOAuthTest extends TestCase
 {
     /** @var TwitterOAuth */
     protected $twitter;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->twitter = new TwitterOAuth(CONSUMER_KEY, CONSUMER_SECRET, ACCESS_TOKEN, ACCESS_TOKEN_SECRET);
         $this->userId = explode('-', ACCESS_TOKEN)[0];
