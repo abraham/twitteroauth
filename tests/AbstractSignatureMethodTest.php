@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Abraham\TwitterOAuth\Tests;
 
 use PHPUnit\Framework\TestCase;
