@@ -45,8 +45,8 @@ class Config
      */
     public function setTimeouts($connectionTimeout, $timeout)
     {
-        $this->connectionTimeout = (int)$connectionTimeout;
-        $this->timeout = (int)$timeout;
+        $this->connectionTimeout = (int) $connectionTimeout;
+        $this->timeout = (int) $timeout;
     }
 
     /**
@@ -57,8 +57,8 @@ class Config
      */
     public function setRetries($maxRetries, $retriesDelay)
     {
-        $this->maxRetries = (int)$maxRetries;
-        $this->retriesDelay = (int)$retriesDelay;
+        $this->maxRetries = (int) $maxRetries;
+        $this->retriesDelay = (int) $retriesDelay;
     }
 
     /**
@@ -66,7 +66,7 @@ class Config
      */
     public function setDecodeJsonAsArray($value)
     {
-        $this->decodeJsonAsArray = (bool)$value;
+        $this->decodeJsonAsArray = (bool) $value;
     }
 
     /**
@@ -74,7 +74,7 @@ class Config
      */
     public function setUserAgent($userAgent)
     {
-        $this->userAgent = (string)$userAgent;
+        $this->userAgent = (string) $userAgent;
     }
 
     /**
@@ -92,7 +92,7 @@ class Config
      */
     public function setGzipEncoding($gzipEncoding)
     {
-        $this->gzipEncoding = (bool)$gzipEncoding;
+        $this->gzipEncoding = (bool) $gzipEncoding;
     }
 
     /**
@@ -102,6 +102,6 @@ class Config
      */
     public function setChunkSize($value)
     {
-        $this->chunkSize = (int)$value;
+        $this->chunkSize = (int) $value;
     }
 }

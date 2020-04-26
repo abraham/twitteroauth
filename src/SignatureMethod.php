@@ -1,8 +1,10 @@
 <?php
+
 /**
  * The MIT License
  * Copyright (c) 2007 Andy Smith
  */
+
 namespace Abraham\TwitterOAuth;
 
 /**
@@ -30,7 +32,11 @@ abstract class SignatureMethod
      *
      * @return string
      */
-    abstract public function buildSignature(Request $request, Consumer $consumer, Token $token = null);
+    abstract public function buildSignature(
+        Request $request,
+        Consumer $consumer,
+        Token $token = null
+    );
 
     /**
      * Verifies that a given signature is correct
@@ -42,8 +48,12 @@ abstract class SignatureMethod
      *
      * @return bool
      */
-    public function checkSignature(Request $request, Consumer $consumer, Token $token, $signature)
-    {
+    public function checkSignature(
+        Request $request,
+        Consumer $consumer,
+        Token $token,
+        $signature
+    ) {
         $built = $this->buildSignature($request, $consumer, $token);
 
         // Check for zero length, although unlikely here

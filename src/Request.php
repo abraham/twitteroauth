@@ -1,8 +1,10 @@
 <?php
+
 /**
  * The MIT License
  * Copyright (c) 2007 Andy Smith
  */
+
 namespace Abraham\TwitterOAuth;
 
 class Request
@@ -22,7 +24,10 @@ class Request
      */
     public function __construct($httpMethod, $httpUrl, ?array $parameters = [])
     {
-        $parameters = array_merge(Util::parseParameters(parse_url($httpUrl, PHP_URL_QUERY)), $parameters);
+        $parameters = array_merge(
+            Util::parseParameters(parse_url($httpUrl, PHP_URL_QUERY)),
+            $parameters
+        );
         $this->parameters = $parameters;
         $this->httpMethod = $httpMethod;
         $this->httpUrl = $httpUrl;
@@ -48,10 +53,10 @@ class Request
         $json = false
     ) {
         $defaults = [
-            "oauth_version" => Request::$version,
-            "oauth_nonce" => Request::generateNonce(),
-            "oauth_timestamp" => time(),
-            "oauth_consumer_key" => $consumer->key
+            'oauth_version' => Request::$version,
+            'oauth_nonce' => Request::generateNonce(),
+            'oauth_timestamp' => time(),
+            'oauth_consumer_key' => $consumer->key,
         ];
         if (null !== $token) {
             $defaults['oauth_token'] = $token->key;
@@ -84,7 +89,9 @@ class Request
      */
     public function getParameter($name)
     {
-        return isset($this->parameters[$name]) ? $this->parameters[$name] : null;
+        return isset($this->parameters[$name])
+            ? $this->parameters[$name]
+            : null;
     }
 
     /**
@@ -136,7 +143,7 @@ class Request
         $parts = [
             $this->getNormalizedHttpMethod(),
             $this->getNormalizedHttpUrl(),
-            $this->getSignableParameters()
+            $this->getSignableParameters(),
         ];
 
         $parts = Util::urlencodeRfc3986($parts);
@@ -207,14 +214,20 @@ class Request
         $first = true;
         $out = 'Authorization: OAuth';
         foreach ($this->parameters as $k => $v) {
-            if (substr($k, 0, 5) != "oauth") {
+            if (substr($k, 0, 5) != 'oauth') {
                 continue;
             }
             if (is_array($v)) {
-                throw new TwitterOAuthException('Arrays not supported in headers');
+                throw new TwitterOAuthException(
+                    'Arrays not supported in headers'
+                );
             }
-            $out .= ($first) ? ' ' : ', ';
-            $out .= Util::urlencodeRfc3986($k) . '="' . Util::urlencodeRfc3986($v) . '"';
+            $out .= $first ? ' ' : ', ';
+            $out .=
+                Util::urlencodeRfc3986($k) .
+                '="' .
+                Util::urlencodeRfc3986($v) .
+                '"';
             $first = false;
         }
         return $out;
@@ -233,11 +246,17 @@ class Request
      * @param Consumer        $consumer
      * @param Token           $token
      */
-    public function signRequest(SignatureMethod $signatureMethod, Consumer $consumer, Token $token = null)
-    {
-        $this->setParameter("oauth_signature_method", $signatureMethod->getName());
+    public function signRequest(
+        SignatureMethod $signatureMethod,
+        Consumer $consumer,
+        Token $token = null
+    ) {
+        $this->setParameter(
+            'oauth_signature_method',
+            $signatureMethod->getName()
+        );
         $signature = $this->buildSignature($signatureMethod, $consumer, $token);
-        $this->setParameter("oauth_signature", $signature);
+        $this->setParameter('oauth_signature', $signature);
     }
 
     /**
@@ -247,8 +266,11 @@ class Request
      *
      * @return string
      */
-    public function buildSignature(SignatureMethod $signatureMethod, Consumer $consumer, Token $token = null)
-    {
+    public function buildSignature(
+        SignatureMethod $signatureMethod,
+        Consumer $consumer,
+        Token $token = null
+    ) {
         return $signatureMethod->buildSignature($this, $consumer, $token);
     }
 

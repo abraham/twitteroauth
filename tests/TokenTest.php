@@ -21,8 +21,16 @@ class TokenTest extends TestCase
     {
         return [
             ['oauth_token=key&oauth_token_secret=secret', 'key', 'secret'],
-            ['oauth_token=key%2Bkey&oauth_token_secret=secret', 'key+key', 'secret'],
-            ['oauth_token=key~key&oauth_token_secret=secret', 'key~key', 'secret'],
+            [
+                'oauth_token=key%2Bkey&oauth_token_secret=secret',
+                'key+key',
+                'secret',
+            ],
+            [
+                'oauth_token=key~key&oauth_token_secret=secret',
+                'key~key',
+                'secret',
+            ],
         ];
     }
 }
