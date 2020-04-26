@@ -1,0 +1,43 @@
+[{
+    "request": {
+        "method": "POST",
+        "url": "https:\/\/api.twitter.com\/1.1\/statuses\/destroy\/1254206657548226561.json",
+        "headers": {
+            "Host": "api.twitter.com",
+            "Accept": "application\/json",
+            "Authorization": "OAuth oauth_version=\"1.0\", oauth_nonce=\"2b67ebbeace76543f356ba8bbd59abde\", oauth_timestamp=\"1587861062\", oauth_consumer_key=\"awJfND4zFGapGOFKfdjg\", oauth_token=\"93915746-KjE3c27dCt8awONxuUAaJ00yishXXwcH5CdLBnO1x\", oauth_signature_method=\"HMAC-SHA1\", oauth_signature=\"kyOKi3x9Ar3foSG5%2BN9XzBbnIOw%3D\"",
+            "Expect": null
+        }
+    },
+    "response": {
+        "status": {
+            "http_version": "2",
+            "code": "200",
+            "message": ""
+        },
+        "headers": {
+            "cache-control": "no-cache, no-store, must-revalidate, pre-check=0, post-check=0",
+            "content-disposition": "attachment; filename=json.json",
+            "content-encoding": "gzip",
+            "content-length": "804",
+            "content-type": "application\/json;charset=utf-8",
+            "date": "Sun, 26 Apr 2020 00:32:24 GMT",
+            "expires": "Tue, 31 Mar 1981 05:00:00 GMT",
+            "last-modified": "Sun, 26 Apr 2020 00:32:24 GMT",
+            "pragma": "no-cache",
+            "server": "tsa_b",
+            "set-cookie": "personalization_id=\"v1_juPKvfSeQeQoZAVeLglnhA==\"; Max-Age=63072000; Expires=Tue, 26 Apr 2022 00:32:24 GMT; Path=\/; Domain=.twitter.com; Secure; SameSite=None, lang=en; Path=\/, guest_id=v1%3A158786114418847477; Max-Age=63072000; Expires=Tue, 26 Apr 2022 00:32:24 GMT; Path=\/; Domain=.twitter.com; Secure; SameSite=None",
+            "status": "200 OK",
+            "strict-transport-security": "max-age=631138519",
+            "x-access-level": "read-write-directmessages",
+            "x-connection-hash": "f4375157b19d6cd139b9917a6d76d0b0",
+            "x-content-type-options": "nosniff",
+            "x-frame-options": "SAMEORIGIN",
+            "x-response-time": "198",
+            "x-transaction": "00f3e731001ccb87",
+            "x-twitter-response-tags": "BouncerCompliant",
+            "x-xss-protection": "0"
+        },
+        "body": "{\"created_at\":\"Sun Apr 26 00:32:23 +0000 2020\",\"id\":1254206657548226561,\"id_str\":\"1254206657548226561\",\"text\":\"x\\u3053\\u3093\\u306b\\u3061\\u306f\\u4e16\\u754c 1587861062\",\"truncated\":false,\"entities\":{\"hashtags\":[],\"symbols\":[],\"user_mentions\":[],\"urls\":[]},\"source\":\"\\u003ca href=\\\"https:\\\/\\\/twitteroauth.com\\\" rel=\\\"nofollow\\\"\\u003eTwitterOAuth dev\\u003c\\\/a\\u003e\",\"in_reply_to_status_id\":null,\"in_reply_to_status_id_str\":null,\"in_reply_to_user_id\":null,\"in_reply_to_user_id_str\":null,\"in_reply_to_screen_name\":null,\"user\":{\"id\":93915746,\"id_str\":\"93915746\",\"name\":\"OAuth Library Test\",\"screen_name\":\"oauthlibtest\",\"location\":\"\",\"description\":\"\",\"url\":null,\"entities\":{\"description\":{\"urls\":[]}},\"protected\":false,\"followers_count\":58,\"friends_count\":2,\"listed_count\":6,\"created_at\":\"Tue Dec 01 18:37:44 +0000 2009\",\"favourites_count\":0,\"utc_offset\":null,\"time_zone\":null,\"geo_enabled\":true,\"verified\":false,\"statuses_count\":6,\"lang\":null,\"contributors_enabled\":false,\"is_translator\":false,\"is_translation_enabled\":false,\"profile_background_color\":\"C0DEED\",\"profile_background_image_url\":\"http:\\\/\\\/abs.twimg.com\\\/images\\\/themes\\\/theme1\\\/bg.png\",\"profile_background_image_url_https\":\"https:\\\/\\\/abs.twimg.com\\\/images\\\/themes\\\/theme1\\\/bg.png\",\"profile_background_tile\":false,\"profile_image_url\":\"http:\\\/\\\/abs.twimg.com\\\/sticky\\\/default_profile_images\\\/default_profile_normal.png\",\"profile_image_url_https\":\"https:\\\/\\\/abs.twimg.com\\\/sticky\\\/default_profile_images\\\/default_profile_normal.png\",\"profile_link_color\":\"1DA1F2\",\"profile_sidebar_border_color\":\"C0DEED\",\"profile_sidebar_fill_color\":\"DDEEF6\",\"profile_text_color\":\"333333\",\"profile_use_background_image\":true,\"has_extended_profile\":false,\"default_profile\":true,\"default_profile_image\":true,\"following\":false,\"follow_request_sent\":false,\"notifications\":false,\"translator_type\":\"none\"},\"geo\":null,\"coordinates\":null,\"place\":null,\"contributors\":null,\"is_quote_status\":false,\"retweet_count\":0,\"favorite_count\":0,\"favorited\":false,\"retweeted\":false,\"lang\":\"ja\"}"
+    }
+}]

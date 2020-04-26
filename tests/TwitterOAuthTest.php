@@ -1,7 +1,8 @@
 <?php
 /**
- * WARNING: Running these tests will post and delete through the actual Twitter account.
+ * WARNING: Running tests will post and delete through the actual Twitter account when updating or saving VCR cassettes.
  */
+
 namespace Abraham\TwitterOAuth\Test;
 
 use PHPUnit\Framework\TestCase;
@@ -24,6 +25,9 @@ class TwitterOAuthTest extends TestCase
         $this->assertObjectHasAttribute('token', $this->twitter);
     }
 
+    /**
+     * @vcr testSetOauthToken.json
+     */
     public function testSetOauthToken()
     {
         $twitter = new TwitterOAuth(CONSUMER_KEY, CONSUMER_SECRET);
@@ -34,6 +38,9 @@ class TwitterOAuthTest extends TestCase
         $this->assertEquals(200, $twitter->getLastHttpCode());
     }
 
+    /**
+     * @vcr testOauth2Token.json
+     */
     public function testOauth2Token()
     {
         $twitter = new TwitterOAuth(CONSUMER_KEY, CONSUMER_SECRET);
@@ -47,36 +54,35 @@ class TwitterOAuthTest extends TestCase
 
     /**
      * @depends testOauth2Token
+     * @vcr testOauth2BearerToken.json
      */
-    public function testBearerToken($accessToken)
+    public function testOauth2BearerToken($accessToken)
     {
         $twitter = new TwitterOAuth(CONSUMER_KEY, CONSUMER_SECRET, null, $accessToken->access_token);
         $result = $twitter->get('statuses/user_timeline', ['screen_name' => 'twitterapi']);
-        if ($twitter->getLastHttpCode() !== 200) {
-            $this->assertEquals('foo', substr($accessToken->access_token, 0, 75));
-            $this->assertEquals('foo', print_r($result, true));
-        }
         $this->assertEquals(200, $twitter->getLastHttpCode());
         return $accessToken;
     }
 
-    // This causes issues for parallel run tests.
-    // /**
-    //  * @depends testBearerToken
-    //  */
-    // public function testOauth2TokenInvalidate($accessToken)
-    // {
-    //     $twitter = new TwitterOAuth(CONSUMER_KEY, CONSUMER_SECRET);
-    //     // HACK: access_token is already urlencoded but gets urlencoded again breaking the invalidate request.
-    //     $result = $twitter->oauth2(
-    //         'oauth2/invalidate_token',
-    //         array('access_token' => urldecode($accessToken->access_token))
-    //     );
-    //     $this->assertEquals(200, $twitter->getLastHttpCode());
-    //     $this->assertObjectHasAttribute('access_token', $result);
-    //     return $result;
-    // }
+    /**
+     * @depends testOauth2BearerToken
+     * @vcr testOauth2TokenInvalidate.json
+     */
+    public function testOauth2TokenInvalidate($accessToken)
+    {
+        $twitter = new TwitterOAuth(CONSUMER_KEY, CONSUMER_SECRET);
+        // HACK: access_token is already urlencoded but gets urlencoded again breaking the invalidate request.
+        $result = $twitter->oauth2(
+            'oauth2/invalidate_token',
+            ['access_token' => urldecode($accessToken->access_token)]
+        );
+        $this->assertEquals(200, $twitter->getLastHttpCode());
+        $this->assertObjectHasAttribute('access_token', $result);
+    }
 
+    /**
+     * @vcr testOauthRequestToken.json
+     */
     public function testOauthRequestToken()
     {
         $twitter = new TwitterOAuth(CONSUMER_KEY, CONSUMER_SECRET);
@@ -89,6 +95,9 @@ class TwitterOAuthTest extends TestCase
         return $result;
     }
 
+    /**
+     * @vcr testOauthRequestTokenException.json
+     */
     public function testOauthRequestTokenException()
     {
         $this->expectException(\Abraham\TwitterOAuth\TwitterOAuthException::class);
@@ -99,6 +108,7 @@ class TwitterOAuthTest extends TestCase
 
     /**
      * @depends testOauthRequestToken
+     * @vcr testOauthAccessTokenTokenException.json
      */
     public function testOauthAccessTokenTokenException(array $requestToken)
     {
@@ -120,6 +130,9 @@ class TwitterOAuthTest extends TestCase
         $this->assertEquals('https://api.twitter.com/oauth/authorize?foo=bar&baz=qux', $url);
     }
 
+    /**
+     * @vcr testGetAccountVerifyCredentials.json
+     */
     public function testGetAccountVerifyCredentials()
     {
         $user = $this->twitter->get('account/verify_credentials', [
@@ -130,26 +143,34 @@ class TwitterOAuthTest extends TestCase
         $this->assertObjectHasAttribute('email', $user);
     }
 
-    // BUG: testing is too unreliable for now
-    // public function testSetProxy()
-    // {
-    //     $this->twitter->setProxy(array(
-    //         'CURLOPT_PROXY' => PROXY,
-    //         'CURLOPT_PROXYUSERPWD' => PROXYUSERPWD,
-    //         'CURLOPT_PROXYPORT' => PROXYPORT,
-    //     ));
-    //     $this->twitter->setTimeouts(60, 60);
-    //     $result = $this->twitter->get('account/verify_credentials');
-    //     $this->assertEquals(200, $this->twitter->getLastHttpCode());
-    //     $this->assertObjectHasAttribute('id', $result);
-    // }
+    /**
+     * @vcr testSetProxy.json
+     */
+    public function testSetProxy()
+    {
+        $this->twitter->setProxy([
+            'CURLOPT_PROXY' => PROXY,
+            'CURLOPT_PROXYUSERPWD' => PROXYUSERPWD,
+            'CURLOPT_PROXYPORT' => PROXYPORT,
+        ]);
+        $this->twitter->setTimeouts(60, 60);
+        $result = $this->twitter->get('account/verify_credentials');
+        $this->assertEquals(200, $this->twitter->getLastHttpCode());
+        $this->assertObjectHasAttribute('id', $result);
+    }
 
+    /**
+     * @vcr testGetStatusesMentionsTimeline.json
+     */
     public function testGetStatusesMentionsTimeline()
     {
         $this->twitter->get('statuses/mentions_timeline');
         $this->assertEquals(200, $this->twitter->getLastHttpCode());
     }
 
+    /**
+     * @vcr testGetSearchTweets.json
+     */
     public function testGetSearchTweets()
     {
         $result = $this->twitter->get('search/tweets', ['q' => 'twitter']);
@@ -159,6 +180,7 @@ class TwitterOAuthTest extends TestCase
 
     /**
      * @depends testGetSearchTweets
+     * @vcr testGetSearchTweetsWithMaxId.json
      */
     public function testGetSearchTweetsWithMaxId($statuses)
     {
@@ -167,19 +189,18 @@ class TwitterOAuthTest extends TestCase
         $this->assertEquals(200, $this->twitter->getLastHttpCode());
     }
 
+    /**
+     * @vcr testPostFavoritesCreate.json
+     */
     public function testPostFavoritesCreate()
     {
         $result = $this->twitter->post('favorites/create', ['id' => '6242973112']);
-        if ($this->twitter->getLastHttpCode() == 403) {
-            // Status already favorited
-            $this->assertEquals(139, $result->errors[0]->code);
-        } else {
-            $this->assertEquals(200, $this->twitter->getLastHttpCode());
-        }
+        $this->assertEquals(200, $this->twitter->getLastHttpCode());
     }
 
     /**
      * @depends testPostFavoritesCreate
+     * @vcr testPostFavoritesDestroy.json
      */
     public function testPostFavoritesDestroy()
     {
@@ -187,6 +208,9 @@ class TwitterOAuthTest extends TestCase
         $this->assertEquals(200, $this->twitter->getLastHttpCode());
     }
 
+    /**
+     * @vcr testPostDirectMessagesEventsNew.json
+     */
     public function testPostDirectMessagesEventsNew()
     {
         $data = [
@@ -209,6 +233,7 @@ class TwitterOAuthTest extends TestCase
 
     /**
      * @depends testPostDirectMessagesEventsNew
+     * @vcr testDeleteDirectMessagesEventsDestroy.json
      */
     public function testDeleteDirectMessagesEventsDestroy($message)
     {
@@ -216,23 +241,27 @@ class TwitterOAuthTest extends TestCase
         $this->assertEquals(204, $this->twitter->getLastHttpCode());
     }
 
+    /**
+     * @vcr testPostStatusesUpdateWithMedia.json
+     */
     public function testPostStatusesUpdateWithMedia()
     {
-        $this->twitter->setTimeouts(60, 30);
+        $this->twitter->setTimeouts(60, 60);
         // Image source https://www.flickr.com/photos/titrans/8548825587/
         $file_path = __DIR__ . '/kitten.jpg';
         $result = $this->twitter->upload('media/upload', ['media' => $file_path]);
         $this->assertEquals(200, $this->twitter->getLastHttpCode());
         $this->assertObjectHasAttribute('media_id_string', $result);
-        $parameters = ['status' => 'Hello World ' . time(), 'media_ids' => $result->media_id_string];
+        $parameters = ['status' => 'Hello World ' . MOCK_TIME, 'media_ids' => $result->media_id_string];
         $result = $this->twitter->post('statuses/update', $parameters);
         $this->assertEquals(200, $this->twitter->getLastHttpCode());
-        if ($this->twitter->getLastHttpCode() == 200) {
-            $result = $this->twitter->post('statuses/destroy/' . $result->id_str);
-        }
+        $result = $this->twitter->post('statuses/destroy/' . $result->id_str);
         return $result;
     }
 
+    /**
+     * @vcr testPostStatusUpdateWithInvalidMediaThrowsException.json
+     */
     public function testPostStatusUpdateWithInvalidMediaThrowsException()
     {
         $this->expectException(\InvalidArgumentException::class);
@@ -241,6 +270,9 @@ class TwitterOAuthTest extends TestCase
         $result = $this->twitter->upload('media/upload', ['media' => $file_path]);
     }
 
+    /**
+     * @vcr testPostStatusesUpdateWithMediaChunked.json
+     */
     public function testPostStatusesUpdateWithMediaChunked()
     {
         $this->twitter->setTimeouts(60, 30);
@@ -249,24 +281,26 @@ class TwitterOAuthTest extends TestCase
         $result = $this->twitter->upload('media/upload', ['media' => $file_path, 'media_type' => 'video/mp4'], true);
         $this->assertEquals(201, $this->twitter->getLastHttpCode());
         $this->assertObjectHasAttribute('media_id_string', $result);
-        $parameters = ['status' => 'Hello World ' . time(), 'media_ids' => $result->media_id_string];
+        $parameters = ['status' => 'Hello World ' . MOCK_TIME, 'media_ids' => $result->media_id_string];
         $result = $this->twitter->post('statuses/update', $parameters);
         $this->assertEquals(200, $this->twitter->getLastHttpCode());
-        if ($this->twitter->getLastHttpCode() == 200) {
-            $result = $this->twitter->post('statuses/destroy/' . $result->id_str);
-        }
+        $result = $this->twitter->post('statuses/destroy/' . $result->id_str);
         return $result;
     }
 
+    /**
+     * @vcr testPostStatusesUpdateUtf8.json
+     */
     public function testPostStatusesUpdateUtf8()
     {
-        $result = $this->twitter->post('statuses/update', ['status' => 'xこんにちは世界 ' . time()]);
+        $result = $this->twitter->post('statuses/update', ['status' => 'xこんにちは世界 ' . MOCK_TIME]);
         $this->assertEquals(200, $this->twitter->getLastHttpCode());
         return $result;
     }
 
     /**
      * @depends testPostStatusesUpdateUtf8
+     * @vcr testPostStatusesDestroy.json
      */
     public function testPostStatusesDestroy($status)
     {
@@ -274,6 +308,9 @@ class TwitterOAuthTest extends TestCase
         $this->assertEquals(200, $this->twitter->getLastHttpCode());
     }
 
+    /**
+     * @vcr testLastResult.json
+     */
     public function testLastResult()
     {
         $this->twitter->get('search/tweets', ['q' => 'twitter']);
@@ -284,6 +321,7 @@ class TwitterOAuthTest extends TestCase
 
     /**
      * @depends testLastResult
+     * @vcr testResetLastResponse.json
      */
     public function testResetLastResponse()
     {

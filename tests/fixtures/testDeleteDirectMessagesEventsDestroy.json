@@ -1,0 +1,40 @@
+[{
+    "request": {
+        "method": "DELETE",
+        "url": "https:\/\/api.twitter.com\/1.1\/direct_messages\/events\/destroy.json?id=1254206523385032714",
+        "headers": {
+            "Host": "api.twitter.com",
+            "Accept": "application\/json",
+            "Authorization": "OAuth oauth_version=\"1.0\", oauth_nonce=\"2b67ebbeace76543f356ba8bbd59abde\", oauth_timestamp=\"1587861062\", oauth_consumer_key=\"awJfND4zFGapGOFKfdjg\", oauth_token=\"93915746-KjE3c27dCt8awONxuUAaJ00yishXXwcH5CdLBnO1x\", oauth_signature_method=\"HMAC-SHA1\", oauth_signature=\"dY4KEaTg5Y6Bv4JlofNCjoArx%2F4%3D\"",
+            "Expect": null
+        }
+    },
+    "response": {
+        "status": {
+            "http_version": "2",
+            "code": "204",
+            "message": ""
+        },
+        "headers": {
+            "cache-control": "no-cache, no-store, must-revalidate, pre-check=0, post-check=0",
+            "content-security-policy": "default-src 'self'; connect-src 'self'; font-src 'self' https:\/\/*.twimg.com https:\/\/twitter.com https:\/\/ton.twitter.com data:; frame-src 'self' https:\/\/*.twimg.com https:\/\/twitter.com https:\/\/ton.twitter.com; img-src 'self' https:\/\/*.twimg.com https:\/\/twitter.com https:\/\/ton.twitter.com data:; media-src 'self' https:\/\/*.twimg.com https:\/\/twitter.com https:\/\/ton.twitter.com; object-src 'none'; script-src 'self' https:\/\/*.twimg.com https:\/\/twitter.com https:\/\/ton.twitter.com; style-src 'self' https:\/\/*.twimg.com https:\/\/twitter.com https:\/\/ton.twitter.com; report-uri https:\/\/twitter.com\/i\/csp_report?a=NVQWGYLXFVSG2%3D%3D%3D&ro=false;",
+            "content-type": "text\/html;charset=utf-8",
+            "date": "Sun, 26 Apr 2020 00:31:52 GMT",
+            "expires": "Tue, 31 Mar 1981 05:00:00 GMT",
+            "last-modified": "Sun, 26 Apr 2020 00:31:52 GMT",
+            "pragma": "no-cache",
+            "server": "tsa_b",
+            "set-cookie": "personalization_id=\"v1_asAbLVWtv6V2+ARemo0VNA==\"; Max-Age=63072000; Expires=Tue, 26 Apr 2022 00:31:52 GMT; Path=\/; Domain=.twitter.com; Secure; SameSite=None, lang=en; Path=\/, guest_id=v1%3A158786111220677678; Max-Age=63072000; Expires=Tue, 26 Apr 2022 00:31:52 GMT; Path=\/; Domain=.twitter.com; Secure; SameSite=None",
+            "status": "204 No Content",
+            "strict-transport-security": "max-age=631138519",
+            "x-access-level": "read-write-directmessages",
+            "x-connection-hash": "5cbff6bc4105c0040c4738daac7adcf4",
+            "x-content-type-options": "nosniff",
+            "x-frame-options": "SAMEORIGIN",
+            "x-response-time": "37",
+            "x-transaction": "00f02f6c00e12e76",
+            "x-twitter-response-tags": "BouncerCompliant",
+            "x-xss-protection": "0"
+        }
+    }
+}]
