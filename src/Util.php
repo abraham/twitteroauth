@@ -1,8 +1,10 @@
 <?php
+
 /**
  * The MIT License
  * Copyright (c) 2007 Andy Smith
  */
+
 namespace Abraham\TwitterOAuth;
 
 class Util
@@ -16,7 +18,10 @@ class Util
     {
         $output = '';
         if (is_array($input)) {
-            $output = array_map([__NAMESPACE__ . '\Util', 'urlencodeRfc3986'], $input);
+            $output = array_map(
+                [__NAMESPACE__ . '\Util', 'urlencodeRfc3986'],
+                $input
+            );
         } elseif (is_scalar($input)) {
             $output = rawurlencode($input);
         }

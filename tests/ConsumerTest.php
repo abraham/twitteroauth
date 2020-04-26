@@ -13,6 +13,9 @@ class ConsumerTest extends TestCase
         $secret = uniqid();
         $consumer = new Consumer($key, $secret);
 
-        $this->assertEquals("Consumer[key=$key,secret=$secret]", $consumer->__toString());
+        $this->assertEquals(
+            "Consumer[key=$key,secret=$secret]",
+            $consumer->__toString()
+        );
     }
 }

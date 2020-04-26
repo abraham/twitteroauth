@@ -5,16 +5,15 @@ php:
   - '7.3'
   - '7.4'
   - nightly
-before_script:
-  - composer self-update
-  - composer install --no-interaction
-script: vendor/bin/phpunit
+before_install: composer self-update
+install: npm install
+script: npm test
 jobs:
   allow_failures:
     - php: nightly
   include:
     - name: Lint
-      script: vendor/bin/phpcs src tests --standard=PSR2
+      script: npm run lint
     - name: cacert.pem current
       script: tests/scripts/cacert.sh
 cache:

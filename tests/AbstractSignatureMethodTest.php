@@ -26,7 +26,10 @@ abstract class AbstractSignatureMethodTest extends TestCase
      */
     public function testBuildSignature($expected, $request, $consumer, $token)
     {
-        $this->assertEquals($expected, $this->getClass()->buildSignature($request, $consumer, $token));
+        $this->assertEquals(
+            $expected,
+            $this->getClass()->buildSignature($request, $consumer, $token)
+        );
     }
 
     protected function getRequest()
@@ -36,8 +39,11 @@ abstract class AbstractSignatureMethodTest extends TestCase
             ->getMock();
     }
 
-    protected function getConsumer($key = null, $secret = null, $callbackUrl = null)
-    {
+    protected function getConsumer(
+        $key = null,
+        $secret = null,
+        $callbackUrl = null
+    ) {
         return $this->getMockBuilder('Abraham\TwitterOAuth\Consumer')
             ->setConstructorArgs([$key, $secret, $callbackUrl])
             ->getMock();
