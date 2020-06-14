@@ -392,6 +392,12 @@ class TwitterOAuth extends Config
             ],
             false
         );
+        
+        if(isset($finalize->processing_info)) {
+            $wait = $finalize->processing_info->check_after_secs;
+	        sleep($wait);
+        }
+        
         return $finalize;
     }
 
