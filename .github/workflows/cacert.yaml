@@ -1,0 +1,11 @@
+name: cacert
+on:
+  push:
+  schedule:
+    - cron: '0 12 * * 3'
+jobs:
+  cacert:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - run: tests/scripts/cacert.sh
