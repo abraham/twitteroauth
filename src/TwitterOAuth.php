@@ -487,7 +487,10 @@ class TwitterOAuth extends Config
         do {
             $this->sleepIfNeeded();
             $result = $this->oAuthRequest($url, $method, $parameters, $json);
-            $response = JsonDecoder::decode($result, $this->decodeJsonAsArray);
+            $response = $result;
+            if($this->isJsonResponse()){
+                $response = JsonDecoder::decode($result, $this->decodeJsonAsArray);
+            }
             $this->response->setBody($response);
             $this->attempts++;
             // Retry up to our $maxRetries number if we get errors greater than 500 (over capacity etc)
@@ -735,5 +738,28 @@ class TwitterOAuth extends Config
     {
         /* Use CACert file when not in a PHAR file. */
         return !$this->pharRunning();
+    }
+    
+    /**
+     * download dm files
+     * @param $url
+     * @return array|object|string
+     */
+    public function getDMFiles($url):string 
+    {
+        return $this->makeRequests($url, 'GET', [], false);
+    }
+
+    /**
+     * check response is json or not
+     * @return bool
+     */
+    private function isJsonResponse()
+    {
+        $headers = $this->response->getsHeaders();
+        if(isset($headers['content_type']) && strpos('application/json', $headers['content_type']) !== false){
+            return true;
+        }
+        return false;
     }
 }
