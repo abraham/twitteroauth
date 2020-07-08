@@ -19,10 +19,13 @@ use Abraham\TwitterOAuth\Util\JsonDecoder;
  */
 class TwitterOAuth extends Config
 {
-    private const API_VERSION = '1.1';
     private const API_HOST = 'https://api.twitter.com';
     private const UPLOAD_HOST = 'https://upload.twitter.com';
 
+	/** @var string API version */
+	private $apiVersion = '1.1';
+	/** @var bool Is the Labs API (dedicated endpoint) */
+	private $isLabs = false;
     /** @var Response details about the result of the last request */
     private $response;
     /** @var string|null Application bearer token */
@@ -60,6 +63,22 @@ class TwitterOAuth extends Config
             $this->setBearer($oauthTokenSecret);
         }
     }
+
+	/**
+	 * @param string $apiVersion
+	 */
+	public function setApiVersion(string $apiVersion): void
+	{
+		$this->apiVersion = $apiVersion;
+	}
+
+	/**
+	 * @param bool $isLabs
+	 */
+	public function setIsLabs(bool $isLabs): void
+	{
+		$this->isLabs = $isLabs;
+	}
 
     /**
      * @param string $oauthToken
@@ -458,7 +477,8 @@ class TwitterOAuth extends Config
     ) {
         $this->resetLastResponse();
         $this->resetAttemptsNumber();
-        $url = sprintf('%s/%s/%s.json', $host, self::API_VERSION, $path);
+        $format = $this->isLabs ? '' : '.json';
+        $url = sprintf('%s/%s/%s%s', $host, $this->apiVersion, $path, $format);
         $this->response->setApiPath($path);
         if (!$json) {
             $parameters = $this->cleanUpParameters($parameters);
