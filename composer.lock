@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "7e25988d44315ad3455e4adf60f438de",
+    "content-hash": "82bcabecc33cdf02d7ccd9d7a50f78e1",
     "packages": [
         {
             "name": "composer/ca-bundle",
@@ -523,20 +523,14 @@
         },
         {
             "name": "php-vcr/phpunit-testlistener-vcr",
-            "version": "3.2.1",
+            "version": "dev-php-8",
             "source": {
                 "type": "git",
-                "url": "https://github.com/php-vcr/phpunit-testlistener-vcr.git",
-                "reference": "299aaf88533cee3ae64e99bdc6ad5b97fb495f21"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/php-vcr/phpunit-testlistener-vcr/zipball/299aaf88533cee3ae64e99bdc6ad5b97fb495f21",
-                "reference": "299aaf88533cee3ae64e99bdc6ad5b97fb495f21",
-                "shasum": ""
+                "url": "https://github.com/abraham/phpunit-testlistener-vcr",
+                "reference": "13a0e1213d3415e3c5cdda9450a4979b5867020a"
             },
             "require": {
-                "php": "^7.1",
+                "php": "^7.1 | ^8.0",
                 "php-vcr/php-vcr": "^1.4"
             },
             "require-dev": {
@@ -548,7 +542,11 @@
                     "VCR\\PHPUnit\\TestListener\\": "src/"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
+            "autoload-dev": {
+                "psr-4": {
+                    "Tests\\VCR\\PHPUnit\\TestListener\\": "tests/"
+                }
+            },
             "license": [
                 "MIT"
             ],
@@ -559,7 +557,7 @@
                 }
             ],
             "description": "Integrates PHPUnit with PHP-VCR.",
-            "time": "2018-07-06T08:53:21+00:00"
+            "time": "2020-11-28T17:40:26+00:00"
         },
         {
             "name": "phpdocumentor/reflection-common",
@@ -2749,13 +2747,15 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {
+        "php-vcr/phpunit-testlistener-vcr": 20
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "php": "^7.2 || ^7.3 || ^7.4",
+        "php": "^7.2 || ^7.3 || ^7.4 || ^8.0",
         "ext-curl": "*"
     },
     "platform-dev": [],
-    "plugin-api-version": "1.1.0"
+    "plugin-api-version": "2.0.0"
 }
