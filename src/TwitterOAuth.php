@@ -21,6 +21,8 @@ class TwitterOAuth extends Config
 {
     private const API_VERSION = '1.1';
     private const API_HOST = 'https://api.twitter.com';
+    private const ADS_API_HOST = 'https://ads-api.twitter.com';
+    private const ADS_API_VERSION = '7';
     private const UPLOAD_HOST = 'https://upload.twitter.com';
 
     /** @var Response details about the result of the last request */
@@ -275,6 +277,86 @@ class TwitterOAuth extends Config
     }
 
     /**
+     * Make GET requests to the API.
+     *
+     * @param string $path
+     * @param array  $parameters
+     *
+     * @return array|object
+     */
+    public function getAdsApi(string $path, array $parameters = [])
+    {
+        return $this->httpAdsApi(
+            'GET',
+            self::ADS_API_HOST,
+            $path,
+            $parameters,
+            false
+        );
+    }
+
+    /**
+     * Make POST requests to the API.
+     *
+     * @param string $path
+     * @param array  $parameters
+     * @param bool   $json
+     *
+     * @return array|object
+     */
+    public function postAdsApi(
+        string $path,
+        array $parameters = [],
+        bool $json = false
+    ) {
+        return $this->httpAdsApi(
+            'POST',
+            self::ADS_API_HOST,
+            $path,
+            $parameters,
+            $json
+        );
+    }
+
+    /**
+     * Make DELETE requests to the API.
+     *
+     * @param string $path
+     * @param array  $parameters
+     *
+     * @return array|object
+     */
+    public function deleteAdsApi(string $path, array $parameters = [])
+    {
+        return $this->httpAdsApi(
+            'DELETE',
+            self::ADS_API_HOST,
+            $path,
+            $parameters,
+            false
+        );
+    }
+
+    /**
+     * Make PUT requests to the API.
+     *
+     * @param string $path
+     * @param array  $parameters
+     *
+     * @return array|object
+     */
+    public function putAdsApi(string $path, array $parameters = [])
+    {
+        return $this->httpAdsApi(
+            'PUT',
+            self::ADS_API_HOST,
+            $path,
+            $parameters,
+            false
+        );
+    }
+
+    /**
      * Upload media to upload.twitter.com.
      *
      * @param string $path
@@ -459,6 +541,32 @@ class TwitterOAuth extends Config
         $this->resetLastResponse();
         $this->resetAttemptsNumber();
         $url = sprintf('%s/%s/%s.json', $host, self::API_VERSION, $path);
+        $this->response->setApiPath($path);
+        if (!$json) {
+            $parameters = $this->cleanUpParameters($parameters);
+        }
+        return $this->makeRequests($url, $method, $parameters, $json);
+    }
+
+    /**
+     * @param string $method
+     * @param string $host
+     * @param string $path
+     * @param array  $parameters
+     * @param bool   $json
+     *
+     * @return array|object
+     */
+    private function httpAdsApi(
+        string $method,
+        string $host,
+        string $path,
+        array $parameters,
+        bool $json
+    ) {
+        $this->resetLastResponse();
+        $this->resetAttemptsNumber();
+        $url = sprintf('%s/%s/%s.json', $host, self::ADS_API_VERSION, $path);
         $this->response->setApiPath($path);
         if (!$json) {
             $parameters = $this->cleanUpParameters($parameters);
