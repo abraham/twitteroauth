@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace Abraham\TwitterOAuth;
 
 use Abraham\TwitterOAuth\Util\JsonDecoder;
+use Composer\CaBundle\CaBundle;
 
 /**
  * TwitterOAuth class for interacting with the Twitter API.
@@ -580,8 +581,9 @@ class TwitterOAuth extends Config
         ];
 
         if ($this->useCAFile()) {
-            $options[CURLOPT_CAINFO] =
-                __DIR__ . DIRECTORY_SEPARATOR . 'cacert.pem';
+            $caRootBundlePath = CaBundle::getSystemCaRootBundlePath();
+            $curlCaOpt = is_dir($caRootBundlePath) ? CURLOPT_CAPATH : CURLOPT_CAINFO;
+            $options[$curlCaOpt] = $caRootBundlePath;
         }
 
         if ($this->gzipEncoding) {
@@ -735,5 +737,15 @@ class TwitterOAuth extends Config
     {
         /* Use CACert file when not in a PHAR file. */
         return !$this->pharRunning();
+    }
+
+    private function getCaBundle(): string
+    {
+        $caPathOrFile = CaBundle::getSystemCaRootBundlePath();
+        if (is_dir($caPathOrFile)) {
+            curl_setopt($curl, CURLOPT_CAPATH, $caPathOrFile);
+        } else {
+            curl_setopt($curl, CURLOPT_CAINFO, $caPathOrFile);
+        }
     }
 }
