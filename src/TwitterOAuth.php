@@ -581,11 +581,8 @@ class TwitterOAuth extends Config
         ];
 
         if ($this->useCAFile()) {
-            $caRootBundlePath = CaBundle::getSystemCaRootBundlePath();
-            $curlCaOpt = is_dir($caRootBundlePath)
-                ? CURLOPT_CAPATH
-                : CURLOPT_CAINFO;
-            $options[$curlCaOpt] = $caRootBundlePath;
+            $bundlePath = CaBundle::getSystemCaRootBundlePath();
+            $options[$this->curlCaOpt($bundlePath)] = $bundlePath;
         }
 
         if ($this->gzipEncoding) {
@@ -741,13 +738,14 @@ class TwitterOAuth extends Config
         return !$this->pharRunning();
     }
 
-    private function getCaBundle(): string
+    /**
+     * Get Curl CA option based on whether the given path is a directory or file.
+     *
+     * @param string $path
+     * @return int
+     */
+    private function curlCaOpt(string $path): int
     {
-        $caPathOrFile = CaBundle::getSystemCaRootBundlePath();
-        if (is_dir($caPathOrFile)) {
-            curl_setopt($curl, CURLOPT_CAPATH, $caPathOrFile);
-        } else {
-            curl_setopt($curl, CURLOPT_CAINFO, $caPathOrFile);
-        }
+        return is_dir($path) ? CURLOPT_CAPATH : CURLOPT_CAINFO;
     }
 }
