@@ -582,7 +582,9 @@ class TwitterOAuth extends Config
 
         if ($this->useCAFile()) {
             $caRootBundlePath = CaBundle::getSystemCaRootBundlePath();
-            $curlCaOpt = is_dir($caRootBundlePath) ? CURLOPT_CAPATH : CURLOPT_CAINFO;
+            $curlCaOpt = is_dir($caRootBundlePath)
+                ? CURLOPT_CAPATH
+                : CURLOPT_CAINFO;
             $options[$curlCaOpt] = $caRootBundlePath;
         }
 
