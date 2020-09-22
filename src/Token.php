@@ -1,8 +1,12 @@
 <?php
+
 /**
  * The MIT License
  * Copyright (c) 2007 Andy Smith
  */
+
+declare(strict_types=1);
+
 namespace Abraham\TwitterOAuth;
 
 class Token
@@ -16,7 +20,7 @@ class Token
      * @param string $key    The OAuth Token
      * @param string $secret The OAuth Token Secret
      */
-    public function __construct($key, $secret)
+    public function __construct(?string $key, ?string $secret)
     {
         $this->key = $key;
         $this->secret = $secret;
@@ -28,10 +32,10 @@ class Token
      *
      * @return string
      */
-    public function __toString()
+    public function __toString(): string
     {
         return sprintf(
-            "oauth_token=%s&oauth_token_secret=%s",
+            'oauth_token=%s&oauth_token_secret=%s',
             Util::urlencodeRfc3986($this->key),
             Util::urlencodeRfc3986($this->secret)
         );

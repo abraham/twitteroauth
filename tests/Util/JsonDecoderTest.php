@@ -2,9 +2,10 @@
 
 namespace Abraham\TwitterOAuth\Tests;
 
+use PHPUnit\Framework\TestCase;
 use Abraham\TwitterOAuth\Util\JsonDecoder;
 
-class JsonDecoderTest extends \PHPUnit_Framework_TestCase
+class JsonDecoderTest extends TestCase
 {
     /**
      * @dataProvider jsonProvider
@@ -19,7 +20,11 @@ class JsonDecoderTest extends \PHPUnit_Framework_TestCase
         return [
             ['[]', true, []],
             ['[1,2,3]', true, [1, 2, 3]],
-            ['[{"id": 556179961825226750}]', true, [['id' => 556179961825226750]]],
+            [
+                '[{"id": 556179961825226750}]',
+                true,
+                [['id' => 556179961825226750]],
+            ],
             ['[]', false, []],
             ['[1,2,3]', false, [1, 2, 3]],
             [
@@ -29,10 +34,9 @@ class JsonDecoderTest extends \PHPUnit_Framework_TestCase
                     $this->getClass(function ($object) {
                         $object->id = 556179961825226750;
                         return $object;
-                    })
-                ]
+                    }),
+                ],
             ],
-
         ];
     }
 

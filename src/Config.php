@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Abraham\TwitterOAuth;
 
 /**
@@ -43,10 +45,10 @@ class Config
      * @param int $connectionTimeout
      * @param int $timeout
      */
-    public function setTimeouts($connectionTimeout, $timeout)
+    public function setTimeouts(int $connectionTimeout, int $timeout): void
     {
-        $this->connectionTimeout = (int)$connectionTimeout;
-        $this->timeout = (int)$timeout;
+        $this->connectionTimeout = $connectionTimeout;
+        $this->timeout = $timeout;
     }
 
     /**
@@ -55,32 +57,32 @@ class Config
      * @param int $maxRetries
      * @param int $retriesDelay
      */
-    public function setRetries($maxRetries, $retriesDelay)
+    public function setRetries(int $maxRetries, int $retriesDelay): void
     {
-        $this->maxRetries = (int)$maxRetries;
-        $this->retriesDelay = (int)$retriesDelay;
+        $this->maxRetries = $maxRetries;
+        $this->retriesDelay = $retriesDelay;
     }
 
     /**
      * @param bool $value
      */
-    public function setDecodeJsonAsArray($value)
+    public function setDecodeJsonAsArray(bool $value): void
     {
-        $this->decodeJsonAsArray = (bool)$value;
+        $this->decodeJsonAsArray = $value;
     }
 
     /**
      * @param string $userAgent
      */
-    public function setUserAgent($userAgent)
+    public function setUserAgent(string $userAgent): void
     {
-        $this->userAgent = (string)$userAgent;
+        $this->userAgent = $userAgent;
     }
 
     /**
      * @param array $proxy
      */
-    public function setProxy(array $proxy)
+    public function setProxy(array $proxy): void
     {
         $this->proxy = $proxy;
     }
@@ -90,9 +92,9 @@ class Config
      *
      * @param boolean $gzipEncoding
      */
-    public function setGzipEncoding($gzipEncoding)
+    public function setGzipEncoding(bool $gzipEncoding): void
     {
-        $this->gzipEncoding = (bool)$gzipEncoding;
+        $this->gzipEncoding = $gzipEncoding;
     }
 
     /**
@@ -100,8 +102,8 @@ class Config
      *
      * @param int $value
      */
-    public function setChunkSize($value)
+    public function setChunkSize(int $value): void
     {
-        $this->chunkSize = (int)$value;
+        $this->chunkSize = $value;
     }
 }

@@ -1,5 +1,5 @@
 .DS_Store
-composer.lock
 vendor
 env
-.cache
+*.cache
+node_modules

@@ -1,34 +1,51 @@
 {
-    "name": "abraham/twitteroauth",
-    "type": "library",
-    "description": "The most popular PHP library for use with the Twitter OAuth REST API.",
-    "keywords": ["twitter", "api", "oauth", "rest", "social", "twitter api", "twitter oauth"],
-    "license": "MIT",
-    "homepage": "https://twitteroauth.com",
-    "authors": [
-        {
-            "name": "Abraham Williams",
-            "email": "abraham@abrah.am",
-            "homepage": "https://abrah.am",
-            "role": "Developer"
-        }
-    ],
-    "support": {
-        "source": "https://github.com/abraham/twitteroauth",
-        "issues": "https://github.com/abraham/twitteroauth/issues"
-    },
-    "require": {
-        "php": "^7.2 || ^7.3",
-        "ext-curl": "*"
-    },
-    "require-dev": {
-        "phpunit/phpunit": "~5.7",
-        "squizlabs/php_codesniffer": "~3.0",
-        "phpmd/phpmd": "~2.6"
-    },
-    "autoload": {
-        "psr-4": {
-            "Abraham\\TwitterOAuth\\": "src"
-        }
+  "name": "abraham/twitteroauth",
+  "type": "library",
+  "description": "The most popular PHP library for use with the Twitter OAuth REST API.",
+  "keywords": [
+    "twitter",
+    "api",
+    "oauth",
+    "rest",
+    "social",
+    "twitter api",
+    "twitter oauth"
+  ],
+  "license": "MIT",
+  "homepage": "https://twitteroauth.com",
+  "authors": [
+    {
+      "name": "Abraham Williams",
+      "email": "abraham@abrah.am",
+      "homepage": "https://abrah.am",
+      "role": "Developer"
     }
+  ],
+  "support": {
+    "source": "https://github.com/abraham/twitteroauth",
+    "issues": "https://github.com/abraham/twitteroauth/issues"
+  },
+  "repositories": [
+    {
+      "type": "git",
+      "url": "https://github.com/morozov/php-vcr"
+    }
+  ],
+  "require": {
+    "php": "^7.2 || ^7.3 || ^7.4",
+    "ext-curl": "*",
+    "composer/ca-bundle": "^1.2"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^8",
+    "squizlabs/php_codesniffer": "^3",
+    "phpmd/phpmd": "^2",
+    "php-vcr/php-vcr": "^1",
+    "php-vcr/phpunit-testlistener-vcr": "^3"
+  },
+  "autoload": {
+    "psr-4": {
+      "Abraham\\TwitterOAuth\\": "src"
+    }
+  }
 }

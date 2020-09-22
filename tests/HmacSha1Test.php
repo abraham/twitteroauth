@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Abraham\TwitterOAuth\Tests;
 
 use Abraham\TwitterOAuth\HmacSha1;
@@ -16,20 +18,30 @@ class HmacSha1Test extends AbstractSignatureMethodTest
     public function signatureDataProvider()
     {
         return [
-            ['5CoEcoq7XoKFjwYCieQvuzadeUA=', $this->getRequest(), $this->getConsumer(), $this->getToken()],
+            [
+                '5CoEcoq7XoKFjwYCieQvuzadeUA=',
+                $this->getRequest(),
+                $this->getConsumer(),
+                $this->getToken(),
+            ],
             [
                 'EBw0gHngam3BTx8kfPfNNSyKem4=',
                 $this->getRequest(),
                 $this->getConsumer('key', 'secret'),
-                $this->getToken()
+                $this->getToken(),
             ],
             [
                 'kDsHFZzws2a5M6cAQjfpdNBo+v8=',
                 $this->getRequest(),
                 $this->getConsumer('key', 'secret'),
-                $this->getToken('key', 'secret')
+                $this->getToken('key', 'secret'),
             ],
-            ['EBw0gHngam3BTx8kfPfNNSyKem4=', $this->getRequest(), $this->getConsumer('key', 'secret'), null],
+            [
+                'EBw0gHngam3BTx8kfPfNNSyKem4=',
+                $this->getRequest(),
+                $this->getConsumer('key', 'secret'),
+                null,
+            ],
         ];
     }
 }

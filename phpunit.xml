@@ -1,11 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <phpunit
         colors="true"
-        bootstrap="tests/bootstrap.php">
+        bootstrap="tests/bootstrap.php"
+        testdox="true">
 
     <testsuites>
         <testsuite name="TwitterOAuth Test Suite">
             <directory>./tests/</directory>
         </testsuite>
     </testsuites>
+
+    <listeners>
+        <listener
+                  class="VCR\PHPUnit\TestListener\VCRTestListener"
+                  file="vendor/php-vcr/phpunit-testlistener-vcr/src/VCRTestListener.php" />
+    </listeners>
 </phpunit>

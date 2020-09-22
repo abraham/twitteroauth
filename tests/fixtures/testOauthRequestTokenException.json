@@ -1,0 +1,43 @@
+[{
+    "request": {
+        "method": "POST",
+        "url": "https:\/\/api.twitter.com\/oauth\/request_token",
+        "headers": {
+            "Host": "api.twitter.com",
+            "Accept": "application\/json",
+            "Authorization": "OAuth oauth_version=\"1.0\", oauth_nonce=\"2b67ebbeace76543f356ba8bbd59abde\", oauth_timestamp=\"1587861062\", oauth_consumer_key=\"CONSUMER_KEY\", oauth_callback=\"https%3A%2F%2Ftwitteroauth.com%2Fcallback.php\", oauth_signature_method=\"HMAC-SHA1\", oauth_signature=\"wOUt6ZyVGpWnQhsHNWqcr%2BpOWAw%3D\"",
+            "Expect": null
+        }
+    },
+    "response": {
+        "status": {
+            "http_version": "2",
+            "code": "401",
+            "message": ""
+        },
+        "headers": {
+            "cache-control": "no-cache, no-store, must-revalidate, pre-check=0, post-check=0",
+            "content-disposition": "attachment; filename=json.json",
+            "content-encoding": "gzip",
+            "content-length": "89",
+            "content-type": "application\/json; charset=utf-8",
+            "date": "Sun, 26 Apr 2020 00:31:11 GMT",
+            "expires": "Tue, 31 Mar 1981 05:00:00 GMT",
+            "last-modified": "Sun, 26 Apr 2020 00:31:11 GMT",
+            "pragma": "no-cache",
+            "server": "tsa_b",
+            "set-cookie": "personalization_id=\"v1_Vz8Os736+fzUwkQGIeIKuw==\"; Max-Age=63072000; Expires=Tue, 26 Apr 2022 00:31:11 GMT; Path=\/; Domain=.twitter.com; Secure; SameSite=None, guest_id=v1%3A158786107116335546; Max-Age=63072000; Expires=Tue, 26 Apr 2022 00:31:11 GMT; Path=\/; Domain=.twitter.com; Secure; SameSite=None",
+            "status": "401 Unauthorized",
+            "strict-transport-security": "max-age=631138519",
+            "www-authenticate": "OAuth realm=\"https:\/\/api.twitter.com\", api_error_code=32",
+            "x-connection-hash": "d620dbb5b35e124662532c3ef8e89c88",
+            "x-content-type-options": "nosniff",
+            "x-frame-options": "SAMEORIGIN",
+            "x-response-time": "6",
+            "x-transaction": "00bf1248004cdafa",
+            "x-twitter-response-tags": "BouncerCompliant",
+            "x-xss-protection": "0"
+        },
+        "body": "{\"errors\":[{\"code\":32,\"message\":\"Could not authenticate you.\"}]}"
+    }
+}]

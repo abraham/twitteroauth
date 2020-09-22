@@ -1,0 +1,46 @@
+[{
+    "request": {
+        "method": "GET",
+        "url": "https:\/\/api.twitter.com\/1.1\/friendships\/show.json?target_screen_name=twitterapi",
+        "headers": {
+            "Host": "api.twitter.com",
+            "Accept": "application\/json",
+            "Authorization": "OAuth oauth_version=\"1.0\", oauth_nonce=\"2b67ebbeace76543f356ba8bbd59abde\", oauth_timestamp=\"1587861062\", oauth_consumer_key=\"awJfND4zFGapGOFKfdjg\", oauth_token=\"93915746-KjE3c27dCt8awONxuUAaJ00yishXXwcH5CdLBnO1x\", oauth_signature_method=\"HMAC-SHA1\", oauth_signature=\"TzPCDLbvxIAlxBqg5Fpf4JZpFJo%3D\"",
+            "Expect": null
+        }
+    },
+    "response": {
+        "status": {
+            "http_version": "2",
+            "code": "200",
+            "message": ""
+        },
+        "headers": {
+            "cache-control": "no-cache, no-store, must-revalidate, pre-check=0, post-check=0",
+            "content-disposition": "attachment; filename=json.json",
+            "content-encoding": "gzip",
+            "content-length": "246",
+            "content-type": "application\/json;charset=utf-8",
+            "date": "Sun, 26 Apr 2020 00:31:09 GMT",
+            "expires": "Tue, 31 Mar 1981 05:00:00 GMT",
+            "last-modified": "Sun, 26 Apr 2020 00:31:09 GMT",
+            "pragma": "no-cache",
+            "server": "tsa_b",
+            "set-cookie": "personalization_id=\"v1_1Yr9ogG1fxy1wdDOY63jAw==\"; Max-Age=63072000; Expires=Tue, 26 Apr 2022 00:31:09 GMT; Path=\/; Domain=.twitter.com; Secure; SameSite=None, lang=en; Path=\/, guest_id=v1%3A158786106956820884; Max-Age=63072000; Expires=Tue, 26 Apr 2022 00:31:09 GMT; Path=\/; Domain=.twitter.com; Secure; SameSite=None",
+            "status": "200 OK",
+            "strict-transport-security": "max-age=631138519",
+            "x-access-level": "read-write-directmessages",
+            "x-connection-hash": "e8b1e309982b5c1d1adedc814fa2e6c3",
+            "x-content-type-options": "nosniff",
+            "x-frame-options": "SAMEORIGIN",
+            "x-rate-limit-limit": "180",
+            "x-rate-limit-remaining": "178",
+            "x-rate-limit-reset": "1587861610",
+            "x-response-time": "20",
+            "x-transaction": "0075ffd2008ff583",
+            "x-twitter-response-tags": "BouncerCompliant",
+            "x-xss-protection": "0"
+        },
+        "body": "{\"relationship\":{\"source\":{\"id\":93915746,\"id_str\":\"93915746\",\"screen_name\":\"oauthlibtest\",\"following\":false,\"followed_by\":false,\"live_following\":false,\"following_received\":false,\"following_requested\":false,\"notifications_enabled\":false,\"can_dm\":false,\"blocking\":false,\"blocked_by\":false,\"muting\":false,\"want_retweets\":false,\"all_replies\":false,\"marked_spam\":false},\"target\":{\"id\":6253282,\"id_str\":\"6253282\",\"screen_name\":\"TwitterAPI\",\"following\":false,\"followed_by\":false,\"following_received\":false,\"following_requested\":false}}}"
+    }
+}]

@@ -1,0 +1,45 @@
+[{
+    "request": {
+        "method": "POST",
+        "url": "https:\/\/api.twitter.com\/oauth\/access_token",
+        "headers": {
+            "Host": "api.twitter.com",
+            "Accept": "application\/json",
+            "Authorization": "OAuth oauth_version=\"1.0\", oauth_nonce=\"2b67ebbeace76543f356ba8bbd59abde\", oauth_timestamp=\"1587861062\", oauth_consumer_key=\"awJfND4zFGapGOFKfdjg\", oauth_token=\"CE545gAAAAAAABtaAAABcbPlJBQ\", oauth_verifier=\"fake_oauth_verifier\", oauth_signature_method=\"HMAC-SHA1\", oauth_signature=\"0bcdtKs3nffzbE5abwaVjCI1HPw%3D\"",
+            "Expect": null
+        }
+    },
+    "response": {
+        "status": {
+            "http_version": "2",
+            "code": "401",
+            "message": ""
+        },
+        "headers": {
+            "cache-control": "no-cache, no-store, must-revalidate, pre-check=0, post-check=0",
+            "content-encoding": "gzip",
+            "content-length": "93",
+            "content-security-policy": "default-src 'none'; connect-src 'self'; font-src https:\/\/abs.twimg.com https:\/\/abs-0.twimg.com data:; frame-src 'self' twitter:; img-src https:\/\/abs.twimg.com https:\/\/*.twimg.com https:\/\/pbs.twimg.com data:; media-src 'none'; object-src 'none'; script-src https:\/\/abs.twimg.com https:\/\/abs-0.twimg.com https:\/\/twitter.com https:\/\/mobile.twitter.com; style-src https:\/\/abs.twimg.com https:\/\/abs-0.twimg.com; report-uri https:\/\/twitter.com\/i\/csp_report?a=NVQWGYLXFVWG6Z3JNY%3D%3D%3D%3D%3D%3D&ro=false;",
+            "content-type": "text\/html;charset=utf-8",
+            "date": "Sun, 26 Apr 2020 00:31:11 GMT",
+            "expires": "Tue, 31 Mar 1981 05:00:00 GMT",
+            "last-modified": "Sun, 26 Apr 2020 00:31:11 GMT",
+            "ml": "A",
+            "pragma": "no-cache",
+            "server": "tsa_b",
+            "set-cookie": "personalization_id=\"v1_n0ZAgT2oLIc0HI23qMIGCA==\"; Max-Age=63072000; Expires=Tue, 26 Apr 2022 00:31:11 GMT; Path=\/; Domain=.twitter.com; Secure; SameSite=None, guest_id=v1%3A158786107147893563; Max-Age=63072000; Expires=Tue, 26 Apr 2022 00:31:11 GMT; Path=\/; Domain=.twitter.com; Secure; SameSite=None",
+            "status": "401 Unauthorized",
+            "strict-transport-security": "max-age=631138519",
+            "www-authenticate": "OAuth realm=\"https:\/\/api.twitter.com\"",
+            "x-connection-hash": "90157d4bdfce3a9b90fd408819c767bc",
+            "x-content-type-options": "nosniff",
+            "x-frame-options": "SAMEORIGIN",
+            "x-response-time": "41",
+            "x-transaction": "0080cead006a758d",
+            "x-twitter-response-tags": "BouncerCompliant",
+            "x-ua-compatible": "IE=edge,chrome=1",
+            "x-xss-protection": "0"
+        },
+        "body": "Error processing your OAuth request: Invalid oauth_verifier parameter"
+    }
+}]
