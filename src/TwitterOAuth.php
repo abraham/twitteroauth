@@ -569,6 +569,7 @@ class TwitterOAuth extends Config
      */
     private function curlOptions(): array
     {
+        $bundlePath = CaBundle::getSystemCaRootBundlePath();
         $options = [
             // CURLOPT_VERBOSE => true,
             CURLOPT_CONNECTTIMEOUT => $this->connectionTimeout,
@@ -578,12 +579,8 @@ class TwitterOAuth extends Config
             CURLOPT_SSL_VERIFYPEER => true,
             CURLOPT_TIMEOUT => $this->timeout,
             CURLOPT_USERAGENT => $this->userAgent,
+            $this->curlCaOpt($bundlePath) => $bundlePath,
         ];
-
-        if ($this->useCAFile()) {
-            $bundlePath = CaBundle::getSystemCaRootBundlePath();
-            $options[$this->curlCaOpt($bundlePath)] = $bundlePath;
-        }
 
         if ($this->gzipEncoding) {
             $options[CURLOPT_ENCODING] = 'gzip';
@@ -715,27 +712,6 @@ class TwitterOAuth extends Config
         $key = rawurlencode($consumer->key);
         $secret = rawurlencode($consumer->secret);
         return base64_encode($key . ':' . $secret);
-    }
-
-    /**
-     * Is the code running from a Phar module.
-     *
-     * @return boolean
-     */
-    private function pharRunning(): bool
-    {
-        return class_exists('Phar') && \Phar::running(false) !== '';
-    }
-
-    /**
-     * Use included CA file instead of OS provided list.
-     *
-     * @return boolean
-     */
-    private function useCAFile(): bool
-    {
-        /* Use CACert file when not in a PHAR file. */
-        return !$this->pharRunning();
     }
 
     /**
