@@ -20,9 +20,9 @@ use Composer\CaBundle\CaBundle;
  */
 class TwitterOAuth extends Config
 {
-    private const API_VERSION = '1.1';
-    private const API_HOST = 'https://api.twitter.com';
-    private const UPLOAD_HOST = 'https://upload.twitter.com';
+    public const API_VERSION = '1.1';
+    public const API_HOST = 'https://api.twitter.com';
+    public const UPLOAD_HOST = 'https://upload.twitter.com';
 
     /** @var Response details about the result of the last request */
     private $response;
