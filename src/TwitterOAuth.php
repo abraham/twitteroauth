@@ -692,7 +692,7 @@ class TwitterOAuth extends Config
         $headers = [];
         foreach (explode("\r\n", $header) as $line) {
             if (strpos($line, ':') !== false) {
-                list($key, $value) = explode(': ', $line);
+                [$key, $value] = explode(': ', $line);
                 $key = str_replace('-', '_', strtolower($key));
                 $headers[$key] = trim($value);
             }
