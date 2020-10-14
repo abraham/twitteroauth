@@ -131,4 +131,152 @@
         },
         "body": "{\"created_at\":\"Sun Apr 26 00:31:53 +0000 2020\",\"id\":1254206531073126405,\"id_str\":\"1254206531073126405\",\"text\":\"Hello World 1587861062 https:\\\/\\\/t.co\\\/k34Vy1Gru6\",\"truncated\":false,\"entities\":{\"hashtags\":[],\"symbols\":[],\"user_mentions\":[],\"urls\":[],\"media\":[{\"id\":1254206528162324480,\"id_str\":\"1254206528162324480\",\"indices\":[23,46],\"media_url\":\"http:\\\/\\\/pbs.twimg.com\\\/media\\\/EWfWMToXYAAK1Mx.jpg\",\"media_url_https\":\"https:\\\/\\\/pbs.twimg.com\\\/media\\\/EWfWMToXYAAK1Mx.jpg\",\"url\":\"https:\\\/\\\/t.co\\\/k34Vy1Gru6\",\"display_url\":\"pic.twitter.com\\\/k34Vy1Gru6\",\"expanded_url\":\"https:\\\/\\\/twitter.com\\\/oauthlibtest\\\/status\\\/1254206531073126405\\\/photo\\\/1\",\"type\":\"photo\",\"sizes\":{\"thumb\":{\"w\":150,\"h\":150,\"resize\":\"crop\"},\"large\":{\"w\":1024,\"h\":682,\"resize\":\"fit\"},\"medium\":{\"w\":1024,\"h\":682,\"resize\":\"fit\"},\"small\":{\"w\":680,\"h\":453,\"resize\":\"fit\"}}}]},\"extended_entities\":{\"media\":[{\"id\":1254206528162324480,\"id_str\":\"1254206528162324480\",\"indices\":[23,46],\"media_url\":\"http:\\\/\\\/pbs.twimg.com\\\/media\\\/EWfWMToXYAAK1Mx.jpg\",\"media_url_https\":\"https:\\\/\\\/pbs.twimg.com\\\/media\\\/EWfWMToXYAAK1Mx.jpg\",\"url\":\"https:\\\/\\\/t.co\\\/k34Vy1Gru6\",\"display_url\":\"pic.twitter.com\\\/k34Vy1Gru6\",\"expanded_url\":\"https:\\\/\\\/twitter.com\\\/oauthlibtest\\\/status\\\/1254206531073126405\\\/photo\\\/1\",\"type\":\"photo\",\"sizes\":{\"thumb\":{\"w\":150,\"h\":150,\"resize\":\"crop\"},\"large\":{\"w\":1024,\"h\":682,\"resize\":\"fit\"},\"medium\":{\"w\":1024,\"h\":682,\"resize\":\"fit\"},\"small\":{\"w\":680,\"h\":453,\"resize\":\"fit\"}}}]},\"source\":\"\\u003ca href=\\\"https:\\\/\\\/twitteroauth.com\\\" rel=\\\"nofollow\\\"\\u003eTwitterOAuth dev\\u003c\\\/a\\u003e\",\"in_reply_to_status_id\":null,\"in_reply_to_status_id_str\":null,\"in_reply_to_user_id\":null,\"in_reply_to_user_id_str\":null,\"in_reply_to_screen_name\":null,\"user\":{\"id\":93915746,\"id_str\":\"93915746\",\"name\":\"OAuth Library Test\",\"screen_name\":\"oauthlibtest\",\"location\":\"\",\"description\":\"\",\"url\":null,\"entities\":{\"description\":{\"urls\":[]}},\"protected\":false,\"followers_count\":58,\"friends_count\":2,\"listed_count\":6,\"created_at\":\"Tue Dec 01 18:37:44 +0000 2009\",\"favourites_count\":0,\"utc_offset\":null,\"time_zone\":null,\"geo_enabled\":true,\"verified\":false,\"statuses_count\":6,\"lang\":null,\"contributors_enabled\":false,\"is_translator\":false,\"is_translation_enabled\":false,\"profile_background_color\":\"C0DEED\",\"profile_background_image_url\":\"http:\\\/\\\/abs.twimg.com\\\/images\\\/themes\\\/theme1\\\/bg.png\",\"profile_background_image_url_https\":\"https:\\\/\\\/abs.twimg.com\\\/images\\\/themes\\\/theme1\\\/bg.png\",\"profile_background_tile\":false,\"profile_image_url\":\"http:\\\/\\\/abs.twimg.com\\\/sticky\\\/default_profile_images\\\/default_profile_normal.png\",\"profile_image_url_https\":\"https:\\\/\\\/abs.twimg.com\\\/sticky\\\/default_profile_images\\\/default_profile_normal.png\",\"profile_link_color\":\"1DA1F2\",\"profile_sidebar_border_color\":\"C0DEED\",\"profile_sidebar_fill_color\":\"DDEEF6\",\"profile_text_color\":\"333333\",\"profile_use_background_image\":true,\"has_extended_profile\":false,\"default_profile\":true,\"default_profile_image\":true,\"following\":false,\"follow_request_sent\":false,\"notifications\":false,\"translator_type\":\"none\"},\"geo\":null,\"coordinates\":null,\"place\":null,\"contributors\":null,\"is_quote_status\":false,\"retweet_count\":0,\"favorite_count\":0,\"favorited\":false,\"retweeted\":false,\"possibly_sensitive\":false,\"lang\":\"en\"}"
     }
+},{
+    "request": {
+        "method": "POST",
+        "url": "https:\/\/upload.twitter.com\/1.1\/statuses\/update.json",
+        "headers": {
+            "Host": "upload.twitter.com",
+            "Accept": "application\/json",
+            "Authorization": "OAuth oauth_version=\"1.0\", oauth_nonce=\"2b67ebbeace76543f356ba8bbd59abde\", oauth_timestamp=\"1587861062\", oauth_consumer_key=\"awJfND4zFGapGOFKfdjg\", oauth_token=\"93915746-KjE3c27dCt8awONxuUAaJ00yishXXwcH5CdLBnO1x\", oauth_signature_method=\"HMAC-SHA1\", oauth_signature=\"yKx3BPMoxIvqAs7%2BlNyjRSIzOuo%3D\"",
+            "Expect": ""
+        },
+        "body": "media_ids=1254206528162324480&status=Hello%20World%201587861062"
+    },
+    "response": {
+        "status": {
+            "http_version": "2",
+            "code": "410",
+            "message": ""
+        },
+        "headers": {
+            "cache-control": "no-cache, no-store, max-age=0",
+            "content-encoding": "gzip",
+            "content-length": "156",
+            "content-type": "application\/json;charset=utf-8",
+            "date": "Tue, 13 Oct 2020 09:14:19 GMT",
+            "server": "tsa_m",
+            "set-cookie": [
+                "personalization_id=\"v1_\/BM8ieUCMaZsUnyVriqhfw==\"; Max-Age=63072000; Expires=Thu, 13 Oct 2022 09:14:19 GMT; Path=\/; Domain=.twitter.com; Secure; SameSite=None",
+                "guest_id=v1%3A160258045971137098; Max-Age=63072000; Expires=Thu, 13 Oct 2022 09:14:19 GMT; Path=\/; Domain=.twitter.com; Secure; SameSite=None"
+            ],
+            "strict-transport-security": "max-age=631138519",
+            "x-connection-hash": "ca934247a5bf1b51298c61f401787004",
+            "x-response-time": "107",
+            "x-tsa-request-body-time": "0"
+        },
+        "body": "{\"errors\":[{\"message\":\"The Twitter REST API v1 is no longer active. Please migrate to API v1.1. https:\/\/dev.twitter.com\/docs\/api\/1.1\/overview.\",\"code\":64}]}",
+        "curl_info": {
+            "url": "https:\/\/upload.twitter.com\/1.1\/statuses\/update.json",
+            "content_type": "application\/json;charset=utf-8",
+            "http_code": 410,
+            "header_size": 679,
+            "request_size": 556,
+            "filetime": -1,
+            "ssl_verify_result": 0,
+            "redirect_count": 0,
+            "total_time": 0.471144,
+            "namelookup_time": 0.04558,
+            "connect_time": 0.11156,
+            "pretransfer_time": 0.258894,
+            "size_upload": 63,
+            "size_download": 156,
+            "speed_download": 331,
+            "speed_upload": 133,
+            "download_content_length": 156,
+            "upload_content_length": 63,
+            "starttransfer_time": 0.258926,
+            "redirect_time": 0,
+            "redirect_url": "",
+            "primary_ip": "104.244.42.139",
+            "certinfo": [],
+            "primary_port": 443,
+            "local_ip": "192.168.1.109",
+            "local_port": 36060,
+            "http_version": 3,
+            "protocol": 2,
+            "ssl_verifyresult": 0,
+            "scheme": "HTTPS",
+            "appconnect_time_us": 258682,
+            "connect_time_us": 111560,
+            "namelookup_time_us": 45580,
+            "pretransfer_time_us": 258894,
+            "redirect_time_us": 0,
+            "starttransfer_time_us": 258926,
+            "total_time_us": 471144
+        }
+    }
+},{
+    "request": {
+        "method": "POST",
+        "url": "https:\/\/upload.twitter.com\/1.1\/statuses\/destroy\/1254206531073126405.json",
+        "headers": {
+            "Host": "upload.twitter.com",
+            "Accept": "application\/json",
+            "Authorization": "OAuth oauth_version=\"1.0\", oauth_nonce=\"2b67ebbeace76543f356ba8bbd59abde\", oauth_timestamp=\"1587861062\", oauth_consumer_key=\"awJfND4zFGapGOFKfdjg\", oauth_token=\"93915746-KjE3c27dCt8awONxuUAaJ00yishXXwcH5CdLBnO1x\", oauth_signature_method=\"HMAC-SHA1\", oauth_signature=\"yyZL7oj2R7Wqdxg9OjGIkcD0%2FYU%3D\"",
+            "Expect": ""
+        }
+    },
+    "response": {
+        "status": {
+            "http_version": "2",
+            "code": "410",
+            "message": ""
+        },
+        "headers": {
+            "cache-control": "no-cache, no-store, max-age=0",
+            "content-encoding": "gzip",
+            "content-length": "156",
+            "content-type": "application\/json;charset=utf-8",
+            "date": "Tue, 13 Oct 2020 09:22:49 GMT",
+            "server": "tsa_m",
+            "set-cookie": [
+                "personalization_id=\"v1_K1e1OvxNyG5TsCr8JRqfMA==\"; Max-Age=63072000; Expires=Thu, 13 Oct 2022 09:22:49 GMT; Path=\/; Domain=.twitter.com; Secure; SameSite=None",
+                "guest_id=v1%3A160258096976276302; Max-Age=63072000; Expires=Thu, 13 Oct 2022 09:22:49 GMT; Path=\/; Domain=.twitter.com; Secure; SameSite=None"
+            ],
+            "strict-transport-security": "max-age=631138519",
+            "x-connection-hash": "56a1b6ce0889b1e527fb18f57779ed64",
+            "x-response-time": "105"
+        },
+        "body": "{\"errors\":[{\"message\":\"The Twitter REST API v1 is no longer active. Please migrate to API v1.1. https:\/\/dev.twitter.com\/docs\/api\/1.1\/overview.\",\"code\":64}]}",
+        "curl_info": {
+            "url": "https:\/\/upload.twitter.com\/1.1\/statuses\/destroy\/1254206531073126405.json",
+            "content_type": "application\/json;charset=utf-8",
+            "http_code": 410,
+            "header_size": 651,
+            "request_size": 508,
+            "filetime": -1,
+            "ssl_verify_result": 0,
+            "redirect_count": 0,
+            "total_time": 0.420527,
+            "namelookup_time": 0.04458,
+            "connect_time": 0.109797,
+            "pretransfer_time": 0.249466,
+            "size_upload": 0,
+            "size_download": 156,
+            "speed_download": 371,
+            "speed_upload": 0,
+            "download_content_length": 156,
+            "upload_content_length": -1,
+            "starttransfer_time": 0.420331,
+            "redirect_time": 0,
+            "redirect_url": "",
+            "primary_ip": "104.244.42.11",
+            "certinfo": [],
+            "primary_port": 443,
+            "local_ip": "192.168.1.109",
+            "local_port": 33870,
+            "http_version": 3,
+            "protocol": 2,
+            "ssl_verifyresult": 0,
+            "scheme": "HTTPS",
+            "appconnect_time_us": 249222,
+            "connect_time_us": 109797,
+            "namelookup_time_us": 44580,
+            "pretransfer_time_us": 249466,
+            "redirect_time_us": 0,
+            "starttransfer_time_us": 420331,
+            "total_time_us": 420527
+        }
+    }
 }]

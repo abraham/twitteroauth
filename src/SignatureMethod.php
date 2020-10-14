@@ -30,7 +30,7 @@ abstract class SignatureMethod
      *
      * @param Request $request
      * @param Consumer $consumer
-     * @param Token $token
+     * @param Token|null $token
      *
      * @return string
      */

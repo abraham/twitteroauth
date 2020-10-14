@@ -42,18 +42,19 @@ class Request
      * pretty much a helper function to set up the request
      *
      * @param Consumer $consumer
-     * @param Token    $token
-     * @param string   $httpMethod
-     * @param string   $httpUrl
-     * @param array    $parameters
+     * @param string $httpMethod
+     * @param string $httpUrl
+     * @param Token|null $token
+     * @param array $parameters
+     * @param bool $json
      *
      * @return Request
      */
     public static function fromConsumerAndToken(
-        Consumer $consumer,
-        Token $token = null,
         string $httpMethod,
         string $httpUrl,
+        Consumer $consumer,
+        Token $token = null,
         array $parameters = [],
         $json = false
     ) {
@@ -248,8 +249,8 @@ class Request
 
     /**
      * @param SignatureMethod $signatureMethod
-     * @param Consumer        $consumer
-     * @param Token           $token
+     * @param Consumer $consumer
+     * @param Token|null $token
      */
     public function signRequest(
         SignatureMethod $signatureMethod,
@@ -266,8 +267,8 @@ class Request
 
     /**
      * @param SignatureMethod $signatureMethod
-     * @param Consumer        $consumer
-     * @param Token           $token
+     * @param Consumer $consumer
+     * @param Token|null $token
      *
      * @return string
      */
