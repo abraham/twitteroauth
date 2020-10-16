@@ -180,9 +180,9 @@ class TwitterOAuth extends Config
      */
     protected function oauthUrl(string $path = null)
     {
-        $apiHost = self::DEFAULT_API_HOST;
+        $host = self::DEFAULT_API_HOST;
         $path = ltrim($path, '\/ ');
-        return empty($path) ? "{$apiHost}" : "{$apiHost}/{$path}";
+        return empty($path) ? "{$host}" : "{$host}/{$path}";
     }
 
     /**
@@ -226,7 +226,7 @@ class TwitterOAuth extends Config
      */
     public function oauth(string $path, array $parameters = []): array
     {
-        $response = [];
+        $responseObj = [];
         $this->resetLastResponse();
         $this->response->setApiPath($path);
         $result = $this->oAuthRequest($this->oauthUrl($path), 'POST', $parameters);
@@ -235,19 +235,20 @@ class TwitterOAuth extends Config
             throw new TwitterOAuthException($result);
         }
 
-        parse_str($result, $response);
-        $this->response->setBody($response);
+        parse_str($result, $responseObj);
+        $this->response->setBody($responseObj);
 
-        return $response;
+        return $responseObj;
     }
 
     /**
      * Make /oauth2/* requests to the API.
      *
      * @param string $path
-     * @param array  $parameters
+     * @param array $parameters
      *
      * @return array|object
+     * @throws TwitterOAuthException
      */
     public function oauth2(string $path, array $parameters = [])
     {
@@ -270,18 +271,19 @@ class TwitterOAuth extends Config
             $authorization,
             $parameters
         );
-        $response = JsonDecoder::decode($result, $this->decodeJsonAsArray);
-        $this->response->setBody($response);
-        return $response;
+        $responseObj = JsonDecoder::decode($result, $this->decodeJsonAsArray);
+        $this->response->setBody($responseObj);
+        return $responseObj;
     }
 
     /**
      * Make GET requests to the API.
      *
      * @param string $path
-     * @param array  $parameters
+     * @param array $parameters
      *
      * @return array|object
+     * @throws TwitterOAuthException
      */
     public function get(string $path, array $parameters = [])
     {
@@ -292,10 +294,11 @@ class TwitterOAuth extends Config
      * Make POST requests to the API.
      *
      * @param string $path
-     * @param array  $parameters
-     * @param bool   $json
+     * @param array $parameters
+     * @param bool $json
      *
      * @return array|object
+     * @throws TwitterOAuthException
      */
     public function post(
         string $path,
@@ -309,9 +312,10 @@ class TwitterOAuth extends Config
      * Make DELETE requests to the API.
      *
      * @param string $path
-     * @param array  $parameters
+     * @param array $parameters
      *
      * @return array|object
+     * @throws TwitterOAuthException
      */
     public function delete(string $path, array $parameters = [])
     {
@@ -322,9 +326,10 @@ class TwitterOAuth extends Config
      * Make PUT requests to the API.
      *
      * @param string $path
-     * @param array  $parameters
+     * @param array $parameters
      *
      * @return array|object
+     * @throws TwitterOAuthException
      */
     public function put(string $path, array $parameters = [])
     {
@@ -356,10 +361,11 @@ class TwitterOAuth extends Config
      * @param string $method
      * @param string $host
      * @param string $path
-     * @param array  $parameters
-     * @param bool   $json
+     * @param array $parameters
+     * @param bool $json
      *
      * @return array|object
+     * @throws TwitterOAuthException
      */
     protected function http(
         string $method,
@@ -381,13 +387,13 @@ class TwitterOAuth extends Config
      *
      * Make requests and retry them (if enabled) in case of Twitter's problems.
      *
-     * @param string $method
      * @param string $url
      * @param string $method
-     * @param array  $parameters
-     * @param bool   $json
+     * @param array $parameters
+     * @param bool $json
      *
      * @return array|object
+     * @throws TwitterOAuthException
      */
     protected function makeRequests(
         string $url,
@@ -398,13 +404,13 @@ class TwitterOAuth extends Config
         do {
             $this->sleepIfNeeded();
             $result = $this->oAuthRequest($url, $method, $parameters, $json);
-            $response = JsonDecoder::decode($result, $this->decodeJsonAsArray);
-            $this->response->setBody($response);
+            $responseObj = JsonDecoder::decode($result, $this->decodeJsonAsArray);
+            $this->response->setBody($responseObj);
             $this->attempts++;
             // Retry up to our $maxRetries number if we get errors greater than 500 (over capacity etc)
         } while ($this->requestsAvailable());
 
-        return $response;
+        return $responseObj;
     }
 
     /**
@@ -536,8 +542,6 @@ class TwitterOAuth extends Config
         ];
 
         switch ($method) {
-            case 'GET':
-                break;
             case 'POST':
                 $options[CURLOPT_POST] = true;
                 if ($json) {
@@ -556,6 +560,9 @@ class TwitterOAuth extends Config
             case 'PUT':
                 $options[CURLOPT_CUSTOMREQUEST] = 'PUT';
                 break;
+            case 'GET':
+            default:
+                break;
         }
 
         if (
@@ -567,7 +574,7 @@ class TwitterOAuth extends Config
 
         $curlHandle = curl_init();
         curl_setopt_array($curlHandle, $options);
-        $response = curl_exec($curlHandle);
+        $responseData = curl_exec($curlHandle);
 
         // Throw exceptions on cURL errors.
         if (curl_errno($curlHandle) > 0) {
@@ -580,7 +587,7 @@ class TwitterOAuth extends Config
         $this->response->setHttpCode(
             curl_getinfo($curlHandle, CURLINFO_HTTP_CODE)
         );
-        $parts = explode("\r\n\r\n", $response);
+        $parts = explode("\r\n\r\n", $responseData);
         $responseBody = array_pop($parts);
         $responseHeader = array_pop($parts);
         $this->response->setHeaders($this->parseHeaders($responseHeader));
