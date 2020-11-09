@@ -33,7 +33,8 @@
   ],
   "require": {
     "php": "^7.2 || ^7.3 || ^7.4",
-    "ext-curl": "*"
+    "ext-curl": "*",
+    "composer/ca-bundle": "^1.2"
   },
   "require-dev": {
     "phpunit/phpunit": "^8",
