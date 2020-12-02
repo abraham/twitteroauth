@@ -31,7 +31,7 @@ class Request
     ) {
         $parameters = array_merge(
             Util::parseParameters(parse_url($httpUrl, PHP_URL_QUERY)),
-            $parameters
+            $parameters,
         );
         $this->parameters = $parameters;
         $this->httpMethod = $httpMethod;
@@ -224,7 +224,7 @@ class Request
             }
             if (is_array($v)) {
                 throw new TwitterOAuthException(
-                    'Arrays not supported in headers'
+                    'Arrays not supported in headers',
                 );
             }
             $out .= $first ? ' ' : ', ';
@@ -258,7 +258,7 @@ class Request
     ) {
         $this->setParameter(
             'oauth_signature_method',
-            $signatureMethod->getName()
+            $signatureMethod->getName(),
         );
         $signature = $this->buildSignature($signatureMethod, $consumer, $token);
         $this->setParameter('oauth_signature', $signature);

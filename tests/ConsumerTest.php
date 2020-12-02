@@ -17,7 +17,7 @@ class ConsumerTest extends TestCase
 
         $this->assertEquals(
             "Consumer[key=$key,secret=$secret]",
-            $consumer->__toString()
+            $consumer->__toString(),
         );
     }
 }

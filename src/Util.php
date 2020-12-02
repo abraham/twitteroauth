@@ -22,7 +22,7 @@ class Util
         if (is_array($input)) {
             $output = array_map(
                 [__NAMESPACE__ . '\Util', 'urlencodeRfc3986'],
-                $input
+                $input,
             );
         } elseif (is_scalar($input)) {
             $output = rawurlencode((string) $input);
