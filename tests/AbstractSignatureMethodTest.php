@@ -30,7 +30,7 @@ abstract class AbstractSignatureMethodTest extends TestCase
     {
         $this->assertEquals(
             $expected,
-            $this->getClass()->buildSignature($request, $consumer, $token)
+            $this->getClass()->buildSignature($request, $consumer, $token),
         );
     }
 
