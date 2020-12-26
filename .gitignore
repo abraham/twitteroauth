@@ -3,3 +3,4 @@ vendor
 env
 *.cache
 node_modules
+.idea/*

@@ -20,7 +20,7 @@ use Composer\CaBundle\CaBundle;
  */
 class TwitterOAuth extends Config
 {
-    private const API_VERSION = '1.1';
+
     private const API_HOST = 'https://api.twitter.com';
     private const UPLOAD_HOST = 'https://upload.twitter.com';
 
@@ -36,6 +36,10 @@ class TwitterOAuth extends Config
     private $signatureMethod;
     /** @var int Number of attempts we made for the request */
     private $attempts = 0;
+    /** @var int The API version */
+    private $apiVersion = '1.1';
+    /** @var string The URL pattern */
+    private $urlPattern = '%s/%s/%s.json';
 
     /**
      * Constructor
@@ -81,6 +85,24 @@ class TwitterOAuth extends Config
     {
         $this->bearer = $oauthTokenSecret;
         $this->token = null;
+    }
+
+    /**
+     * swap api configuration to API v2
+     */
+    public function swapToApiV2(): void
+    {
+        $this->apiVersion = 2;
+        $this->urlPattern = '%s/%s/%s';
+    }
+
+    /**
+     * swap api configuration to API v1.1
+     */
+    public function swapToApiV1(): void
+    {
+        $this->apiVersion = 1.1;
+        $this->urlPattern = '%s/%s/%s.json';
     }
 
     /**
@@ -459,7 +481,7 @@ class TwitterOAuth extends Config
     ) {
         $this->resetLastResponse();
         $this->resetAttemptsNumber();
-        $url = sprintf('%s/%s/%s.json', $host, self::API_VERSION, $path);
+        $url = sprintf($this->urlPattern, $host, $this->apiVersion, $path);
         $this->response->setApiPath($path);
         if (!$json) {
             $parameters = $this->cleanUpParameters($parameters);
@@ -553,6 +575,7 @@ class TwitterOAuth extends Config
         } else {
             $authorization = 'Authorization: Bearer ' . $this->bearer;
         }
+
         return $this->request(
             $request->getNormalizedHttpUrl(),
             $method,
