@@ -441,7 +441,7 @@ class TwitterOAuth extends Config
         return $parameters;
     }
 
-    public function getUrl(string $host, string $path)
+    protected function getUrl(string $host, string $path)
     {
         return sprintf('%s/%s/%s.json', $host, self::API_VERSION, $path);
     }
