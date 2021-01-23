@@ -441,6 +441,11 @@ class TwitterOAuth extends Config
         return $parameters;
     }
 
+    public function getUrl(string $host, string $path)
+    {
+        return sprintf('%s/%s/%s.json', $host, self::API_VERSION, $path);
+    }
+
     /**
      * @param string $method
      * @param string $host
@@ -459,7 +464,7 @@ class TwitterOAuth extends Config
     ) {
         $this->resetLastResponse();
         $this->resetAttemptsNumber();
-        $url = sprintf('%s/%s/%s.json', $host, self::API_VERSION, $path);
+        $url = $this->getUrl($host, $path);
         $this->response->setApiPath($path);
         if (!$json) {
             $parameters = $this->cleanUpParameters($parameters);
