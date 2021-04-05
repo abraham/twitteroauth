@@ -464,7 +464,24 @@ class TwitterOAuth extends Config
         if (!$json) {
             $parameters = $this->cleanUpParameters($parameters);
         }
-        return $this->makeRequests($url, $method, $parameters, $json);
+        $result = $this->makeRequests($url, $method, $parameters, $json);
+
+        $response = JsonDecoder::decode($result, $this->decodeJsonAsArray);
+        $this->response->setBody($response);
+
+        return $response;
+    }
+
+    /**
+     * Get media file attached to direct message.
+     *
+     * @param string $url
+     * @param array $parameters
+     * @return string
+     */
+    function file(string $url, array $parameters)
+    {
+        return $this->makeRequests($url, 'GET', $parameters, false);
     }
 
     /**
@@ -477,7 +494,7 @@ class TwitterOAuth extends Config
      * @param array  $parameters
      * @param bool   $json
      *
-     * @return array|object
+     * @return string
      */
     private function makeRequests(
         string $url,
@@ -488,13 +505,11 @@ class TwitterOAuth extends Config
         do {
             $this->sleepIfNeeded();
             $result = $this->oAuthRequest($url, $method, $parameters, $json);
-            $response = JsonDecoder::decode($result, $this->decodeJsonAsArray);
-            $this->response->setBody($response);
             $this->attempts++;
             // Retry up to our $maxRetries number if we get errors greater than 500 (over capacity etc)
         } while ($this->requestsAvailable());
 
-        return $response;
+        return $result;
     }
 
     /**
