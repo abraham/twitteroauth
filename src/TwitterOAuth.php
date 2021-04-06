@@ -318,6 +318,18 @@ class TwitterOAuth extends Config
     }
 
     /**
+     * Get media file attached to direct message.
+     *
+     * @param string $url
+     * @param array $parameters
+     * @return string
+     */
+    public function getFile(string $url, array $parameters = [])
+    {
+        return $this->makeRequests($url, 'GET', $parameters, false);
+    }
+
+    /**
      * Private method to upload media (not chunked) to upload.twitter.com.
      *
      * @param string $path
@@ -470,18 +482,6 @@ class TwitterOAuth extends Config
         $this->response->setBody($response);
 
         return $response;
-    }
-
-    /**
-     * Get media file attached to direct message.
-     *
-     * @param string $url
-     * @param array $parameters
-     * @return string
-     */
-    function getFile(string $url, array $parameters = [])
-    {
-        return $this->makeRequests($url, 'GET', $parameters, false);
     }
 
     /**
