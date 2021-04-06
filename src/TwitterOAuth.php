@@ -479,7 +479,7 @@ class TwitterOAuth extends Config
      * @param array $parameters
      * @return string
      */
-    function getFile(string $url, array $parameters)
+    function getFile(string $url, array $parameters = [])
     {
         return $this->makeRequests($url, 'GET', $parameters, false);
     }
