@@ -321,7 +321,8 @@ class TwitterOAuth extends Config
      * Get media file attached to direct message.
      *
      * @param string $url
-     * @param array $parameters
+     * @param array  $parameters
+     *
      * @return string
      */
     public function getFile(string $url, array $parameters = [])
