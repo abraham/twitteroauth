@@ -8,4 +8,4 @@ See documentation at https://twitteroauth.com.
 
 PHP versions [listed](https://secure.php.net/supported-versions.php) as "active support" or "security fixes only" are supported.
 
-<img src="https://raw.githubusercontent.com/abraham/twitteroauth-com/master/images/twitter-logo-blue.png" itemprop="image" alt="Twitter bird" width="200px">
+<img src="https://github.com/abraham/twitteroauth-com/blob/main/src/images/twitter-logo-blue.png?raw=true" itemprop="image" alt="Twitter bird" width="200px">
