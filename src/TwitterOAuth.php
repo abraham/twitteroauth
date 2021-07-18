@@ -20,7 +20,6 @@ use Composer\CaBundle\CaBundle;
  */
 class TwitterOAuth extends Config
 {
-    private const API_VERSION = '1.1';
     private const API_HOST = 'https://api.twitter.com';
     private const UPLOAD_HOST = 'https://upload.twitter.com';
 
@@ -442,6 +441,19 @@ class TwitterOAuth extends Config
     }
 
     /**
+     * Get URL extension for current API Version.
+     *
+     * @return string
+     */
+    private function extension()
+    {
+        return [
+            '1.1' => '.json',
+            '2' => '',
+        ][$this->apiVersion];
+    }
+
+    /**
      * @param string $method
      * @param string $host
      * @param string $path
@@ -459,7 +471,13 @@ class TwitterOAuth extends Config
     ) {
         $this->resetLastResponse();
         $this->resetAttemptsNumber();
-        $url = sprintf('%s/%s/%s.json', $host, self::API_VERSION, $path);
+        $url = sprintf(
+            '%s/%s/%s%s',
+            $host,
+            $this->apiVersion,
+            $path,
+            $this->extension(),
+        );
         $this->response->setApiPath($path);
         if (!$json) {
             $parameters = $this->cleanUpParameters($parameters);
