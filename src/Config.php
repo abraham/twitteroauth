@@ -11,6 +11,9 @@ namespace Abraham\TwitterOAuth;
  */
 class Config
 {
+    // Update extension function when updating this list.
+    private const SUPPORTED_VERSIONS = ['1.1', '2'];
+
     /** @var int How long to wait for a response from the API */
     protected $timeout = 5;
     /** @var int how long to wait while connecting to the API */
@@ -19,6 +22,8 @@ class Config
     protected $maxRetries = 0;
     /** @var int Delay in seconds before we retry the request */
     protected $retriesDelay = 1;
+    /** @var string Version of the Twitter API requests should target */
+    protected $apiVersion = '1.1';
 
     /**
      * Decode JSON Response as associative Array
@@ -38,6 +43,20 @@ class Config
 
     /** @var integer Size for Chunked Uploads */
     protected $chunkSize = 250000; // 0.25 MegaByte
+
+    /**
+     * Set the the Twitter API version.
+     *
+     * @param string $apiVersion
+     */
+    public function setApiVersion(string $apiVersion): void
+    {
+        if (in_array($apiVersion, self::SUPPORTED_VERSIONS, true)) {
+            $this->apiVersion = $apiVersion;
+        } else {
+            throw new TwitterOAuthException('Unsupported API version');
+        }
+    }
 
     /**
      * Set the connection and response timeouts.
