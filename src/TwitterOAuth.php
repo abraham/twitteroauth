@@ -471,18 +471,37 @@ class TwitterOAuth extends Config
     ) {
         $this->resetLastResponse();
         $this->resetAttemptsNumber();
-        $url = sprintf(
+        $this->response->setApiPath($path);
+        if (!$json) {
+            $parameters = $this->cleanUpParameters($parameters);
+        }
+        return $this->makeRequests(
+            $this->apiUrl($host, $path),
+            $method,
+            $parameters,
+            $json,
+        );
+    }
+
+    /**
+     * Generate API URL.
+     *
+     * Overriding this function is not supported and may cause unintended issues.
+     *
+     * @param string $host
+     * @param string $path
+     *
+     * @return string
+     */
+    protected function apiUrl(string $host, string $path)
+    {
+        return sprintf(
             '%s/%s/%s%s',
             $host,
             $this->apiVersion,
             $path,
             $this->extension(),
         );
-        $this->response->setApiPath($path);
-        if (!$json) {
-            $parameters = $this->cleanUpParameters($parameters);
-        }
-        return $this->makeRequests($url, $method, $parameters, $json);
     }
 
     /**
