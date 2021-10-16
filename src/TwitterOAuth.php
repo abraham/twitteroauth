@@ -671,21 +671,14 @@ class TwitterOAuth extends Config
                 break;
             case 'POST':
                 $options[CURLOPT_POST] = true;
-                if ($json) {
-                    $options[CURLOPT_HTTPHEADER][] =
-                        'Content-type: application/json';
-                    $options[CURLOPT_POSTFIELDS] = json_encode($postfields);
-                } else {
-                    $options[CURLOPT_POSTFIELDS] = Util::buildHttpQuery(
-                        $postfields,
-                    );
-                }
+                $options = $this->setJsonOptions($options, $postfields, $json);
                 break;
             case 'DELETE':
                 $options[CURLOPT_CUSTOMREQUEST] = 'DELETE';
                 break;
             case 'PUT':
                 $options[CURLOPT_CUSTOMREQUEST] = 'PUT';
+                $options = $this->setJsonOptions($options, $postfields, $json);
                 break;
         }
 
@@ -764,5 +757,32 @@ class TwitterOAuth extends Config
     private function curlCaOpt(string $path): int
     {
         return is_dir($path) ? CURLOPT_CAPATH : CURLOPT_CAINFO;
+    }
+
+    /**
+     * Set options for JSON Requests
+     *
+     * @param array $options
+     * @param array $postfields
+     * @param bool $json
+     *
+     * @return array
+     */
+    private function setJsonOptions(
+        array $options,
+        array $postfields,
+        bool  $json
+    ): array {
+        if ($json) {
+            $options[CURLOPT_HTTPHEADER][] =
+                'Content-type: application/json';
+            $options[CURLOPT_POSTFIELDS] = json_encode($postfields);
+        } else {
+            $options[CURLOPT_POSTFIELDS] = Util::buildHttpQuery(
+                $postfields,
+            );
+        }
+
+        return $options;
     }
 }
