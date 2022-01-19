@@ -671,14 +671,22 @@ class TwitterOAuth extends Config
                 break;
             case 'POST':
                 $options[CURLOPT_POST] = true;
-                $options = $this->setJsonOptions($options, $postfields, $json);
+                $options = $this->setPostfieldsOptions(
+                    $options,
+                    $postfields,
+                    $json,
+                );
                 break;
             case 'DELETE':
                 $options[CURLOPT_CUSTOMREQUEST] = 'DELETE';
                 break;
             case 'PUT':
                 $options[CURLOPT_CUSTOMREQUEST] = 'PUT';
-                $options = $this->setJsonOptions($options, $postfields, $json);
+                $options = $this->setPostfieldsOptions(
+                    $options,
+                    $postfields,
+                    $json,
+                );
                 break;
         }
 
@@ -768,7 +776,7 @@ class TwitterOAuth extends Config
      *
      * @return array
      */
-    private function setJsonOptions(
+    private function setPostfieldsOptions(
         array $options,
         array $postfields,
         bool $json
