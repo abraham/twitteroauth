@@ -275,7 +275,7 @@ class TwitterOAuth extends Config
         array $parameters = [],
         bool $json = false
     ) {
-        return $this->http('PUT', self::API_HOST, $path, $parameters, false);
+        return $this->http('PUT', self::API_HOST, $path, $parameters, $json);
     }
 
     /**
@@ -771,16 +771,13 @@ class TwitterOAuth extends Config
     private function setJsonOptions(
         array $options,
         array $postfields,
-        bool  $json
+        bool $json
     ): array {
         if ($json) {
-            $options[CURLOPT_HTTPHEADER][] =
-                'Content-type: application/json';
+            $options[CURLOPT_HTTPHEADER][] = 'Content-type: application/json';
             $options[CURLOPT_POSTFIELDS] = json_encode($postfields);
         } else {
-            $options[CURLOPT_POSTFIELDS] = Util::buildHttpQuery(
-                $postfields,
-            );
+            $options[CURLOPT_POSTFIELDS] = Util::buildHttpQuery($postfields);
         }
 
         return $options;
