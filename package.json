@@ -16,9 +16,11 @@
     "fix": "concurrently npm:fix:*",
     "fix:phpcbf": "./vendor/bin/phpcbf src tests --standard=PSR12",
     "fix:prettier": "prettier . --write",
+    "fix:rector": "vendor/bin/rector process",
     "lint": "concurrently npm:lint:*",
     "lint:phpcs": "./vendor/bin/phpcs src tests --standard=PSR12",
     "lint:prettier": "prettier . --check",
+    "lint:rector": "vendor/bin/rector process --dry-run",
     "postinstall": "composer install --no-interaction",
     "test": "./vendor/bin/phpunit"
   },

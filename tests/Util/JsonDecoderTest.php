@@ -23,7 +23,7 @@ class JsonDecoderTest extends TestCase
             [
                 '[{"id": 556179961825226750}]',
                 true,
-                [['id' => 556179961825226750]],
+                [['id' => 556_179_961_825_226_750]],
             ],
             ['[]', false, []],
             ['[1,2,3]', false, [1, 2, 3]],
@@ -32,7 +32,7 @@ class JsonDecoderTest extends TestCase
                 false,
                 [
                     $this->getClass(function ($object) {
-                        $object->id = 556179961825226750;
+                        $object->id = 556_179_961_825_226_750;
                         return $object;
                     }),
                 ],

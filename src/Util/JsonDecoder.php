@@ -24,6 +24,6 @@ class JsonDecoder
             return json_decode($string, $asArray, 512, JSON_BIGINT_AS_STRING);
         }
 
-        return json_decode($string, $asArray);
+        return json_decode($string, $asArray, 512, JSON_THROW_ON_ERROR);
     }
 }

@@ -94,9 +94,7 @@ class Request
      */
     public function getParameter(string $name): ?string
     {
-        return isset($this->parameters[$name])
-            ? $this->parameters[$name]
-            : null;
+        return $this->parameters[$name] ?? null;
     }
 
     /**
@@ -284,6 +282,6 @@ class Request
      */
     public static function generateNonce(): string
     {
-        return md5(microtime() . mt_rand());
+        return md5(microtime() . random_int(0, mt_getrandmax()));
     }
 }
