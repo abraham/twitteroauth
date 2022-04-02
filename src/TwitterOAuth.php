@@ -10,6 +10,10 @@ declare(strict_types=1);
 
 namespace Abraham\TwitterOAuth;
 
+use Abraham\TwitterOAuth\Consumer;
+use Abraham\TwitterOAuth\HmacSha1;
+use Abraham\TwitterOAuth\Response;
+use Abraham\TwitterOAuth\Token;
 use Abraham\TwitterOAuth\Util\JsonDecoder;
 use Composer\CaBundle\CaBundle;
 
@@ -24,17 +28,17 @@ class TwitterOAuth extends Config
     private const UPLOAD_HOST = 'https://upload.twitter.com';
 
     /** @var Response details about the result of the last request */
-    private $response;
+    private ?Response $response = null;
     /** @var string|null Application bearer token */
-    private $bearer;
+    private ?string $bearer = null;
     /** @var Consumer Twitter application details */
-    private $consumer;
+    private Consumer $consumer;
     /** @var Token|null User access token details */
-    private $token;
+    private ?Token $token = null;
     /** @var HmacSha1 OAuth 1 signature type used by Twitter */
-    private $signatureMethod;
+    private HmacSha1 $signatureMethod;
     /** @var int Number of attempts we made for the request */
-    private $attempts = 0;
+    private int $attempts = 0;
 
     /**
      * Constructor
@@ -783,7 +787,10 @@ class TwitterOAuth extends Config
     ): array {
         if ($json) {
             $options[CURLOPT_HTTPHEADER][] = 'Content-type: application/json';
-            $options[CURLOPT_POSTFIELDS] = json_encode($postfields);
+            $options[CURLOPT_POSTFIELDS] = json_encode(
+                $postfields,
+                JSON_THROW_ON_ERROR,
+            );
         } else {
             $options[CURLOPT_POSTFIELDS] = Util::buildHttpQuery($postfields);
         }

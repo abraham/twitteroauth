@@ -12,15 +12,15 @@ namespace Abraham\TwitterOAuth;
 class Response
 {
     /** @var string|null API path from the most recent request */
-    private $apiPath;
+    private ?string $apiPath = null;
     /** @var int HTTP status code from the most recent request */
-    private $httpCode = 0;
+    private int $httpCode = 0;
     /** @var array HTTP headers from the most recent request */
-    private $headers = [];
+    private array $headers = [];
     /** @var array|object Response body from the most recent request */
     private $body = [];
     /** @var array HTTP headers from the most recent request that start with X */
-    private $xHeaders = [];
+    private array $xHeaders = [];
 
     /**
      * @param string $apiPath

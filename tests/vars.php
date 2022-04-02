@@ -24,7 +24,7 @@ define('ACCESS_TOKEN', '93915746-KjE3c27dCt8awONxuUAaJ00yishXXwcH5CdLBnO1x');
 define('ACCESS_TOKEN_SECRET', 'vurSbgJw6nHvv7xBfqKnBLWEQekOi59KFkXDLiY3Vqn3u');
 
 // Timestamp the VCR cassettes were last updated
-define('MOCK_TIME', 1587861062);
+define('MOCK_TIME', 1_587_861_062);
 
 // https://free-proxy-list.net/
 define('PROXY', '12.218.209.130');
