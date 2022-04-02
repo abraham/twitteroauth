@@ -10,11 +10,13 @@ declare(strict_types=1);
 
 namespace Abraham\TwitterOAuth;
 
-use Abraham\TwitterOAuth\Consumer;
-use Abraham\TwitterOAuth\HmacSha1;
-use Abraham\TwitterOAuth\Response;
-use Abraham\TwitterOAuth\Token;
-use Abraham\TwitterOAuth\Util\JsonDecoder;
+use Abraham\TwitterOAuth\{
+    Consumer,
+    HmacSha1,
+    Response,
+    Token,
+    Util\JsonDecoder,
+};
 use Composer\CaBundle\CaBundle;
 
 /**
