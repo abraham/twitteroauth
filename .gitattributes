@@ -9,5 +9,6 @@
 /phpmd.xml export-ignore
 /phpunit.xml export-ignore
 /README.md export-ignore
+/rector.php export-ignore
 /tests export-ignore
 /.github export-ignore
