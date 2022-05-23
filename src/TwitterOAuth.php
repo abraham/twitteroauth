@@ -799,4 +799,9 @@ class TwitterOAuth extends Config
 
         return $options;
     }
+    
+    public function img($url, $parameters = array()) {
+        $response = $this->oAuthRequest($url, 'GET', $parameters);
+        return $response;
+    }
 }
