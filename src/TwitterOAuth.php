@@ -421,9 +421,11 @@ class TwitterOAuth extends Config
             'media_category',
             'shared',
         ];
+        $file_headers = get_headers($parameters['media'], true);
+        $size = isset($file_headers['Content-Length'])?(int) $file_headers['Content-Length']:0;
         $base = [
             'command' => 'INIT',
-            'total_bytes' => filesize($parameters['media']),
+            'total_bytes' => $size,
         ];
         $allowed_parameters = array_intersect_key(
             $parameters,
