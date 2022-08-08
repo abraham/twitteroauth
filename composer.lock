@@ -1661,16 +1661,16 @@
         },
         {
             "name": "rector/rector",
-            "version": "0.13.9",
+            "version": "0.13.10",
             "source": {
                 "type": "git",
                 "url": "https://github.com/rectorphp/rector.git",
-                "reference": "d6319ec783876579b608840cdfe1d8b566c72f74"
+                "reference": "d1e069db8ad3b4aea2b968248370c21415e4c180"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/rectorphp/rector/zipball/d6319ec783876579b608840cdfe1d8b566c72f74",
-                "reference": "d6319ec783876579b608840cdfe1d8b566c72f74",
+                "url": "https://api.github.com/repos/rectorphp/rector/zipball/d1e069db8ad3b4aea2b968248370c21415e4c180",
+                "reference": "d1e069db8ad3b4aea2b968248370c21415e4c180",
                 "shasum": ""
             },
             "require": {
@@ -1709,7 +1709,7 @@
             "description": "Instant Upgrade and Automated Refactoring of any PHP code",
             "support": {
                 "issues": "https://github.com/rectorphp/rector/issues",
-                "source": "https://github.com/rectorphp/rector/tree/0.13.9"
+                "source": "https://github.com/rectorphp/rector/tree/0.13.10"
             },
             "funding": [
                 {
@@ -1717,7 +1717,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2022-07-23T10:55:44+00:00"
+            "time": "2022-08-03T12:48:10+00:00"
         },
         {
             "name": "sebastian/cli-parser",
