@@ -1,6 +1,6 @@
 {
   "singleQuote": true,
-  "phpVersion": "7.4",
+  "phpVersion": "8.0",
   "trailingCommaPHP": true,
   "braceStyle": "psr-2"
 }

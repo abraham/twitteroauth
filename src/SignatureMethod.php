@@ -37,7 +37,7 @@ abstract class SignatureMethod
     abstract public function buildSignature(
         Request $request,
         Consumer $consumer,
-        Token $token = null
+        Token $token = null,
     );
 
     /**
@@ -54,7 +54,7 @@ abstract class SignatureMethod
         Request $request,
         Consumer $consumer,
         Token $token,
-        string $signature
+        string $signature,
     ): bool {
         $built = $this->buildSignature($request, $consumer, $token);
 
