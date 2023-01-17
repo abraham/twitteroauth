@@ -43,7 +43,7 @@ abstract class AbstractSignatureMethodTest extends TestCase
     protected function getConsumer(
         $key = null,
         $secret = null,
-        $callbackUrl = null
+        $callbackUrl = null,
     ) {
         return $this->getMockBuilder(\Abraham\TwitterOAuth\Consumer::class)
             ->setConstructorArgs([$key, $secret, $callbackUrl])
