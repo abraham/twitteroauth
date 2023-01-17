@@ -17,8 +17,8 @@ class Response
     private int $httpCode = 0;
     /** @var array HTTP headers from the most recent request */
     private array $headers = [];
-    /** @var array|object Response body from the most recent request */
-    private $body = [];
+    /** @var array|object|null Response body from the most recent request */
+    private array|object|null $body = [];
     /** @var array HTTP headers from the most recent request that start with X */
     private array $xHeaders = [];
 
