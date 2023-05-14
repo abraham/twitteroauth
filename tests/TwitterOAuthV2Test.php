@@ -26,7 +26,6 @@ class TwitterOAuthV2Test extends TestCase
             ACCESS_TOKEN_SECRET,
         );
         $this->userId = explode('-', ACCESS_TOKEN)[0];
-        $this->twitter->setApiVersion('2');
     }
 
     /**
