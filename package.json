@@ -36,7 +36,7 @@
   "dependencies": {},
   "devDependencies": {
     "@prettier/plugin-php": "0.19.5",
-    "concurrently": "^8.1.0",
+    "concurrently": "^8.2.0",
     "prettier": "2.8.8",
     "prettier-plugin-package": "1.3.0"
   },
