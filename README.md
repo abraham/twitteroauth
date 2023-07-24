@@ -2,6 +2,9 @@
 
 ---
 
+> **Note**
+> TwitterOAuth is in maintenance mode, no new feature development is planned.
+
 <p itemprop="description">The most popular PHP library for Twitter's OAuth REST API.</p>
 
 See documentation at https://twitteroauth.com.
