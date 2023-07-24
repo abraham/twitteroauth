@@ -95,7 +95,7 @@ class TwitterOAuthMediaTest extends TestCase
     public function testPostStatusesUpdateWithMediaChunkedException()
     {
         $this->expectException(
-            \Abraham\TwitterOAuth\TwitterOAuthException::class
+            \Abraham\TwitterOAuth\TwitterOAuthException::class,
         );
         $this->expectErrorMessage('Missing "media_id_string"');
         // Video source http://www.sample-videos.com/
