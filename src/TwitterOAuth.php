@@ -364,6 +364,7 @@ class TwitterOAuth extends Config
      */
     private function uploadMediaChunked(string $path, array $parameters)
     {
+        /** @var object $init */
         $init = $this->http(
             'POST',
             self::UPLOAD_HOST,
@@ -371,6 +372,9 @@ class TwitterOAuth extends Config
             $this->mediaInitParameters($parameters),
             false,
         );
+        if (!property_exists($init, 'media_id_string')) {
+            throw new TwitterOAuthException('Missing "media_id_string"');
+        }
         // Append
         $segmentIndex = 0;
         $media = fopen($parameters['media'], 'rb');

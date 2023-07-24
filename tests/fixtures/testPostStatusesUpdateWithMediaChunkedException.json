@@ -1,0 +1,49 @@
+[{
+    "request": {
+        "method": "POST",
+        "url": "https:\/\/upload.twitter.com\/1.1\/media\/upload.json",
+        "headers": {
+            "Host": "upload.twitter.com",
+            "Accept": "application\/json",
+            "Authorization": "OAuth oauth_version=\"1.0\", oauth_nonce=\"2b67ebbeace76543f356ba8bbd59abde\", oauth_timestamp=\"1587861062\", oauth_consumer_key=\"awJfND4zFGapGOFKfdjg\", oauth_token=\"93915746-KjE3c27dCt8awONxuUAaJ00yishXXwcH5CdLBnO1x\", oauth_signature_method=\"HMAC-SHA1\", oauth_signature=\"cOKZmxZ5f3bxiwWU%2B1cJ9hWpUL4%3D\"",
+            "Expect": null
+        },
+        "body": "command=INIT&media_type=video%2Fmp4&total_bytes=383631"
+    },
+    "response": {
+        "status": {
+            "http_version": "2",
+            "code": "400",
+            "message": ""
+        },
+        "headers": {
+            "cache-control": "no-cache, no-store, must-revalidate, pre-check=0, post-check=0",
+            "content-disposition": "attachment; filename=json.json",
+            "content-encoding": "gzip",
+            "content-length": "101",
+            "content-type": "application\/json;charset=utf-8",
+            "date": "Sun, 26 Apr 2020 00:31:54 GMT",
+            "expires": "Tue, 31 Mar 1981 05:00:00 GMT",
+            "last-modified": "Sun, 26 Apr 2020 00:31:54 GMT",
+            "pragma": "no-cache",
+            "server": "tsa_b",
+            "set-cookie": "personalization_id=\"v1_0CYjFmw6Rjdl\/xKmqvzf4g==\"; Max-Age=63072000; Expires=Tue, 26 Apr 2022 00:31:54 GMT; Path=\/; Domain=.twitter.com; Secure; SameSite=None, lang=en; Path=\/, guest_id=v1%3A158786111466374311; Max-Age=63072000; Expires=Tue, 26 Apr 2022 00:31:54 GMT; Path=\/; Domain=.twitter.com; Secure; SameSite=None",
+            "status": "202 Accepted",
+            "strict-transport-security": "max-age=631138519",
+            "vary": "Origin",
+            "x-access-level": "read-write-directmessages",
+            "x-connection-hash": "448b96791c0d13223e24f9c1edc4a7fa",
+            "x-frame-options": "SAMEORIGIN",
+            "x-mediaid": "1254206535166763008",
+            "x-rate-limit-limit": "200",
+            "x-rate-limit-remaining": "198",
+            "x-rate-limit-reset": "1587864355",
+            "x-response-time": "28",
+            "x-transaction": "009da55c002c6fca",
+            "x-tsa-request-body-time": "1",
+            "x-twitter-response-tags": "BouncerCompliant",
+            "x-xss-protection": "1; mode=block"
+        },
+        "body": "{\"errors\":[{\"code\":324,\"message\":\"Failed to process media.\"}]}"
+    }
+}]
