@@ -12,6 +12,7 @@ GitHub has [outlined instructions](https://help.github.com/articles/fork-a-repo/
 
 - Fork the repo
 - Make the changes
+- Add tests
 - Submit a pull request
 
 Once the [pull request](https://help.github.com/articles/about-pull-requests/) is reviewed, if the changes are approved they will be merged in to the project.

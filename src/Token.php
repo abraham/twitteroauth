@@ -37,7 +37,7 @@ class Token
         return sprintf(
             'oauth_token=%s&oauth_token_secret=%s',
             Util::urlencodeRfc3986($this->key),
-            Util::urlencodeRfc3986($this->secret)
+            Util::urlencodeRfc3986($this->secret),
         );
     }
 }

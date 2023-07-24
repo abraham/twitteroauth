@@ -15,7 +15,7 @@ function microtime()
     return 'FAKE_MICROTIME';
 }
 
-function mt_rand()
+function random_int($_min, $_max)
 {
-    return 123456789;
+    return 123_456_789;
 }

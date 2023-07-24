@@ -11,7 +11,7 @@ namespace Abraham\TwitterOAuth\Test;
 use PHPUnit\Framework\TestCase;
 use Abraham\TwitterOAuth\TwitterOAuth;
 
-class TwitterOAuthTest extends TestCase
+class TwitterOAuthFavoritesTest extends TestCase
 {
     /** @var TwitterOAuth */
     protected $twitter;
@@ -29,15 +29,23 @@ class TwitterOAuthTest extends TestCase
     }
 
     /**
-     * @vcr testGetAccountVerifyCredentials.json
+     * @vcr testPostFavoritesCreate.json
      */
-    public function testGetAccountVerifyCredentials()
+    public function testPostFavoritesCreate()
     {
-        $user = $this->twitter->get('account/verify_credentials', [
-            'include_entities' => false,
-            'include_email' => true,
+        $result = $this->twitter->post('favorites/create', [
+            'id' => '6242973112',
         ]);
         $this->assertEquals(200, $this->twitter->getLastHttpCode());
-        $this->assertObjectHasAttribute('email', $user);
+    }
+
+    /**
+     * @depends testPostFavoritesCreate
+     * @vcr testPostFavoritesDestroy.json
+     */
+    public function testPostFavoritesDestroy()
+    {
+        $this->twitter->post('favorites/destroy', ['id' => '6242973112']);
+        $this->assertEquals(200, $this->twitter->getLastHttpCode());
     }
 }

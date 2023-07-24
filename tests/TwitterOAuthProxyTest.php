@@ -11,7 +11,7 @@ namespace Abraham\TwitterOAuth\Test;
 use PHPUnit\Framework\TestCase;
 use Abraham\TwitterOAuth\TwitterOAuth;
 
-class TwitterOAuthTest extends TestCase
+class TwitterOAuthProxyTest extends TestCase
 {
     /** @var TwitterOAuth */
     protected $twitter;
@@ -29,15 +29,18 @@ class TwitterOAuthTest extends TestCase
     }
 
     /**
-     * @vcr testGetAccountVerifyCredentials.json
+     * @vcr testSetProxy.json
      */
-    public function testGetAccountVerifyCredentials()
+    public function testSetProxy()
     {
-        $user = $this->twitter->get('account/verify_credentials', [
-            'include_entities' => false,
-            'include_email' => true,
+        $this->twitter->setProxy([
+            'CURLOPT_PROXY' => PROXY,
+            'CURLOPT_PROXYUSERPWD' => PROXYUSERPWD,
+            'CURLOPT_PROXYPORT' => PROXYPORT,
         ]);
+        $this->twitter->setTimeouts(60, 60);
+        $result = $this->twitter->get('account/verify_credentials');
         $this->assertEquals(200, $this->twitter->getLastHttpCode());
-        $this->assertObjectHasAttribute('email', $user);
+        $this->assertObjectHasAttribute('id', $result);
     }
 }

@@ -27,11 +27,11 @@ class Request
     public function __construct(
         string $httpMethod,
         string $httpUrl,
-        ?array $parameters = []
+        ?array $parameters = [],
     ) {
         $parameters = array_merge(
             Util::parseParameters(parse_url($httpUrl, PHP_URL_QUERY)),
-            $parameters
+            $parameters,
         );
         $this->parameters = $parameters;
         $this->httpMethod = $httpMethod;
@@ -55,7 +55,7 @@ class Request
         string $httpMethod,
         string $httpUrl,
         array $parameters = [],
-        $json = false
+        $json = false,
     ) {
         $defaults = [
             'oauth_version' => Request::$version,
@@ -94,9 +94,7 @@ class Request
      */
     public function getParameter(string $name): ?string
     {
-        return isset($this->parameters[$name])
-            ? $this->parameters[$name]
-            : null;
+        return $this->parameters[$name] ?? null;
     }
 
     /**
@@ -224,7 +222,7 @@ class Request
             }
             if (is_array($v)) {
                 throw new TwitterOAuthException(
-                    'Arrays not supported in headers'
+                    'Arrays not supported in headers',
                 );
             }
             $out .= $first ? ' ' : ', ';
@@ -254,11 +252,11 @@ class Request
     public function signRequest(
         SignatureMethod $signatureMethod,
         Consumer $consumer,
-        Token $token = null
+        Token $token = null,
     ) {
         $this->setParameter(
             'oauth_signature_method',
-            $signatureMethod->getName()
+            $signatureMethod->getName(),
         );
         $signature = $this->buildSignature($signatureMethod, $consumer, $token);
         $this->setParameter('oauth_signature', $signature);
@@ -274,7 +272,7 @@ class Request
     public function buildSignature(
         SignatureMethod $signatureMethod,
         Consumer $consumer,
-        Token $token = null
+        Token $token = null,
     ): string {
         return $signatureMethod->buildSignature($this, $consumer, $token);
     }
@@ -284,6 +282,6 @@ class Request
      */
     public static function generateNonce(): string
     {
-        return md5(microtime() . mt_rand());
+        return md5(microtime() . random_int(PHP_INT_MIN, PHP_INT_MAX));
     }
 }
