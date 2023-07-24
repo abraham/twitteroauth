@@ -24,6 +24,7 @@ class TwitterOAuthOAuthTest extends TestCase
             ACCESS_TOKEN,
             ACCESS_TOKEN_SECRET,
         );
+        $this->twitter->setApiVersion('1.1');
         $this->userId = explode('-', ACCESS_TOKEN)[0];
     }
 
@@ -39,6 +40,7 @@ class TwitterOAuthOAuthTest extends TestCase
     public function testSetOauthToken()
     {
         $twitter = new TwitterOAuth(CONSUMER_KEY, CONSUMER_SECRET);
+        $twitter->setApiVersion('1.1');
         $twitter->setOauthToken(ACCESS_TOKEN, ACCESS_TOKEN_SECRET);
         $this->assertObjectHasAttribute('consumer', $twitter);
         $this->assertObjectHasAttribute('token', $twitter);
@@ -76,6 +78,7 @@ class TwitterOAuthOAuthTest extends TestCase
             null,
             $accessToken->access_token,
         );
+        $twitter->setApiVersion('1.1');
         $result = $twitter->get('statuses/user_timeline', [
             'screen_name' => 'twitterapi',
         ]);

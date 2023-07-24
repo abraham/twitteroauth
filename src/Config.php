@@ -23,7 +23,7 @@ class Config
     /** @var int Delay in seconds before we retry the request */
     protected $retriesDelay = 1;
     /** @var string Version of the Twitter API requests should target */
-    protected $apiVersion = '1.1';
+    protected $apiVersion = '2';
 
     /**
      * Decode JSON Response as associative Array
