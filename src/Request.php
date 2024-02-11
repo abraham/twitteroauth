@@ -14,7 +14,6 @@ class Request
     protected $parameters;
     protected $httpMethod;
     protected $httpUrl;
-    protected $json;
     public static $version = '1.0';
 
     /**
@@ -22,7 +21,7 @@ class Request
      *
      * @param string     $httpMethod
      * @param string     $httpUrl
-     * @param array|null $parameters
+     * @param ?array     $parameters
      */
     public function __construct(
         string $httpMethod,
@@ -55,7 +54,7 @@ class Request
         string $httpMethod,
         string $httpUrl,
         array $parameters = [],
-        $json = false,
+        array $options = [],
     ) {
         $defaults = [
             'oauth_version' => Request::$version,
@@ -69,7 +68,7 @@ class Request
 
         // The json payload is not included in the signature on json requests,
         // therefore it shouldn't be included in the parameters array.
-        if ($json) {
+        if ($options['jsonPayload'] ?? false) {
             $parameters = $defaults;
         } else {
             $parameters = array_merge($defaults, $parameters);
