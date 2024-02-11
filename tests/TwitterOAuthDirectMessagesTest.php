@@ -46,11 +46,9 @@ class TwitterOAuthDirectMessagesTest extends TestCase
                 ],
             ],
         ];
-        $result = $this->twitter->post(
-            'direct_messages/events/new',
-            $data,
-            true,
-        );
+        $result = $this->twitter->post('direct_messages/events/new', $data, [
+            'jsonPayload' => true,
+        ]);
         $this->assertEquals(200, $this->twitter->getLastHttpCode());
         return $result;
     }
