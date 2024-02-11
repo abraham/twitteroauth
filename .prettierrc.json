@@ -1,6 +1,15 @@
 {
+  "plugins": ["@prettier/plugin-php"],
   "singleQuote": true,
-  "phpVersion": "8.0",
-  "trailingCommaPHP": true,
-  "braceStyle": "psr-2"
+  "overrides": [
+    {
+      "files": "*.php",
+      "options": {
+        "parser": "php",
+        "phpVersion": "8.0",
+        "trailingCommaPHP": true,
+        "braceStyle": "psr-2"
+      }
+    }
+  ]
 }
