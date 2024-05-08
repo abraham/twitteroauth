@@ -3,12 +3,8 @@
 ---
 
 > **Important**
-> TwitterOAuth is in maintenance mode, no new feature development is planned.
+> This version of the library has been adapted from the original [TwitterOAuth](https://github.com/abraham/twitteroauth) to provide support for [Mixpost](https://mixpost.app).
 
 <p itemprop="description">The most popular PHP library for Twitter's OAuth REST API.</p>
 
 See documentation at https://twitteroauth.com.
-
-PHP versions [listed](https://secure.php.net/supported-versions.php) as "active support" or "security fixes only" are supported.
-
-<img src="https://github.com/abraham/twitteroauth-com/blob/main/src/images/twitter-logo-blue.png?raw=true" itemprop="image" alt="Twitter bird" width="200px">

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "7d30fe2bef5135a37507abed4376cbac",
+    "content-hash": "12196e45c4339ab073ac365fa4ae8052",
     "packages": [
         {
             "name": "composer/ca-bundle",
@@ -649,28 +649,29 @@
         },
         {
             "name": "php-vcr/php-vcr",
-            "version": "1.6.7",
+            "version": "1.7.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-vcr/php-vcr.git",
-                "reference": "7debb44f4efc16ce442f0bd99b8d72e0283122e4"
+                "reference": "2a6220d9d8368c1c5d22b5e77bd6b0f8acfd0705"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-vcr/php-vcr/zipball/7debb44f4efc16ce442f0bd99b8d72e0283122e4",
-                "reference": "7debb44f4efc16ce442f0bd99b8d72e0283122e4",
+                "url": "https://api.github.com/repos/php-vcr/php-vcr/zipball/2a6220d9d8368c1c5d22b5e77bd6b0f8acfd0705",
+                "reference": "2a6220d9d8368c1c5d22b5e77bd6b0f8acfd0705",
                 "shasum": ""
             },
             "require": {
                 "beberlei/assert": "^3.2.5",
                 "ext-curl": "*",
-                "php": "^8,<8.2|>=8.2.9,<8.3",
+                "php": "^8,<8.2|>=8.2.9,<8.4",
                 "symfony/event-dispatcher": "^4|^5|^6",
                 "symfony/event-dispatcher-contracts": "^1|^2|^3",
                 "symfony/yaml": "^3|^4|^5|^6"
             },
             "require-dev": {
                 "editorconfig-checker/editorconfig-checker": "^10.3",
+                "ext-soap": "*",
                 "friendsofphp/php-cs-fixer": "^3.0",
                 "guzzlehttp/guzzle": "^7",
                 "mikey179/vfsstream": "^1.6.10",
@@ -700,9 +701,9 @@
             "description": "Record your test suite's HTTP interactions and replay them during future test runs for fast, deterministic, accurate tests.",
             "support": {
                 "issues": "https://github.com/php-vcr/php-vcr/issues",
-                "source": "https://github.com/php-vcr/php-vcr/tree/1.6.7"
+                "source": "https://github.com/php-vcr/php-vcr/tree/1.7.0"
             },
-            "time": "2023-09-04T22:44:06+00:00"
+            "time": "2024-02-23T22:40:43+00:00"
         },
         {
             "name": "php-vcr/phpunit-testlistener-vcr",
