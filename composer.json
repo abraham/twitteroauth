@@ -1,5 +1,5 @@
 {
-  "name": "abraham/twitteroauth",
+  "name": "inovector/twitteroauth",
   "type": "library",
   "description": "The most popular PHP library for use with the Twitter OAuth REST API.",
   "keywords": [
