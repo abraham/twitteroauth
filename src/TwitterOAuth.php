@@ -324,6 +324,25 @@ class TwitterOAuth extends Config
     }
 
     /**
+     * Add metadata of media upload.
+     *
+     * @param string $media_id
+     * @param array  $parameters
+     *
+     * @return array|object
+     */
+    public function mediaMeta(string $media_id, array $parameters = [])
+    {
+        return $this->http(
+        	'POST', 
+        	self::UPLOAD_HOST, 
+        	'media/metadata/create', 
+        	array_merge( [ 'media_id' => $media_id ], $parameters ), 
+        	true
+        );
+    }
+
+    /**
      * Progression of media upload
      *
      * @param string $media_id
