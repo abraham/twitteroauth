@@ -42,7 +42,13 @@ class Config
     protected $gzipEncoding = true;
 
     /** @var integer Size for Chunked Uploads */
-    protected $chunkSize = 250000; // 0.25 MegaByte
+	protected $chunkSize = 250000; // 0.25 MegaByte
+
+	/** @var integer Size for Chunked Uploads */
+	protected $returnLimit = 5; // 5 times
+
+	/** @var integer Size for Chunked Uploads */
+	protected $defaultSleepTime = 5; // 5 seconds
 
     /**
      * Set the the Twitter API version.

@@ -420,6 +420,34 @@ class TwitterOAuth extends Config
             ],
             ['jsonPayload' => false],
         );
+		do{
+			$status = $this->mediaStatus($init->media_id_string);
+			$this->returnLimit--;
+			sleep($status->processing_info->check_after_secs ?? $this->defaultSleepTime);
+		} while($status->processing_info->state != 'failed' && $status->processing_info->state != 'succeeded' && $this->returnLimit > 0);
+		$finalize = $this->http(
+			'POST',
+			self::UPLOAD_HOST,
+			'media/upload',
+			[
+				'command' => 'FINALIZE',
+				'media_id' => $init->media_id_string,
+			],
+			['jsonPayload' => false],
+		);
+		if ($finalize->processing_info->state === 'succeeded') {
+			$content['media']['media_ids'][0] = $finalize->media_id_string;
+			$content['text'] = $parameters['text'];
+
+			$this->setApiVersion('2');
+			$this->http(
+				'POST',
+				self::API_HOST,
+				'tweets',
+				$content,
+				['jsonPayload' => false],
+			);
+		}
         return $finalize;
     }
 
