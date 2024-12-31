@@ -387,7 +387,7 @@ class TwitterOAuth extends Config
             ['jsonPayload' => false],
         );
         if (!property_exists($init, 'media_id_string')) {
-            throw new TwitterOAuthException('Missing "media_id_string"');
+            throw new TwitterOAuthException($init->errors[0]->message ?? 'Missing "media_id_string"');
         }
         // Append
         $segmentIndex = 0;
