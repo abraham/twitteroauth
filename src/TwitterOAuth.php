@@ -29,7 +29,7 @@ class TwitterOAuth extends Config
     private const API_HOST = 'https://api.twitter.com';
     private const UPLOAD_HOST = 'https://upload.twitter.com';
 
-    /** @var Response details about the result of the last request */
+    /** @var Response|null details about the result of the last request */
     private ?Response $response = null;
     /** @var string|null Application bearer token */
     private ?string $bearer = null;
