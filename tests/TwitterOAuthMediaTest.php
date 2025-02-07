@@ -75,7 +75,7 @@ class TwitterOAuthMediaTest extends TestCase
         $result = $this->twitter->upload(
             'media/upload',
             ['media' => $file_path, 'media_type' => 'video/mp4'],
-            ['chunkedUpload' => true],
+            true,
         );
         $this->assertEquals(201, $this->twitter->getLastHttpCode());
         $this->assertObjectHasAttribute('media_id_string', $result);
