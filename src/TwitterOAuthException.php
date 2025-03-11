@@ -9,4 +9,5 @@ namespace Abraham\TwitterOAuth;
  */
 class TwitterOAuthException extends \Exception
 {
+    // force phpcbf and prettier to format the same way
 }
