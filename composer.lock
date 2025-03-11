@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a7f98edbd40e030029b8584445b1714c",
+    "content-hash": "3dbf323d1dfd1a7b1bb4c8b9eefcb06e",
     "packages": [
         {
             "name": "composer/ca-bundle",
@@ -517,11 +517,17 @@
         },
         {
             "name": "php-vcr/phpunit-testlistener-vcr",
-            "version": "dev-php8",
+            "version": "3.3.0",
             "source": {
                 "type": "git",
-                "url": "https://github.com/abraham/phpunit-testlistener-vcr",
-                "reference": "4e466130ada12b722411ac930fa661cdbe441752"
+                "url": "https://github.com/php-vcr/phpunit-testlistener-vcr.git",
+                "reference": "e57a97f0c3942000350d03033d21e86ef48ac718"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/php-vcr/phpunit-testlistener-vcr/zipball/e57a97f0c3942000350d03033d21e86ef48ac718",
+                "reference": "e57a97f0c3942000350d03033d21e86ef48ac718",
+                "shasum": ""
             },
             "require": {
                 "php": "^7.1|^8.0",
@@ -536,11 +542,7 @@
                     "VCR\\PHPUnit\\TestListener\\": "src/"
                 }
             },
-            "autoload-dev": {
-                "psr-4": {
-                    "Tests\\VCR\\PHPUnit\\TestListener\\": "tests/"
-                }
-            },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -551,7 +553,11 @@
                 }
             ],
             "description": "Integrates PHPUnit with PHP-VCR.",
-            "time": "2020-12-22T10:54:04+00:00"
+            "support": {
+                "issues": "https://github.com/php-vcr/phpunit-testlistener-vcr/issues",
+                "source": "https://github.com/php-vcr/phpunit-testlistener-vcr/tree/3.3.0"
+            },
+            "time": "2024-10-29T19:16:02+00:00"
         },
         {
             "name": "phpstan/phpstan",
@@ -2618,9 +2624,7 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {
-        "php-vcr/phpunit-testlistener-vcr": 20
-    },
+    "stability-flags": {},
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {

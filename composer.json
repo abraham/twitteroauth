@@ -25,12 +25,6 @@
     "source": "https://github.com/abraham/twitteroauth",
     "issues": "https://github.com/abraham/twitteroauth/issues"
   },
-  "repositories": [
-    {
-      "type": "git",
-      "url": "https://github.com/abraham/phpunit-testlistener-vcr"
-    }
-  ],
   "require": {
     "php": "^8.1",
     "ext-curl": "*",
@@ -40,7 +34,7 @@
     "phpunit/phpunit": "^9",
     "squizlabs/php_codesniffer": "^3",
     "php-vcr/php-vcr": "^1",
-    "php-vcr/phpunit-testlistener-vcr": "dev-php8",
+    "php-vcr/phpunit-testlistener-vcr": "^3",
     "rector/rector": "^0.15.7"
   },
   "autoload": {
