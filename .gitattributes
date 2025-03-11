@@ -6,7 +6,6 @@
 /CONTRIBUTING.md export-ignore
 /package.json export-ignore
 /package-lock.json export-ignore
-/phpmd.xml export-ignore
 /phpunit.xml export-ignore
 /README.md export-ignore
 /rector.php export-ignore
