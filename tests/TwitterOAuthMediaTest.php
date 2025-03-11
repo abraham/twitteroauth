@@ -105,7 +105,7 @@ class TwitterOAuthMediaTest extends TestCase
             );
         } catch (\Abraham\TwitterOAuth\TwitterOAuthException $e) {
             $this->assertStringContainsString(
-                'Missing "media_id_string"',
+                'Failed to process media.',
                 $e->getMessage(),
             );
             $caught = true;
