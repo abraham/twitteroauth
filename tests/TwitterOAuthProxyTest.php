@@ -41,6 +41,6 @@ class TwitterOAuthProxyTest extends TestCase
         $this->twitter->setTimeouts(60, 60);
         $result = $this->twitter->get('account/verify_credentials');
         $this->assertEquals(200, $this->twitter->getLastHttpCode());
-        $this->assertObjectHasAttribute('id', $result);
+        $this->assertObjectHasProperty('id', $result);
     }
 }

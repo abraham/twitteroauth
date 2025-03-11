@@ -38,6 +38,6 @@ class TwitterOAuthTest extends TestCase
             'include_email' => true,
         ]);
         $this->assertEquals(200, $this->twitter->getLastHttpCode());
-        $this->assertObjectHasAttribute('email', $user);
+        $this->assertObjectHasProperty('email', $user);
     }
 }

@@ -40,7 +40,7 @@ class TwitterOAuthMediaTest extends TestCase
             'media' => $file_path,
         ]);
         $this->assertEquals(200, $this->twitter->getLastHttpCode());
-        $this->assertObjectHasAttribute('media_id_string', $result);
+        $this->assertObjectHasProperty('media_id_string', $result);
         $parameters = [
             'status' => 'Hello World ' . MOCK_TIME,
             'media_ids' => $result->media_id_string,
@@ -78,7 +78,7 @@ class TwitterOAuthMediaTest extends TestCase
             ['chunkedUpload' => true],
         );
         $this->assertEquals(201, $this->twitter->getLastHttpCode());
-        $this->assertObjectHasAttribute('media_id_string', $result);
+        $this->assertObjectHasProperty('media_id_string', $result);
         $parameters = [
             'status' => 'Hello World ' . MOCK_TIME,
             'media_ids' => $result->media_id_string,
