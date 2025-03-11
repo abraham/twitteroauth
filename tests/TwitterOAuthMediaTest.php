@@ -40,7 +40,7 @@ class TwitterOAuthMediaTest extends TestCase
             'media' => $file_path,
         ]);
         $this->assertEquals(200, $this->twitter->getLastHttpCode());
-        $this->assertObjectHasAttribute('media_id_string', $result);
+        $this->assertObjectHasProperty('media_id_string', $result);
         $parameters = [
             'status' => 'Hello World ' . MOCK_TIME,
             'media_ids' => $result->media_id_string,
@@ -78,7 +78,7 @@ class TwitterOAuthMediaTest extends TestCase
             ['chunkedUpload' => true],
         );
         $this->assertEquals(201, $this->twitter->getLastHttpCode());
-        $this->assertObjectHasAttribute('media_id_string', $result);
+        $this->assertObjectHasProperty('media_id_string', $result);
         $parameters = [
             'status' => 'Hello World ' . MOCK_TIME,
             'media_ids' => $result->media_id_string,
@@ -94,16 +94,22 @@ class TwitterOAuthMediaTest extends TestCase
      */
     public function testPostStatusesUpdateWithMediaChunkedException()
     {
-        $this->expectException(
-            \Abraham\TwitterOAuth\TwitterOAuthException::class,
-        );
-        $this->expectErrorMessage('Missing "media_id_string"');
-        // Video source http://www.sample-videos.com/
-        $file_path = __DIR__ . '/video.mp4';
-        $result = $this->twitter->upload(
-            'media/upload',
-            ['media' => $file_path, 'media_type' => 'video/mp4'],
-            ['chunkedUpload' => true],
-        );
+        $caught = false;
+        try {
+            // Video source http://www.sample-videos.com/
+            $file_path = __DIR__ . '/video.mp4';
+            $result = $this->twitter->upload(
+                'media/upload',
+                ['media' => $file_path, 'media_type' => 'video/mp4'],
+                ['chunkedUpload' => true],
+            );
+        } catch (\Abraham\TwitterOAuth\TwitterOAuthException $e) {
+            $this->assertStringContainsString(
+                'Missing "media_id_string"',
+                $e->getMessage(),
+            );
+            $caught = true;
+        }
+        assert($caught);
     }
 }

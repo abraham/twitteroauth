@@ -36,7 +36,7 @@ class TwitterOAuthLastTest extends TestCase
         $this->twitter->get('search/tweets', ['q' => 'twitter']);
         $this->assertEquals('search/tweets', $this->twitter->getLastApiPath());
         $this->assertEquals(200, $this->twitter->getLastHttpCode());
-        $this->assertObjectHasAttribute(
+        $this->assertObjectHasProperty(
             'statuses',
             $this->twitter->getLastBody(),
         );

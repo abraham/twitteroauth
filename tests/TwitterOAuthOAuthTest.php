@@ -30,8 +30,8 @@ class TwitterOAuthOAuthTest extends TestCase
 
     public function testBuildClient()
     {
-        $this->assertObjectHasAttribute('consumer', $this->twitter);
-        $this->assertObjectHasAttribute('token', $this->twitter);
+        $this->assertObjectHasProperty('consumer', $this->twitter);
+        $this->assertObjectHasProperty('token', $this->twitter);
     }
 
     /**
@@ -42,8 +42,8 @@ class TwitterOAuthOAuthTest extends TestCase
         $twitter = new TwitterOAuth(CONSUMER_KEY, CONSUMER_SECRET);
         $twitter->setApiVersion('1.1');
         $twitter->setOauthToken(ACCESS_TOKEN, ACCESS_TOKEN_SECRET);
-        $this->assertObjectHasAttribute('consumer', $twitter);
-        $this->assertObjectHasAttribute('token', $twitter);
+        $this->assertObjectHasProperty('consumer', $twitter);
+        $this->assertObjectHasProperty('token', $twitter);
         $twitter->get('friendships/show', [
             'target_screen_name' => 'twitterapi',
         ]);
@@ -60,8 +60,8 @@ class TwitterOAuthOAuthTest extends TestCase
             'grant_type' => 'client_credentials',
         ]);
         $this->assertEquals(200, $twitter->getLastHttpCode());
-        $this->assertObjectHasAttribute('token_type', $result);
-        $this->assertObjectHasAttribute('access_token', $result);
+        $this->assertObjectHasProperty('token_type', $result);
+        $this->assertObjectHasProperty('access_token', $result);
         $this->assertEquals('bearer', $result->token_type);
         return $result;
     }
@@ -98,7 +98,7 @@ class TwitterOAuthOAuthTest extends TestCase
             'access_token' => urldecode($accessToken->access_token),
         ]);
         $this->assertEquals(200, $twitter->getLastHttpCode());
-        $this->assertObjectHasAttribute('access_token', $result);
+        $this->assertObjectHasProperty('access_token', $result);
     }
 
     /**
@@ -123,14 +123,20 @@ class TwitterOAuthOAuthTest extends TestCase
      */
     public function testOauthRequestTokenException()
     {
-        $this->expectException(
-            \Abraham\TwitterOAuth\TwitterOAuthException::class,
-        );
-        $this->expectErrorMessage('Could not authenticate you');
-        $twitter = new TwitterOAuth('CONSUMER_KEY', 'CONSUMER_SECRET');
-        $result = $twitter->oauth('oauth/request_token', [
-            'oauth_callback' => OAUTH_CALLBACK,
-        ]);
+        $caught = false;
+        try {
+            $twitter = new TwitterOAuth('CONSUMER_KEY', 'CONSUMER_SECRET');
+            $result = $twitter->oauth('oauth/request_token', [
+                'oauth_callback' => OAUTH_CALLBACK,
+            ]);
+        } catch (\Abraham\TwitterOAuth\TwitterOAuthException $e) {
+            $this->assertStringContainsString(
+                'Could not authenticate you',
+                $e->getMessage(),
+            );
+            $caught = true;
+        }
+        assert($caught);
     }
 
     /**
@@ -140,19 +146,25 @@ class TwitterOAuthOAuthTest extends TestCase
     public function testOauthAccessTokenTokenException(array $requestToken)
     {
         // Can't test this without a browser logging into Twitter so check for the correct error instead.
-        $this->expectException(
-            \Abraham\TwitterOAuth\TwitterOAuthException::class,
-        );
-        $this->expectErrorMessage('Invalid oauth_verifier parameter');
-        $twitter = new TwitterOAuth(
-            CONSUMER_KEY,
-            CONSUMER_SECRET,
-            $requestToken['oauth_token'],
-            $requestToken['oauth_token_secret'],
-        );
-        $twitter->oauth('oauth/access_token', [
-            'oauth_verifier' => 'fake_oauth_verifier',
-        ]);
+        $caught = false;
+        try {
+            $twitter = new TwitterOAuth(
+                CONSUMER_KEY,
+                CONSUMER_SECRET,
+                $requestToken['oauth_token'],
+                $requestToken['oauth_token_secret'],
+            );
+            $twitter->oauth('oauth/access_token', [
+                'oauth_verifier' => 'fake_oauth_verifier',
+            ]);
+        } catch (\Abraham\TwitterOAuth\TwitterOAuthException $e) {
+            $this->assertStringContainsString(
+                'Invalid oauth_verifier parameter',
+                $e->getMessage(),
+            );
+            $caught = true;
+        }
+        assert($caught);
     }
 
     public function testUrl()
