@@ -205,9 +205,9 @@ class TwitterOAuth extends Config
         $url = sprintf('%s/%s', self::API_HOST, $path);
         $request = Request::fromConsumerAndToken(
             $this->consumer,
-            $this->token,
             $method,
             $url,
+            $this->token,
             $parameters,
         );
         $authorization =
@@ -606,9 +606,9 @@ class TwitterOAuth extends Config
     ) {
         $request = Request::fromConsumerAndToken(
             $this->consumer,
-            $this->token,
             $method,
             $url,
+            $this->token,
             $parameters,
             $options,
         );
