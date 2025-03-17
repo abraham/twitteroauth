@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "3dbf323d1dfd1a7b1bb4c8b9eefcb06e",
+    "content-hash": "f34f216e23afce20f2cdc0fbc7801666",
     "packages": [
         {
             "name": "composer/ca-bundle",
@@ -561,20 +561,20 @@
         },
         {
             "name": "phpstan/phpstan",
-            "version": "1.12.21",
+            "version": "2.1.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan.git",
-                "reference": "14276fdef70575106a3392a4ed553c06a984df28"
+                "reference": "f9adff3b87c03b12cc7e46a30a524648e497758f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/14276fdef70575106a3392a4ed553c06a984df28",
-                "reference": "14276fdef70575106a3392a4ed553c06a984df28",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/f9adff3b87c03b12cc7e46a30a524648e497758f",
+                "reference": "f9adff3b87c03b12cc7e46a30a524648e497758f",
                 "shasum": ""
             },
             "require": {
-                "php": "^7.2|^8.0"
+                "php": "^7.4|^8.0"
             },
             "conflict": {
                 "phpstan/phpstan-shim": "*"
@@ -615,7 +615,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-03-09T09:24:50+00:00"
+            "time": "2025-03-09T09:30:48+00:00"
         },
         {
             "name": "phpunit/php-code-coverage",
@@ -1091,21 +1091,21 @@
         },
         {
             "name": "rector/rector",
-            "version": "0.15.25",
+            "version": "2.0.10",
             "source": {
                 "type": "git",
                 "url": "https://github.com/rectorphp/rector.git",
-                "reference": "015935c7ed9e48a4f5895ba974f337e20a263841"
+                "reference": "5844a718acb40f40afcd110394270afa55509fd0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/rectorphp/rector/zipball/015935c7ed9e48a4f5895ba974f337e20a263841",
-                "reference": "015935c7ed9e48a4f5895ba974f337e20a263841",
+                "url": "https://api.github.com/repos/rectorphp/rector/zipball/5844a718acb40f40afcd110394270afa55509fd0",
+                "reference": "5844a718acb40f40afcd110394270afa55509fd0",
                 "shasum": ""
             },
             "require": {
-                "php": "^7.2|^8.0",
-                "phpstan/phpstan": "^1.10.14"
+                "php": "^7.4|^8.0",
+                "phpstan/phpstan": "^2.1.6"
             },
             "conflict": {
                 "rector/rector-doctrine": "*",
@@ -1113,15 +1113,13 @@
                 "rector/rector-phpunit": "*",
                 "rector/rector-symfony": "*"
             },
+            "suggest": {
+                "ext-dom": "To manipulate phpunit.xml via the custom-rule command"
+            },
             "bin": [
                 "bin/rector"
             ],
             "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-main": "0.15-dev"
-                }
-            },
             "autoload": {
                 "files": [
                     "bootstrap.php"
@@ -1140,7 +1138,7 @@
             ],
             "support": {
                 "issues": "https://github.com/rectorphp/rector/issues",
-                "source": "https://github.com/rectorphp/rector/tree/0.15.25"
+                "source": "https://github.com/rectorphp/rector/tree/2.0.10"
             },
             "funding": [
                 {
@@ -1148,7 +1146,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2023-04-20T16:07:39+00:00"
+            "time": "2025-03-03T17:35:18+00:00"
         },
         {
             "name": "sebastian/cli-parser",
@@ -2624,13 +2622,13 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {},
+    "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
         "php": "^8.1",
         "ext-curl": "*"
     },
-    "platform-dev": {},
-    "plugin-api-version": "2.6.0"
+    "platform-dev": [],
+    "plugin-api-version": "2.3.0"
 }
