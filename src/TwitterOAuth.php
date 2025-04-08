@@ -345,6 +345,30 @@ class TwitterOAuth extends Config
     }
 
     /**
+     * Create media metadata (Alt Text).
+     *
+     * @param string $media_id
+     * @param string $alt_text
+     *
+     * @return array|object
+     */
+    public function mediaMetadataCreate(string $media_id, string $alt_text)
+    {
+        return $this->http(
+            'POST',
+            self::UPLOAD_HOST,
+            'media/metadata/create',
+            [
+                'media_id' => $media_id,
+                'alt_text' => [
+                    'text' => $alt_text
+                ]
+            ],
+            ['jsonPayload' => true],
+        );
+    }
+
+    /**
      * Private method to upload media (not chunked) to upload.twitter.com.
      *
      * @param string $path
