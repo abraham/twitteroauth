@@ -1,5 +1,5 @@
 {
-  "name": "abraham/twitteroauth",
+  "name": "codeinwp/twitteroauth",
   "type": "library",
   "description": "The most popular PHP library for use with the Twitter OAuth REST API.",
   "keywords": [
@@ -26,7 +26,7 @@
     "issues": "https://github.com/abraham/twitteroauth/issues"
   },
   "require": {
-    "php": "^8.1",
+    "php": "^7.4",
     "ext-curl": "*",
     "composer/ca-bundle": "^1.2"
   },

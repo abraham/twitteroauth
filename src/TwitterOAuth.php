@@ -18,6 +18,7 @@ use Abraham\TwitterOAuth\{
     Util\JsonDecoder,
 };
 use Composer\CaBundle\CaBundle;
+use CURLFile;
 
 /**
  * TwitterOAuth class for interacting with the Twitter API.
@@ -27,7 +28,6 @@ use Composer\CaBundle\CaBundle;
 class TwitterOAuth extends Config
 {
     private const API_HOST = 'https://api.twitter.com';
-    private const UPLOAD_HOST = 'https://upload.twitter.com';
 
     /** @var Response details about the result of the last request */
     private ?Response $response = null;
@@ -41,6 +41,15 @@ class TwitterOAuth extends Config
     private HmacSha1 $signatureMethod;
     /** @var int Number of attempts we made for the request */
     private int $attempts = 0;
+    /** @var string consumer key */
+    private $consumerKey = null;
+    /** @var string consumer secret key */
+    private $consumerSecret = null;
+    /** @var string access token */
+    private $oauthToken = null;
+    /** @var string access token secret */
+    private $oauthTokenSecret = null;
+
 
     /**
      * Constructor
@@ -56,6 +65,10 @@ class TwitterOAuth extends Config
         ?string $oauthToken = null,
         ?string $oauthTokenSecret = null,
     ) {
+        $this->consumerKey = $consumerKey;
+        $this->consumerSecret = $consumerSecret;
+        $this->oauthToken = $oauthToken;
+        $this->oauthTokenSecret = $oauthTokenSecret;
         $this->resetLastResponse();
         $this->signatureMethod = new HmacSha1();
         $this->consumer = new Consumer($consumerKey, $consumerSecret);
@@ -334,7 +347,7 @@ class TwitterOAuth extends Config
     {
         return $this->http(
             'GET',
-            self::UPLOAD_HOST,
+            self::API_HOST,
             'media/upload',
             [
                 'command' => 'STATUS',
@@ -363,7 +376,7 @@ class TwitterOAuth extends Config
             );
         }
         $parameters['media'] = base64_encode($file);
-        return $this->http('POST', self::UPLOAD_HOST, $path, $parameters, [
+        return $this->http('POST', self::API_HOST, $path, $parameters, [
             'jsonPayload' => false,
         ]);
     }
@@ -381,14 +394,14 @@ class TwitterOAuth extends Config
         /** @var object $init */
         $init = $this->http(
             'POST',
-            self::UPLOAD_HOST,
+            self::API_HOST,
             $path,
             $this->mediaInitParameters($parameters),
             ['jsonPayload' => false],
         );
-        if (!property_exists($init, 'media_id_string')) {
+        if (!property_exists($init, 'data')) {
             throw new TwitterOAuthException(
-                $init->errors[0]->message ?? 'Missing "media_id_string"',
+                $init->errors[0]->message ?? 'Missing "data"',
             );
         }
         // Append
@@ -397,15 +410,13 @@ class TwitterOAuth extends Config
         while (!feof($media)) {
             $this->http(
                 'POST',
-                self::UPLOAD_HOST,
+                self::API_HOST,
                 'media/upload',
                 [
                     'command' => 'APPEND',
-                    'media_id' => $init->media_id_string,
+                    'media_id' => $init->data->id,
                     'segment_index' => $segmentIndex++,
-                    'media_data' => base64_encode(
-                        fread($media, $this->chunkSize),
-                    ),
+                    'media' => new CURLFile('data://application/octet-stream;base64,' . base64_encode(fread($media, $this->chunkSize)), $parameters['media_type'], 'chunk'),
                 ],
                 ['jsonPayload' => false],
             );
@@ -414,11 +425,11 @@ class TwitterOAuth extends Config
         // Finalize
         $finalize = $this->http(
             'POST',
-            self::UPLOAD_HOST,
+            self::API_HOST,
             'media/upload',
             [
                 'command' => 'FINALIZE',
-                'media_id' => $init->media_id_string,
+                'media_id' => $init->data->id,
             ],
             ['jsonPayload' => false],
         );
@@ -590,6 +601,54 @@ class TwitterOAuth extends Config
     }
 
     /**
+     * Create oAuth header for request.
+     *
+     * @param string $url
+     * @param string $method
+     * @param string $token
+     * @param string $tokenSecret
+     *
+     * @return string
+     */
+    private function oAuthHeader($url, $method, $token, $tokenSecret) {
+        $url_parts = parse_url($url);
+        $query_params = [];
+        if (!empty($url_parts['query'])) {
+            parse_str($url_parts['query'], $query_params);
+        }
+    
+        $oauth_params = [
+            'oauth_consumer_key'     => $this->consumerKey,
+            'oauth_nonce'            => bin2hex(random_bytes(16)),
+            'oauth_signature_method' => 'HMAC-SHA1',
+            'oauth_timestamp'        => time(),
+            'oauth_token'            => $token,
+            'oauth_version'          => '1.0',
+        ];
+    
+        $signature_params = array_merge($oauth_params, $query_params);
+
+        ksort($signature_params);
+
+        $base_string = strtoupper($method) . '&' .
+                       rawurlencode($url_parts['scheme'] . '://' . $url_parts['host'] . $url_parts['path']) . '&' .
+                       rawurlencode(http_build_query($signature_params, '', '&', PHP_QUERY_RFC3986));
+    
+        // Generate signature
+        $signing_key = rawurlencode($this->consumerSecret) . '&' . rawurlencode($tokenSecret);
+        $signature = base64_encode(hash_hmac('sha1', $base_string, $signing_key, true));
+    
+        $oauth_params['oauth_signature'] = $signature;
+    
+        // Build the Authorization header
+        $header = 'OAuth ' . implode(', ', array_map(function ($k, $v) {
+            return $k . '="' . rawurlencode((string)$v) . '"';
+        }, array_keys($oauth_params), $oauth_params));
+    
+        return $header;
+    }
+
+    /**
      * Format and sign an OAuth / API request
      *
      * @param string $url
@@ -619,17 +678,7 @@ class TwitterOAuth extends Config
             unset($parameters['oauth_callback']);
         }
         if ($this->bearer === null) {
-            $request->signRequest(
-                $this->signatureMethod,
-                $this->consumer,
-                $this->token,
-            );
-            $authorization = $request->toHeader();
-            if (array_key_exists('oauth_verifier', $parameters)) {
-                // Twitter doesn't always work with oauth in the body and in the header
-                // and it's already included in the $authorization header
-                unset($parameters['oauth_verifier']);
-            }
+            $authorization = 'Authorization: ' . $this->oAuthHeader($url, $method, $this->oauthToken, $this->oauthTokenSecret);
         } else {
             $authorization = 'Authorization: Bearer ' . $this->bearer;
         }
@@ -828,6 +877,8 @@ class TwitterOAuth extends Config
                 $postfields,
                 JSON_THROW_ON_ERROR,
             );
+        } elseif ( isset( $postfields['command'] ) ) {
+            $curlOptions[CURLOPT_POSTFIELDS] = $postfields;
         } else {
             $curlOptions[CURLOPT_POSTFIELDS] = Util::buildHttpQuery(
                 $postfields,
