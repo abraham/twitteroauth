@@ -343,6 +343,64 @@ class TwitterOAuth extends Config
             ['jsonPayload' => false],
         );
     }
+    
+    /**
+     * Add subtitles to an uploaded video
+     *
+     * @param string $video_id
+     * @param string $subtitles_id
+     * @param string $language_code
+     * @param string $language_name
+     *
+     * @return array|object
+     */
+    public function createMediaSubtitles($video_id, $subtitles_id, $language_code='EN', $language_name='English') {
+        $postfields = [
+            "media_id" => $video_id, 
+            "media_category" => "TweetVideo", 
+            "subtitle_info" => [
+                "subtitles" => [
+                    "media_id" => $subtitles_id, 
+                    "language_code" => strtoupper($language_code), 
+                    "display_name" => $language_name
+                ]
+            ]
+        ];
+        return $this->http(
+            'POST', 
+            self::UPLOAD_HOST,
+            'media/subtitles/create', 
+            $postfields, 
+            true
+        );
+    }
+
+    /**
+     * Delete subtitles from an uploaded video
+     *
+     * @param string $video_id
+     * @param string $language_code
+     *
+     * @return array|object
+     */
+    public function deleteMediaSubtitles($video_id, $language_code='EN') {
+        $postfields = [
+            "media_id" => $video_id, 
+            "media_category" => "TweetVideo", 
+            "subtitle_info" => [
+                "subtitles" => [
+                    "language_code" => strtoupper($language_code)
+                ]
+            ]
+        ];
+        return $this->http(
+            'POST', 
+            self::UPLOAD_HOST, 
+            'media/subtitles/delete', 
+            $postfields, 
+            true
+        );
+    }
 
     /**
      * Private method to upload media (not chunked) to upload.twitter.com.
