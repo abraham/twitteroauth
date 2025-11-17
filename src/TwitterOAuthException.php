@@ -9,5 +9,19 @@ namespace Abraham\TwitterOAuth;
  */
 class TwitterOAuthException extends \Exception
 {
-    // force phpcbf and prettier to format the same way
+    /**
+     * Attempts to parse message as JSON. If parsing fails, returns message directly.
+     *
+     * @return array|object|string
+     */
+    public function parsedMessage()
+    {
+        $decoded = json_decode($this->message, false);
+
+        if (json_last_error() === JSON_ERROR_NONE) {
+            return $decoded;
+        }
+
+        return $this->message;
+    }
 }
