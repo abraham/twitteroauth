@@ -28,7 +28,7 @@
   "require": {
     "php": "^8.2",
     "ext-curl": "*",
-    "composer/ca-bundle": "^1.2"
+    "composer/ca-bundle": "^1"
   },
   "require-dev": {
     "phpunit/phpunit": "^9",
