@@ -745,9 +745,6 @@ class TwitterOAuth extends Config
         if (curl_errno($curlHandle) > 0) {
             $error = curl_error($curlHandle);
             $errorNo = curl_errno($curlHandle);
-            if (PHP_MAJOR_VERSION < 8) {
-                curl_close($curlHandle);
-            }
             throw new TwitterOAuthException($error, $errorNo);
         }
 
@@ -758,10 +755,6 @@ class TwitterOAuth extends Config
         $responseBody = array_pop($parts);
         $responseHeader = array_pop($parts);
         $this->response->setHeaders($this->parseHeaders($responseHeader));
-
-        if (PHP_MAJOR_VERSION < 8) {
-            curl_close($curlHandle);
-        }
 
         return $responseBody;
     }
