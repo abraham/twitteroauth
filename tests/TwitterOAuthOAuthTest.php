@@ -203,7 +203,7 @@ class TwitterOAuthOAuthTest extends TestCase
             'baz' => 'qux',
         ]);
         $this->assertEquals(
-            'https://api.twitter.com/oauth/authorize?foo=bar&baz=qux',
+            'https://api.x.com/oauth/authorize?foo=bar&baz=qux',
             $url,
         );
     }

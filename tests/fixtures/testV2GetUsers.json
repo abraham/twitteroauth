@@ -1,9 +1,9 @@
 [{
     "request": {
         "method": "GET",
-        "url": "https://api.twitter.com/2/users?ids=12",
+        "url": "https://api.x.com/2/users?ids=12",
         "headers": {
-            "Host": "api.twitter.com",
+            "Host": "api.x.com",
             "Accept": "application/json",
             "Authorization": "OAuth oauth_version=\"1.0\", oauth_nonce=\"2b67ebbeace76543f356ba8bbd59abde\", oauth_timestamp=\"1587861062\", oauth_consumer_key=\"awJfND4zFGapGOFKfdjg\", oauth_token=\"93915746-KjE3c27dCt8awONxuUAaJ00yishXXwcH5CdLBnO1x\", oauth_signature_method=\"HMAC-SHA1\", oauth_signature=\"testSignature123=\"",
             "Expect": null

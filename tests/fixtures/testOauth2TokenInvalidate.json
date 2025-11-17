@@ -1,9 +1,9 @@
 [{
     "request": {
         "method": "POST",
-        "url": "https:\/\/api.twitter.com\/oauth2\/invalidate_token",
+        "url": "https:\/\/api.x.com\/oauth2\/invalidate_token",
         "headers": {
-            "Host": "api.twitter.com",
+            "Host": "api.x.com",
             "Accept": "application\/json",
             "Authorization": "Basic YXdKZk5ENHpGR2FwR09GS2Zkamc6TGZrbU5TUlBJWHdrUWtaVUI5RE5XU3p4NUxJYWl2U2tuVjRyeG5nb2pKYw==",
             "Expect": null
@@ -28,7 +28,7 @@
             "ml": "A",
             "pragma": "no-cache",
             "server": "tsa_b",
-            "set-cookie": "personalization_id=\"v1_8Iv+DqoXk8DVAVDoUVltSA==\"; Max-Age=63072000; Expires=Tue, 26 Apr 2022 00:31:10 GMT; Path=\/; Domain=.twitter.com; Secure; SameSite=None, guest_id=v1%3A158786107054950627; Max-Age=63072000; Expires=Tue, 26 Apr 2022 00:31:10 GMT; Path=\/; Domain=.twitter.com; Secure; SameSite=None",
+            "set-cookie": "personalization_id=\"v1_8Iv+DqoXk8DVAVDoUVltSA==\"; Max-Age=63072000; Expires=Tue, 26 Apr 2022 00:31:10 GMT; Path=\/; Domain=.x.com; Secure; SameSite=None, guest_id=v1%3A158786107054950627; Max-Age=63072000; Expires=Tue, 26 Apr 2022 00:31:10 GMT; Path=\/; Domain=.x.com; Secure; SameSite=None",
             "status": "200 OK",
             "strict-transport-security": "max-age=631138519",
             "x-connection-hash": "18b7327592f746230c1c016c344dd14d",

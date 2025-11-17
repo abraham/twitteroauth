@@ -26,8 +26,8 @@ use Composer\CaBundle\CaBundle;
  */
 class TwitterOAuth extends Config
 {
-    private const API_HOST = 'https://api.twitter.com';
-    private const UPLOAD_HOST = 'https://upload.twitter.com';
+    private const API_HOST = 'https://api.x.com';
+    private const UPLOAD_HOST = 'https://upload.x.com';
 
     /** @var Response details about the result of the last request */
     private ?Response $response = null;
@@ -308,7 +308,7 @@ class TwitterOAuth extends Config
     }
 
     /**
-     * Upload media to upload.twitter.com.
+     * Upload media to upload.x.com.
      *
      * @param string $path
      * @param array  $parameters
@@ -350,7 +350,7 @@ class TwitterOAuth extends Config
     }
 
     /**
-     * Private method to upload media (not chunked) to upload.twitter.com.
+     * Private method to upload media (not chunked) to upload.x.com.
      *
      * @param string $path
      * @param array  $parameters
@@ -374,7 +374,7 @@ class TwitterOAuth extends Config
     }
 
     /**
-     * Private method to upload media (chunked) to upload.twitter.com.
+     * Private method to upload media (chunked) to upload.x.com.
      *
      * @param string $path
      * @param array  $parameters
@@ -432,7 +432,7 @@ class TwitterOAuth extends Config
 
     /**
      * Private method to get params for upload media chunked init.
-     * Twitter docs: https://dev.twitter.com/rest/reference/post/media/upload-init.html
+     * Twitter docs: https://dev.x.com/rest/reference/post/media/upload-init.html
      *
      * @param array  $parameters
      *
