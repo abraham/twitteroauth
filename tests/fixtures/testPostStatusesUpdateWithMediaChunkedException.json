@@ -1,9 +1,9 @@
 [{
     "request": {
         "method": "POST",
-        "url": "https:\/\/upload.twitter.com\/1.1\/media\/upload.json",
+        "url": "https:\/\/upload.x.com\/1.1\/media\/upload.json",
         "headers": {
-            "Host": "upload.twitter.com",
+            "Host": "upload.x.com",
             "Accept": "application\/json",
             "Authorization": "OAuth oauth_version=\"1.0\", oauth_nonce=\"2b67ebbeace76543f356ba8bbd59abde\", oauth_timestamp=\"1587861062\", oauth_consumer_key=\"awJfND4zFGapGOFKfdjg\", oauth_token=\"93915746-KjE3c27dCt8awONxuUAaJ00yishXXwcH5CdLBnO1x\", oauth_signature_method=\"HMAC-SHA1\", oauth_signature=\"cOKZmxZ5f3bxiwWU%2B1cJ9hWpUL4%3D\"",
             "Expect": null
@@ -27,7 +27,7 @@
             "last-modified": "Sun, 26 Apr 2020 00:31:54 GMT",
             "pragma": "no-cache",
             "server": "tsa_b",
-            "set-cookie": "personalization_id=\"v1_0CYjFmw6Rjdl\/xKmqvzf4g==\"; Max-Age=63072000; Expires=Tue, 26 Apr 2022 00:31:54 GMT; Path=\/; Domain=.twitter.com; Secure; SameSite=None, lang=en; Path=\/, guest_id=v1%3A158786111466374311; Max-Age=63072000; Expires=Tue, 26 Apr 2022 00:31:54 GMT; Path=\/; Domain=.twitter.com; Secure; SameSite=None",
+            "set-cookie": "personalization_id=\"v1_0CYjFmw6Rjdl\/xKmqvzf4g==\"; Max-Age=63072000; Expires=Tue, 26 Apr 2022 00:31:54 GMT; Path=\/; Domain=.x.com; Secure; SameSite=None, lang=en; Path=\/, guest_id=v1%3A158786111466374311; Max-Age=63072000; Expires=Tue, 26 Apr 2022 00:31:54 GMT; Path=\/; Domain=.x.com; Secure; SameSite=None",
             "status": "202 Accepted",
             "strict-transport-security": "max-age=631138519",
             "vary": "Origin",
