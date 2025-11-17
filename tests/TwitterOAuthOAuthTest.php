@@ -10,19 +10,24 @@ namespace Abraham\TwitterOAuth\Test;
 
 use PHPUnit\Framework\TestCase;
 use Abraham\TwitterOAuth\TwitterOAuth;
+use Abraham\TwitterOAuth\MockHttpClient;
 
 class TwitterOAuthOAuthTest extends TestCase
 {
     /** @var TwitterOAuth */
     protected $twitter;
+    /** @var MockHttpClient */
+    protected $mockClient;
 
     protected function setUp(): void
     {
+        $this->mockClient = new MockHttpClient();
         $this->twitter = new TwitterOAuth(
             CONSUMER_KEY,
             CONSUMER_SECRET,
             ACCESS_TOKEN,
             ACCESS_TOKEN_SECRET,
+            $this->mockClient,
         );
         $this->twitter->setApiVersion('1.1');
         $this->userId = explode('-', ACCESS_TOKEN)[0];
@@ -34,12 +39,16 @@ class TwitterOAuthOAuthTest extends TestCase
         $this->assertObjectHasProperty('token', $this->twitter);
     }
 
-    /**
-     * @vcr testSetOauthToken.json
-     */
     public function testSetOauthToken()
     {
-        $twitter = new TwitterOAuth(CONSUMER_KEY, CONSUMER_SECRET);
+        $this->mockClient->useFixture('testSetOauthToken');
+        $twitter = new TwitterOAuth(
+            CONSUMER_KEY,
+            CONSUMER_SECRET,
+            null,
+            null,
+            $this->mockClient,
+        );
         $twitter->setApiVersion('1.1');
         $twitter->setOauthToken(ACCESS_TOKEN, ACCESS_TOKEN_SECRET);
         $this->assertObjectHasProperty('consumer', $twitter);
@@ -50,12 +59,16 @@ class TwitterOAuthOAuthTest extends TestCase
         $this->assertEquals(200, $twitter->getLastHttpCode());
     }
 
-    /**
-     * @vcr testOauth2Token.json
-     */
     public function testOauth2Token()
     {
-        $twitter = new TwitterOAuth(CONSUMER_KEY, CONSUMER_SECRET);
+        $this->mockClient->useFixture('testOauth2Token');
+        $twitter = new TwitterOAuth(
+            CONSUMER_KEY,
+            CONSUMER_SECRET,
+            null,
+            null,
+            $this->mockClient,
+        );
         $result = $twitter->oauth2('oauth2/token', [
             'grant_type' => 'client_credentials',
         ]);
@@ -68,15 +81,16 @@ class TwitterOAuthOAuthTest extends TestCase
 
     /**
      * @depends testOauth2Token
-     * @vcr testOauth2BearerToken.json
      */
     public function testOauth2BearerToken($accessToken)
     {
+        $this->mockClient->useFixture('testOauth2BearerToken');
         $twitter = new TwitterOAuth(
             CONSUMER_KEY,
             CONSUMER_SECRET,
             null,
             $accessToken->access_token,
+            $this->mockClient,
         );
         $twitter->setApiVersion('1.1');
         $result = $twitter->get('statuses/user_timeline', [
@@ -88,11 +102,17 @@ class TwitterOAuthOAuthTest extends TestCase
 
     /**
      * @depends testOauth2BearerToken
-     * @vcr testOauth2TokenInvalidate.json
      */
     public function testOauth2TokenInvalidate($accessToken)
     {
-        $twitter = new TwitterOAuth(CONSUMER_KEY, CONSUMER_SECRET);
+        $this->mockClient->useFixture('testOauth2TokenInvalidate');
+        $twitter = new TwitterOAuth(
+            CONSUMER_KEY,
+            CONSUMER_SECRET,
+            null,
+            null,
+            $this->mockClient,
+        );
         // HACK: access_token is already urlencoded but gets urlencoded again breaking the invalidate request.
         $result = $twitter->oauth2('oauth2/invalidate_token', [
             'access_token' => urldecode($accessToken->access_token),
@@ -101,12 +121,16 @@ class TwitterOAuthOAuthTest extends TestCase
         $this->assertObjectHasProperty('access_token', $result);
     }
 
-    /**
-     * @vcr testOauthRequestToken.json
-     */
     public function testOauthRequestToken()
     {
-        $twitter = new TwitterOAuth(CONSUMER_KEY, CONSUMER_SECRET);
+        $this->mockClient->useFixture('testOauthRequestToken');
+        $twitter = new TwitterOAuth(
+            CONSUMER_KEY,
+            CONSUMER_SECRET,
+            null,
+            null,
+            $this->mockClient,
+        );
         $result = $twitter->oauth('oauth/request_token', [
             'oauth_callback' => OAUTH_CALLBACK,
         ]);
@@ -118,14 +142,18 @@ class TwitterOAuthOAuthTest extends TestCase
         return $result;
     }
 
-    /**
-     * @vcr testOauthRequestTokenException.json
-     */
     public function testOauthRequestTokenException()
     {
+        $this->mockClient->useFixture('testOauthRequestTokenException');
         $caught = false;
         try {
-            $twitter = new TwitterOAuth('CONSUMER_KEY', 'CONSUMER_SECRET');
+            $twitter = new TwitterOAuth(
+                'CONSUMER_KEY',
+                'CONSUMER_SECRET',
+                null,
+                null,
+                $this->mockClient,
+            );
             $result = $twitter->oauth('oauth/request_token', [
                 'oauth_callback' => OAUTH_CALLBACK,
             ]);
@@ -141,10 +169,10 @@ class TwitterOAuthOAuthTest extends TestCase
 
     /**
      * @depends testOauthRequestToken
-     * @vcr testOauthAccessTokenTokenException.json
      */
     public function testOauthAccessTokenTokenException(array $requestToken)
     {
+        $this->mockClient->useFixture('testOauthAccessTokenTokenException');
         // Can't test this without a browser logging into Twitter so check for the correct error instead.
         $caught = false;
         try {
@@ -153,6 +181,7 @@ class TwitterOAuthOAuthTest extends TestCase
                 CONSUMER_SECRET,
                 $requestToken['oauth_token'],
                 $requestToken['oauth_token_secret'],
+                $this->mockClient,
             );
             $twitter->oauth('oauth/access_token', [
                 'oauth_verifier' => 'fake_oauth_verifier',
