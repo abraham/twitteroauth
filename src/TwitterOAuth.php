@@ -41,6 +41,8 @@ class TwitterOAuth extends Config
     private HmacSha1 $signatureMethod;
     /** @var int Number of attempts we made for the request */
     private int $attempts = 0;
+    /** @var HttpClientInterface HTTP client for making requests */
+    private HttpClientInterface $httpClient;
 
     /**
      * Constructor
@@ -49,16 +51,19 @@ class TwitterOAuth extends Config
      * @param string  $consumerSecret   The Application Consumer Secret
      * @param ?string $oauthToken       The Client Token (optional)
      * @param ?string $oauthTokenSecret The Client Token Secret (optional)
+     * @param ?HttpClientInterface $httpClient HTTP client for making requests (optional)
      */
     public function __construct(
         string $consumerKey,
         string $consumerSecret,
         ?string $oauthToken = null,
         ?string $oauthTokenSecret = null,
+        ?HttpClientInterface $httpClient = null,
     ) {
         $this->resetLastResponse();
         $this->signatureMethod = new HmacSha1();
         $this->consumer = new Consumer($consumerKey, $consumerSecret);
+        $this->httpClient = $httpClient ?? new CurlHttpClient();
         if (!empty($oauthToken) && !empty($oauthTokenSecret)) {
             $this->setOauthToken($oauthToken, $oauthTokenSecret);
         }
@@ -698,85 +703,39 @@ class TwitterOAuth extends Config
         ?array $options = [],
     ): string {
         $curlOptions = $this->curlOptions();
-        $curlOptions[CURLOPT_URL] = $url;
-        $curlOptions[CURLOPT_HTTPHEADER] = [
-            'Accept: application/json',
-            $authorization,
-            'Expect:',
-        ];
+        $headers = ['Accept: application/json', $authorization, 'Expect:'];
 
-        switch ($method) {
-            case 'GET':
-                break;
-            case 'POST':
-                $curlOptions[CURLOPT_POST] = true;
-                $curlOptions = $this->setPostfieldsOptions(
-                    $curlOptions,
-                    $postfields,
-                    $options,
-                );
-                break;
-            case 'DELETE':
-                $curlOptions[CURLOPT_CUSTOMREQUEST] = 'DELETE';
-                break;
-            case 'PUT':
-                $curlOptions[CURLOPT_CUSTOMREQUEST] = 'PUT';
-                $curlOptions = $this->setPostfieldsOptions(
-                    $curlOptions,
-                    $postfields,
-                    $options,
-                );
-                break;
+        // Prepare request body
+        $body = '';
+        if (in_array($method, ['POST', 'PUT']) && !empty($postfields)) {
+            if ($options['jsonPayload'] ?? false) {
+                $headers[] = 'Content-type: application/json';
+                $body = json_encode($postfields, JSON_THROW_ON_ERROR);
+            } else {
+                $body = Util::buildHttpQuery($postfields);
+            }
         }
 
+        // Add query string for GET, PUT, DELETE requests
         if (
             in_array($method, ['GET', 'PUT', 'DELETE']) &&
             !empty($postfields)
         ) {
-            $curlOptions[CURLOPT_URL] .=
-                '?' . Util::buildHttpQuery($postfields);
+            $url .= '?' . Util::buildHttpQuery($postfields);
         }
 
-        $curlHandle = curl_init();
-        curl_setopt_array($curlHandle, $curlOptions);
-        $response = curl_exec($curlHandle);
-
-        // Throw exceptions on cURL errors.
-        if (curl_errno($curlHandle) > 0) {
-            $error = curl_error($curlHandle);
-            $errorNo = curl_errno($curlHandle);
-            throw new TwitterOAuthException($error, $errorNo);
-        }
-
-        $this->response->setHttpCode(
-            curl_getinfo($curlHandle, CURLINFO_HTTP_CODE),
+        $result = $this->httpClient->request(
+            $url,
+            $method,
+            $headers,
+            $body,
+            $curlOptions,
         );
-        $parts = explode("\r\n\r\n", $response);
-        $responseBody = array_pop($parts);
-        $responseHeader = array_pop($parts);
-        $this->response->setHeaders($this->parseHeaders($responseHeader));
 
-        return $responseBody;
-    }
+        $this->response->setHttpCode($result['httpCode']);
+        $this->response->setHeaders($result['headers']);
 
-    /**
-     * Get the header info to store.
-     *
-     * @param string $header
-     *
-     * @return array
-     */
-    private function parseHeaders(string $header): array
-    {
-        $headers = [];
-        foreach (explode("\r\n", $header) as $line) {
-            if (strpos($line, ':') !== false) {
-                [$key, $value] = explode(': ', $line);
-                $key = str_replace('-', '_', strtolower($key));
-                $headers[$key] = trim($value);
-            }
-        }
-        return $headers;
+        return $result['body'];
     }
 
     /**
@@ -802,35 +761,5 @@ class TwitterOAuth extends Config
     private function curlCaOpt(string $path): int
     {
         return is_dir($path) ? CURLOPT_CAPATH : CURLOPT_CAINFO;
-    }
-
-    /**
-     * Set options for JSON Requests
-     *
-     * @param array $options
-     * @param array $postfields
-     * @param array $options
-     *
-     * @return array
-     */
-    private function setPostfieldsOptions(
-        array $curlOptions,
-        array $postfields,
-        array $options,
-    ): array {
-        if ($options['jsonPayload'] ?? false) {
-            $curlOptions[CURLOPT_HTTPHEADER][] =
-                'Content-type: application/json';
-            $curlOptions[CURLOPT_POSTFIELDS] = json_encode(
-                $postfields,
-                JSON_THROW_ON_ERROR,
-            );
-        } else {
-            $curlOptions[CURLOPT_POSTFIELDS] = Util::buildHttpQuery(
-                $postfields,
-            );
-        }
-
-        return $curlOptions;
     }
 }

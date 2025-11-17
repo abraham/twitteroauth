@@ -1,1 +1,28 @@
-[]
+[{
+    "request": {
+        "method": "GET",
+        "url": "https://api.twitter.com/2/users?ids=12",
+        "headers": {
+            "Host": "api.twitter.com",
+            "Accept": "application/json",
+            "Authorization": "OAuth oauth_version=\"1.0\", oauth_nonce=\"2b67ebbeace76543f356ba8bbd59abde\", oauth_timestamp=\"1587861062\", oauth_consumer_key=\"awJfND4zFGapGOFKfdjg\", oauth_token=\"93915746-KjE3c27dCt8awONxuUAaJ00yishXXwcH5CdLBnO1x\", oauth_signature_method=\"HMAC-SHA1\", oauth_signature=\"testSignature123=\"",
+            "Expect": null
+        }
+    },
+    "response": {
+        "status": {
+            "http_version": "2",
+            "code": "200",
+            "message": "OK"
+        },
+        "headers": {
+            "cache-control": "no-cache, no-store, must-revalidate, pre-check=0, post-check=0",
+            "content-type": "application/json;charset=utf-8",
+            "date": "Sun, 26 Apr 2020 00:31:11 GMT",
+            "x-rate-limit-limit": "75",
+            "x-rate-limit-remaining": "73",
+            "x-rate-limit-reset": "1587861613"
+        },
+        "body": "{\"data\":[{\"id\":\"12\",\"name\":\"Test User\",\"username\":\"testuser\"}]}"
+    }
+}]

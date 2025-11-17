@@ -10,38 +10,39 @@ namespace Abraham\TwitterOAuth\Test;
 
 use PHPUnit\Framework\TestCase;
 use Abraham\TwitterOAuth\TwitterOAuth;
+use Abraham\TwitterOAuth\MockHttpClient;
 
 class TwitterOAuthStatusesTest extends TestCase
 {
     /** @var TwitterOAuth */
     protected $twitter;
+    /** @var MockHttpClient */
+    protected $mockClient;
 
     protected function setUp(): void
     {
+        $this->mockClient = new MockHttpClient();
         $this->twitter = new TwitterOAuth(
             CONSUMER_KEY,
             CONSUMER_SECRET,
             ACCESS_TOKEN,
             ACCESS_TOKEN_SECRET,
+            $this->mockClient,
         );
         $this->twitter->setApiVersion('1.1');
         $this->userId = explode('-', ACCESS_TOKEN)[0];
     }
 
-    /**
-     * @vcr testGetStatusesMentionsTimeline.json
-     */
     public function testGetStatusesMentionsTimeline()
     {
+        $this->mockClient->useFixture('testGetStatusesMentionsTimeline');
         $this->twitter->get('statuses/mentions_timeline');
         $this->assertEquals(200, $this->twitter->getLastHttpCode());
     }
 
-    /**
-     * @vcr testGetSearchTweets.json
-     */
     public function testGetSearchTweets()
     {
+        $this->mockClient->useFixture('testGetSearchTweets');
         $result = $this->twitter->get('search/tweets', ['q' => 'twitter']);
         $this->assertEquals(200, $this->twitter->getLastHttpCode());
         return $result->statuses;
@@ -49,10 +50,10 @@ class TwitterOAuthStatusesTest extends TestCase
 
     /**
      * @depends testGetSearchTweets
-     * @vcr testGetSearchTweetsWithMaxId.json
      */
     public function testGetSearchTweetsWithMaxId($statuses)
     {
+        $this->mockClient->useFixture('testGetSearchTweetsWithMaxId');
         $maxId = array_pop($statuses)->id_str;
         $this->twitter->get('search/tweets', [
             'q' => 'twitter',
@@ -61,11 +62,9 @@ class TwitterOAuthStatusesTest extends TestCase
         $this->assertEquals(200, $this->twitter->getLastHttpCode());
     }
 
-    /**
-     * @vcr testPostStatusesUpdateUtf8.json
-     */
     public function testPostStatusesUpdateUtf8()
     {
+        $this->mockClient->useFixture('testPostStatusesUpdateUtf8');
         $result = $this->twitter->post('statuses/update', [
             'status' => 'xこんにちは世界 ' . MOCK_TIME,
         ]);
@@ -75,10 +74,10 @@ class TwitterOAuthStatusesTest extends TestCase
 
     /**
      * @depends testPostStatusesUpdateUtf8
-     * @vcr testPostStatusesDestroy.json
      */
     public function testPostStatusesDestroy($status)
     {
+        $this->mockClient->useFixture('testPostStatusesDestroy');
         $this->twitter->post('statuses/destroy/' . $status->id_str);
         $this->assertEquals(200, $this->twitter->getLastHttpCode());
     }

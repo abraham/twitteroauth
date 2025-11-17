@@ -10,29 +10,32 @@ namespace Abraham\TwitterOAuth\Test;
 
 use PHPUnit\Framework\TestCase;
 use Abraham\TwitterOAuth\TwitterOAuth;
+use Abraham\TwitterOAuth\MockHttpClient;
 
 class TwitterOAuthDirectMessagesTest extends TestCase
 {
     /** @var TwitterOAuth */
     protected $twitter;
+    /** @var MockHttpClient */
+    protected $mockClient;
 
     protected function setUp(): void
     {
+        $this->mockClient = new MockHttpClient();
         $this->twitter = new TwitterOAuth(
             CONSUMER_KEY,
             CONSUMER_SECRET,
             ACCESS_TOKEN,
             ACCESS_TOKEN_SECRET,
+            $this->mockClient,
         );
         $this->twitter->setApiVersion('1.1');
         $this->userId = explode('-', ACCESS_TOKEN)[0];
     }
 
-    /**
-     * @vcr testPostDirectMessagesEventsNew.json
-     */
     public function testPostDirectMessagesEventsNew()
     {
+        $this->mockClient->useFixture('testPostDirectMessagesEventsNew');
         $data = [
             'event' => [
                 'type' => 'message_create',
@@ -55,10 +58,10 @@ class TwitterOAuthDirectMessagesTest extends TestCase
 
     /**
      * @depends testPostDirectMessagesEventsNew
-     * @vcr testDeleteDirectMessagesEventsDestroy.json
      */
     public function testDeleteDirectMessagesEventsDestroy($message)
     {
+        $this->mockClient->useFixture('testDeleteDirectMessagesEventsDestroy');
         $this->twitter->delete('direct_messages/events/destroy', [
             'id' => $message->event->id,
         ]);
