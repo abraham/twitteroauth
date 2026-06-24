@@ -359,10 +359,8 @@ class TwitterOAuth extends Config
      */
     private function uploadMediaNotChunked(string $path, array $parameters)
     {
-        if (
-            !is_readable($parameters['media']) ||
-            ($file = file_get_contents($parameters['media'])) === false
-        ) {
+        $this->validateMediaPath($parameters['media']);
+        if (($file = file_get_contents($parameters['media'])) === false) {
             throw new \InvalidArgumentException(
                 'You must supply a readable file',
             );
@@ -383,6 +381,7 @@ class TwitterOAuth extends Config
      */
     private function uploadMediaChunked(string $path, array $parameters)
     {
+        $this->validateMediaPath($parameters['media']);
         /** @var object $init */
         $init = $this->http(
             'POST',
@@ -428,6 +427,26 @@ class TwitterOAuth extends Config
             ['jsonPayload' => false],
         );
         return $finalize;
+    }
+
+    /**
+     * Validate upload media path before reading from disk.
+     *
+     * @param string $mediaPath
+     */
+    private function validateMediaPath(string $mediaPath): void
+    {
+        if (
+            !stream_is_local($mediaPath) ||
+            !file_exists($mediaPath) ||
+            !is_file($mediaPath) ||
+            is_link($mediaPath) ||
+            !is_readable($mediaPath)
+        ) {
+            throw new \InvalidArgumentException(
+                'You must supply a readable file',
+            );
+        }
     }
 
     /**

@@ -113,4 +113,44 @@ class TwitterOAuthMediaTest extends TestCase
         }
         assert($caught);
     }
+
+    public function testUploadRejectsSymlinkForNotChunked()
+    {
+        $target = __DIR__ . '/kitten.jpg';
+        $link = __DIR__ . '/kitten-symlink.jpg';
+
+        @unlink($link);
+        if (!symlink($target, $link)) {
+            $this->markTestSkipped('Unable to create symlink on this system.');
+        }
+
+        try {
+            $this->expectException(\InvalidArgumentException::class);
+            $this->twitter->upload('media/upload', ['media' => $link]);
+        } finally {
+            @unlink($link);
+        }
+    }
+
+    public function testUploadRejectsSymlinkForChunked()
+    {
+        $target = __DIR__ . '/video.mp4';
+        $link = __DIR__ . '/video-symlink.mp4';
+
+        @unlink($link);
+        if (!symlink($target, $link)) {
+            $this->markTestSkipped('Unable to create symlink on this system.');
+        }
+
+        try {
+            $this->expectException(\InvalidArgumentException::class);
+            $this->twitter->upload(
+                'media/upload',
+                ['media' => $link, 'media_type' => 'video/mp4'],
+                ['chunkedUpload' => true],
+            );
+        } finally {
+            @unlink($link);
+        }
+    }
 }
