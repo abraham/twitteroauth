@@ -275,14 +275,24 @@ class TwitterOAuth extends Config
      *
      * @param string $path
      * @param array  $parameters
+     * @param array  $options
      *
      * @return array|object
      */
-    public function delete(string $path, array $parameters = [])
-    {
-        return $this->http('DELETE', self::API_HOST, $path, $parameters, [
-            'jsonPayload' => false,
-        ]);
+    public function delete(
+        string $path,
+        array $parameters = [],
+        array $options = [],
+    ) {
+        $options['jsonPayload'] ??= false;
+
+        return $this->http(
+            'DELETE',
+            self::API_HOST,
+            $path,
+            $parameters,
+            $options,
+        );
     }
 
     /**
@@ -758,8 +768,12 @@ class TwitterOAuth extends Config
 
         // Prepare request body
         $body = '';
-        if (in_array($method, ['POST', 'PUT']) && !empty($postfields)) {
-            if ($options['jsonPayload'] ?? false) {
+        $jsonPayload = $options['jsonPayload'] ?? false;
+        $hasBody =
+            in_array($method, ['POST', 'PUT']) ||
+            ($method === 'DELETE' && $jsonPayload);
+        if ($hasBody && !empty($postfields)) {
+            if ($jsonPayload) {
                 $headers[] = 'Content-type: application/json';
                 $body = json_encode($postfields, JSON_THROW_ON_ERROR);
             } else {
@@ -770,6 +784,7 @@ class TwitterOAuth extends Config
         // Add query string for GET, PUT, DELETE requests
         if (
             in_array($method, ['GET', 'PUT', 'DELETE']) &&
+            !($method === 'DELETE' && $jsonPayload) &&
             !empty($postfields)
         ) {
             $url .= '?' . Util::buildHttpQuery($postfields);
