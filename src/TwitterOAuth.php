@@ -315,7 +315,7 @@ class TwitterOAuth extends Config
     }
 
     /**
-     * Upload media to upload.x.com.
+     * Upload media. Uses upload.x.com for API v1.1 and api.x.com for v2.
      *
      * @param string $path
      * @param array  $parameters
@@ -328,11 +328,13 @@ class TwitterOAuth extends Config
         array $parameters = [],
         array $options = [],
     ) {
-        if ($options['chunkedUpload'] ?? false) {
-            return $this->uploadMediaChunked($path, $parameters);
-        } else {
+        if (!($options['chunkedUpload'] ?? false)) {
             return $this->uploadMediaNotChunked($path, $parameters);
         }
+        if ($this->apiVersion === '2') {
+            return $this->uploadMediaChunkedV2($path, $parameters);
+        }
+        return $this->uploadMediaChunked($path, $parameters);
     }
 
     /**
@@ -346,7 +348,7 @@ class TwitterOAuth extends Config
     {
         return $this->http(
             'GET',
-            self::UPLOAD_HOST,
+            $this->uploadHost(),
             'media/upload',
             [
                 'command' => 'STATUS',
@@ -390,7 +392,7 @@ class TwitterOAuth extends Config
     }
 
     /**
-     * Private method to upload media (not chunked) to upload.x.com.
+     * Private method to upload media (not chunked).
      *
      * @param string $path
      * @param array  $parameters
@@ -406,8 +408,8 @@ class TwitterOAuth extends Config
             );
         }
         $parameters['media'] = base64_encode($file);
-        return $this->http('POST', self::UPLOAD_HOST, $path, $parameters, [
-            'jsonPayload' => false,
+        return $this->http('POST', $this->uploadHost(), $path, $parameters, [
+            'jsonPayload' => $this->useJsonBody(),
         ]);
     }
 
@@ -470,6 +472,54 @@ class TwitterOAuth extends Config
     }
 
     /**
+     * Private method to upload media (chunked) with the API v2 endpoints.
+     *
+     * @param string $path
+     * @param array  $parameters
+     *
+     * @return array|object
+     */
+    private function uploadMediaChunkedV2(string $path, array $parameters)
+    {
+        $this->validateMediaPath($parameters['media']);
+        $init = $this->http(
+            'POST',
+            self::API_HOST,
+            $path . '/initialize',
+            $this->mediaInitParameters($parameters),
+            ['jsonPayload' => true],
+        );
+        $mediaId = is_array($init)
+            ? $init['data']['id'] ?? null
+            : $init->data->id ?? null;
+        if ($mediaId === null) {
+            throw new TwitterOAuthException(json_encode($init));
+        }
+        $segmentIndex = 0;
+        $media = fopen($parameters['media'], 'rb');
+        while (($chunk = fread($media, $this->chunkSize)) !== '') {
+            $this->http(
+                'POST',
+                self::API_HOST,
+                "{$path}/{$mediaId}/append",
+                [
+                    'segment_index' => $segmentIndex++,
+                    'media' => base64_encode($chunk),
+                ],
+                ['jsonPayload' => true],
+            );
+        }
+        fclose($media);
+        return $this->http(
+            'POST',
+            self::API_HOST,
+            "{$path}/{$mediaId}/finalize",
+            [],
+            ['jsonPayload' => true],
+        );
+    }
+
+    /**
      * Validate upload media path before reading from disk.
      *
      * @param string $mediaPath
@@ -505,10 +555,10 @@ class TwitterOAuth extends Config
             'media_category',
             'shared',
         ];
-        $base = [
-            'command' => 'INIT',
-            'total_bytes' => filesize($parameters['media']),
-        ];
+        $base = ['total_bytes' => filesize($parameters['media'])];
+        if ($this->apiVersion === '1.1') {
+            $base = ['command' => 'INIT'] + $base;
+        }
         $allowed_parameters = array_intersect_key(
             $parameters,
             array_flip($allowed_keys),
@@ -557,6 +607,19 @@ class TwitterOAuth extends Config
         return [
             '1.1' => false,
             '2' => true,
+        ][$this->apiVersion];
+    }
+
+    /**
+     * Media upload host for current API Version.
+     *
+     * @return string
+     */
+    private function uploadHost(): string
+    {
+        return [
+            '1.1' => self::UPLOAD_HOST,
+            '2' => self::API_HOST,
         ][$this->apiVersion];
     }
 
