@@ -9,7 +9,7 @@ declare(strict_types=1);
 
 namespace Abraham\TwitterOAuth;
 
-class Request
+class Request implements \Stringable
 {
     protected $parameters;
     protected $httpMethod;
@@ -216,7 +216,7 @@ class Request
         $first = true;
         $out = 'Authorization: OAuth';
         foreach ($this->parameters as $k => $v) {
-            if (substr($k, 0, 5) != 'oauth') {
+            if (!str_starts_with($k, 'oauth')) {
                 continue;
             }
             if (is_array($v)) {

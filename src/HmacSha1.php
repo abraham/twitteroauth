@@ -36,7 +36,7 @@ class HmacSha1 extends SignatureMethod
     ): string {
         $signatureBase = $request->getSignatureBaseString();
 
-        $parts = [$consumer->secret, null !== $token ? $token->secret : ''];
+        $parts = [$consumer->secret, $token?->secret ?? ''];
 
         $parts = Util::urlencodeRfc3986($parts);
         $key = implode('&', $parts);

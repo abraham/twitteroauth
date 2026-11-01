@@ -26,23 +26,23 @@ use Composer\CaBundle\CaBundle;
  */
 class TwitterOAuth extends Config
 {
-    private const API_HOST = 'https://api.x.com';
-    private const DM_MEDIA_HOST = 'ton.x.com';
+    private const string API_HOST = 'https://api.x.com';
+    private const string DM_MEDIA_HOST = 'ton.x.com';
 
     /** @var Response details about the result of the last request */
     private ?Response $response = null;
     /** @var string|null Application bearer token */
     private ?string $bearer = null;
     /** @var Consumer Twitter application details */
-    private Consumer $consumer;
+    private readonly Consumer $consumer;
     /** @var Token|null User access token details */
     private ?Token $token = null;
     /** @var HmacSha1 OAuth 1 signature type used by Twitter */
-    private HmacSha1 $signatureMethod;
+    private readonly HmacSha1 $signatureMethod;
     /** @var int Number of attempts we made for the request */
     private int $attempts = 0;
     /** @var HttpClientInterface HTTP client for making requests */
-    private HttpClientInterface $httpClient;
+    private readonly HttpClientInterface $httpClient;
 
     /**
      * Constructor

@@ -11,7 +11,7 @@ namespace Abraham\TwitterOAuth;
  */
 class Config
 {
-    private const SUPPORTED_VERSIONS = ['2'];
+    private const array SUPPORTED_VERSIONS = ['2'];
 
     /** @var int How long to wait for a response from the API */
     protected $timeout = 5;

@@ -98,7 +98,7 @@ class CurlHttpClient implements HttpClientInterface
     {
         $headers = [];
         foreach (explode("\r\n", $header) as $line) {
-            if (strpos($line, ':') !== false) {
+            if (str_contains($line, ':')) {
                 [$key, $value] = explode(': ', $line, 2);
                 $key = str_replace('-', '_', strtolower($key));
                 $headers[$key] = trim($value);
