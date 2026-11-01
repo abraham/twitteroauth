@@ -29,8 +29,6 @@ class TwitterOAuthProxyTest extends TestCase
             ACCESS_TOKEN_SECRET,
             $this->mockClient,
         );
-        $this->twitter->setApiVersion('1.1');
-        $this->userId = explode('-', ACCESS_TOKEN)[0];
     }
 
     public function testSetProxy()
@@ -42,8 +40,8 @@ class TwitterOAuthProxyTest extends TestCase
             'CURLOPT_PROXYPORT' => PROXYPORT,
         ]);
         $this->twitter->setTimeouts(60, 60);
-        $result = $this->twitter->get('account/verify_credentials');
+        $result = $this->twitter->get('users/me');
         $this->assertEquals(200, $this->twitter->getLastHttpCode());
-        $this->assertObjectHasProperty('id', $result);
+        $this->assertObjectHasProperty('id', $result->data);
     }
 }

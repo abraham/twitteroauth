@@ -1,0 +1,26 @@
+[{
+    "request": {
+        "method": "GET",
+        "url": "https://api.x.com/2/users/me?user.fields=created_at",
+        "headers": {
+            "Host": "api.x.com",
+            "Accept": "application/json",
+            "Authorization": "OAuth oauth_version=\"1.0\", oauth_nonce=\"2b67ebbeace76543f356ba8bbd59abde\", oauth_timestamp=\"1587861062\", oauth_consumer_key=\"awJfND4zFGapGOFKfdjg\", oauth_token=\"93915746-KjE3c27dCt8awONxuUAaJ00yishXXwcH5CdLBnO1x\", oauth_signature_method=\"HMAC-SHA1\", oauth_signature=\"testSignature123=\"",
+            "Expect": null
+        }
+    },
+    "response": {
+        "status": {
+            "http_version": "2",
+            "code": "200",
+            "message": "OK"
+        },
+        "headers": {
+            "content-type": "application/json;charset=utf-8",
+            "x-rate-limit-limit": "75",
+            "x-rate-limit-remaining": "73",
+            "x-rate-limit-reset": "1587861613"
+        },
+        "body": "{\"data\":{\"id\":\"93915746\",\"name\":\"OAuth Library Test\",\"username\":\"oauthlibtest\",\"created_at\":\"2009-12-01T18:37:44.000Z\"}}"
+    }
+}]

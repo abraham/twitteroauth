@@ -29,8 +29,6 @@ class TwitterOAuthOAuthTest extends TestCase
             ACCESS_TOKEN_SECRET,
             $this->mockClient,
         );
-        $this->twitter->setApiVersion('1.1');
-        $this->userId = explode('-', ACCESS_TOKEN)[0];
     }
 
     public function testBuildClient()
@@ -49,13 +47,10 @@ class TwitterOAuthOAuthTest extends TestCase
             null,
             $this->mockClient,
         );
-        $twitter->setApiVersion('1.1');
         $twitter->setOauthToken(ACCESS_TOKEN, ACCESS_TOKEN_SECRET);
         $this->assertObjectHasProperty('consumer', $twitter);
         $this->assertObjectHasProperty('token', $twitter);
-        $twitter->get('friendships/show', [
-            'target_screen_name' => 'twitterapi',
-        ]);
+        $twitter->get('users/me');
         $this->assertEquals(200, $twitter->getLastHttpCode());
     }
 
@@ -92,10 +87,7 @@ class TwitterOAuthOAuthTest extends TestCase
             $accessToken->access_token,
             $this->mockClient,
         );
-        $twitter->setApiVersion('1.1');
-        $result = $twitter->get('statuses/user_timeline', [
-            'screen_name' => 'twitterapi',
-        ]);
+        $result = $twitter->get('users/by/username/twitterapi');
         $this->assertEquals(200, $twitter->getLastHttpCode());
         return $accessToken;
     }

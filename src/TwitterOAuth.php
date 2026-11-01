@@ -27,8 +27,7 @@ use Composer\CaBundle\CaBundle;
 class TwitterOAuth extends Config
 {
     private const API_HOST = 'https://api.x.com';
-    private const UPLOAD_HOST = 'https://upload.x.com';
-    private const DM_MEDIA_HOSTS = ['ton.twitter.com', 'ton.x.com'];
+    private const DM_MEDIA_HOST = 'ton.x.com';
 
     /** @var Response details about the result of the last request */
     private ?Response $response = null;
@@ -259,7 +258,7 @@ class TwitterOAuth extends Config
         array $parameters = [],
         array $options = [],
     ) {
-        $options['jsonPayload'] ??= $this->useJsonBody();
+        $options['jsonPayload'] ??= true;
 
         return $this->http(
             'POST',
@@ -309,13 +308,13 @@ class TwitterOAuth extends Config
         array $parameters = [],
         array $options = [],
     ) {
-        $options['jsonPayload'] ??= $this->useJsonBody();
+        $options['jsonPayload'] ??= true;
 
         return $this->http('PUT', self::API_HOST, $path, $parameters, $options);
     }
 
     /**
-     * Upload media. Uses upload.x.com for API v1.1 and api.x.com for v2.
+     * Upload media.
      *
      * @param string $path
      * @param array  $parameters
@@ -328,13 +327,10 @@ class TwitterOAuth extends Config
         array $parameters = [],
         array $options = [],
     ) {
-        if (!($options['chunkedUpload'] ?? false)) {
-            return $this->uploadMediaNotChunked($path, $parameters);
+        if ($options['chunkedUpload'] ?? false) {
+            return $this->uploadMediaChunked($path, $parameters);
         }
-        if ($this->apiVersion === '2') {
-            return $this->uploadMediaChunkedV2($path, $parameters);
-        }
-        return $this->uploadMediaChunked($path, $parameters);
+        return $this->uploadMediaNotChunked($path, $parameters);
     }
 
     /**
@@ -348,7 +344,7 @@ class TwitterOAuth extends Config
     {
         return $this->http(
             'GET',
-            $this->uploadHost(),
+            self::API_HOST,
             'media/upload',
             [
                 'command' => 'STATUS',
@@ -361,7 +357,7 @@ class TwitterOAuth extends Config
     /**
      * Download a media file attached to a direct message.
      *
-     * @param string $url Media URL from the DM, e.g. https://ton.twitter.com/1.1/ton/data/dm/...
+     * @param string $url Media URL from the DM on https://ton.x.com
      *
      * @return string Raw file contents
      * @throws \InvalidArgumentException
@@ -372,7 +368,7 @@ class TwitterOAuth extends Config
         // Requests are signed with the user's credentials, so never send them to other hosts.
         if (
             ($parts['scheme'] ?? null) !== 'https' ||
-            !in_array($parts['host'] ?? null, self::DM_MEDIA_HOSTS, true) ||
+            ($parts['host'] ?? null) !== self::DM_MEDIA_HOST ||
             isset($parts['port']) ||
             isset($parts['user'])
         ) {
@@ -408,13 +404,13 @@ class TwitterOAuth extends Config
             );
         }
         $parameters['media'] = base64_encode($file);
-        return $this->http('POST', $this->uploadHost(), $path, $parameters, [
-            'jsonPayload' => $this->useJsonBody(),
+        return $this->http('POST', self::API_HOST, $path, $parameters, [
+            'jsonPayload' => true,
         ]);
     }
 
     /**
-     * Private method to upload media (chunked) to upload.x.com.
+     * Private method to upload media (chunked).
      *
      * @param string $path
      * @param array  $parameters
@@ -422,64 +418,6 @@ class TwitterOAuth extends Config
      * @return array|object
      */
     private function uploadMediaChunked(string $path, array $parameters)
-    {
-        $this->validateMediaPath($parameters['media']);
-        /** @var object $init */
-        $init = $this->http(
-            'POST',
-            self::UPLOAD_HOST,
-            $path,
-            $this->mediaInitParameters($parameters),
-            ['jsonPayload' => false],
-        );
-        if (!property_exists($init, 'media_id_string')) {
-            throw new TwitterOAuthException(
-                $init->errors[0]->message ?? 'Missing "media_id_string"',
-            );
-        }
-        // Append
-        $segmentIndex = 0;
-        $media = fopen($parameters['media'], 'rb');
-        while (!feof($media)) {
-            $this->http(
-                'POST',
-                self::UPLOAD_HOST,
-                'media/upload',
-                [
-                    'command' => 'APPEND',
-                    'media_id' => $init->media_id_string,
-                    'segment_index' => $segmentIndex++,
-                    'media_data' => base64_encode(
-                        fread($media, $this->chunkSize),
-                    ),
-                ],
-                ['jsonPayload' => false],
-            );
-        }
-        fclose($media);
-        // Finalize
-        $finalize = $this->http(
-            'POST',
-            self::UPLOAD_HOST,
-            'media/upload',
-            [
-                'command' => 'FINALIZE',
-                'media_id' => $init->media_id_string,
-            ],
-            ['jsonPayload' => false],
-        );
-        return $finalize;
-    }
-
-    /**
-     * Private method to upload media (chunked) with the API v2 endpoints.
-     *
-     * @param string $path
-     * @param array  $parameters
-     *
-     * @return array|object
-     */
-    private function uploadMediaChunkedV2(string $path, array $parameters)
     {
         $this->validateMediaPath($parameters['media']);
         $init = $this->http(
@@ -541,7 +479,6 @@ class TwitterOAuth extends Config
 
     /**
      * Private method to get params for upload media chunked init.
-     * Twitter docs: https://dev.x.com/rest/reference/post/media/upload-init.html
      *
      * @param array  $parameters
      *
@@ -556,9 +493,6 @@ class TwitterOAuth extends Config
             'shared',
         ];
         $base = ['total_bytes' => filesize($parameters['media'])];
-        if ($this->apiVersion === '1.1') {
-            $base = ['command' => 'INIT'] + $base;
-        }
         $allowed_parameters = array_intersect_key(
             $parameters,
             array_flip($allowed_keys),
@@ -582,45 +516,6 @@ class TwitterOAuth extends Config
             }
         }
         return $parameters;
-    }
-
-    /**
-     * Get URL extension for current API Version.
-     *
-     * @return string
-     */
-    private function extension()
-    {
-        return [
-            '1.1' => '.json',
-            '2' => '',
-        ][$this->apiVersion];
-    }
-
-    /**
-     * Default content type for sending data.
-     *
-     * @return bool
-     */
-    private function useJsonBody()
-    {
-        return [
-            '1.1' => false,
-            '2' => true,
-        ][$this->apiVersion];
-    }
-
-    /**
-     * Media upload host for current API Version.
-     *
-     * @return string
-     */
-    private function uploadHost(): string
-    {
-        return [
-            '1.1' => self::UPLOAD_HOST,
-            '2' => self::API_HOST,
-        ][$this->apiVersion];
     }
 
     /**
@@ -669,13 +564,7 @@ class TwitterOAuth extends Config
      */
     protected function apiUrl(string $host, string $path)
     {
-        return sprintf(
-            '%s/%s/%s%s',
-            $host,
-            $this->apiVersion,
-            $path,
-            $this->extension(),
-        );
+        return sprintf('%s/%s/%s', $host, $this->apiVersion, $path);
     }
 
     /**
