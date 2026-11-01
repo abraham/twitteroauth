@@ -1,0 +1,46 @@
+name: CI
+on: [push, pull_request]
+permissions:
+  contents: read
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v7.1.0
+        with:
+          node-version-file: package.json
+      - run: gh extension install github/gh-actions-lock --pin v0.4.0
+      - run: gh actions-lock --verify
+        env:
+          GH_TOKEN: ${{ github.token }}
+      - run: npm ci
+      - run: npm run lint
+  test:
+    name: PHP ${{ matrix.php-versions }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        php-versions: ['8.2', '8.3', '8.4', '8.5']
+    steps:
+      - uses: actions/checkout@v7.0.1
+        with:
+          persist-credentials: false
+      - uses: shivammathur/setup-php@2.40.0
+        with:
+          php-version: ${{ matrix.php-versions }}
+          extensions: soap
+      - run: composer validate --no-interaction --strict
+      - run: composer install --no-interaction --prefer-dist
+      - run: npm test
+  ci-required:
+    if: ${{ !cancelled() }}
+    needs: [lint, test]
+    runs-on: ubuntu-latest
+    permissions: {}
+    steps:
+      - if: ${{ contains(needs.*.result, 'failure') || contains(needs.*.result, 'cancelled') }}
+        run: exit 1

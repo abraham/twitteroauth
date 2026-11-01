@@ -1,3 +1,4 @@
 vendor
+package-lock.json
 composer.lock
 tests/fixtures
