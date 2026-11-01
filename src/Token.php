@@ -9,7 +9,7 @@ declare(strict_types=1);
 
 namespace Abraham\TwitterOAuth;
 
-class Token
+class Token implements \Stringable
 {
     /** @var string */
     public $key;

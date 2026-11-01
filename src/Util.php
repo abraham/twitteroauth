@@ -99,7 +99,7 @@ class Util
 
         // Parameters are sorted by name, using lexicographical byte value ordering.
         // Ref: Spec: 9.1.1 (1)
-        uksort($params, 'strcmp');
+        uksort($params, strcmp(...));
 
         $pairs = [];
         foreach ($params as $parameter => $value) {

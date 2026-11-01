@@ -9,7 +9,7 @@ declare(strict_types=1);
 
 namespace Abraham\TwitterOAuth;
 
-class Consumer
+class Consumer implements \Stringable
 {
     /** @var string  */
     public $key;
@@ -36,7 +36,7 @@ class Consumer
     /**
      * @return string
      */
-    public function __toString()
+    public function __toString(): string
     {
         return "Consumer[key=$this->key,secret=$this->secret]";
     }
