@@ -4,9 +4,13 @@ jobs:
   lint:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v7
-      - uses: actions/setup-node@v7
+      - uses: actions/checkout@v7.0.1
+      - uses: actions/setup-node@v7.1.0
         with:
           node-version: 20
+      - run: gh extension install github/gh-actions-lock
+      - run: gh actions-lock --verify
+        env:
+          GH_TOKEN: ${{ github.token }}
       - run: npm ci
       - run: npm run lint
