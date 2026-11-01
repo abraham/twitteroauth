@@ -67,4 +67,35 @@ class TwitterOAuthDirectMessagesTest extends TestCase
         ]);
         $this->assertEquals(204, $this->twitter->getLastHttpCode());
     }
+
+    public function testDirectMessageMedia()
+    {
+        $this->mockClient->useFixture('testDirectMessageMedia');
+        $result = $this->twitter->directMessageMedia(
+            'https://ton.twitter.com/1.1/ton/data/dm/1234567890/1234567891/abcdEFGH.jpg',
+        );
+        $this->assertSame('fake-jpeg-bytes', $result);
+        $this->assertEquals(200, $this->twitter->getLastHttpCode());
+    }
+
+    /**
+     * @dataProvider invalidDirectMessageMediaUrls
+     */
+    public function testDirectMessageMediaRejectsOtherUrls(string $url)
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->twitter->directMessageMedia($url);
+    }
+
+    public static function invalidDirectMessageMediaUrls(): array
+    {
+        return [
+            ['http://ton.twitter.com/1.1/ton/data/dm/1/2/a.jpg'],
+            ['https://example.com/1.1/ton/data/dm/1/2/a.jpg'],
+            ['https://ton.twitter.com.example.com/a.jpg'],
+            ['https://user@ton.twitter.com/a.jpg'],
+            ['https://ton.twitter.com:8443/a.jpg'],
+            ['/etc/passwd'],
+        ];
+    }
 }
