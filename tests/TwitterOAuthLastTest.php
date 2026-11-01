@@ -29,20 +29,15 @@ class TwitterOAuthLastTest extends TestCase
             ACCESS_TOKEN_SECRET,
             $this->mockClient,
         );
-        $this->twitter->setApiVersion('1.1');
-        $this->userId = explode('-', ACCESS_TOKEN)[0];
     }
 
     public function testLastResult()
     {
         $this->mockClient->useFixture('testLastResult');
-        $this->twitter->get('search/tweets', ['q' => 'twitter']);
-        $this->assertEquals('search/tweets', $this->twitter->getLastApiPath());
+        $this->twitter->get('users/me');
+        $this->assertEquals('users/me', $this->twitter->getLastApiPath());
         $this->assertEquals(200, $this->twitter->getLastHttpCode());
-        $this->assertObjectHasProperty(
-            'statuses',
-            $this->twitter->getLastBody(),
-        );
+        $this->assertObjectHasProperty('data', $this->twitter->getLastBody());
     }
 
     /**

@@ -10,6 +10,7 @@ namespace Abraham\TwitterOAuth\Test;
 
 use PHPUnit\Framework\TestCase;
 use Abraham\TwitterOAuth\TwitterOAuth;
+use Abraham\TwitterOAuth\TwitterOAuthException;
 use Abraham\TwitterOAuth\MockHttpClient;
 
 class TwitterOAuthTest extends TestCase
@@ -29,18 +30,21 @@ class TwitterOAuthTest extends TestCase
             ACCESS_TOKEN_SECRET,
             $this->mockClient,
         );
-        $this->twitter->setApiVersion('1.1');
-        $this->userId = explode('-', ACCESS_TOKEN)[0];
     }
 
-    public function testGetAccountVerifyCredentials()
+    public function testGetUsersMe()
     {
-        $this->mockClient->useFixture('testGetAccountVerifyCredentials');
-        $user = $this->twitter->get('account/verify_credentials', [
-            'include_entities' => false,
-            'include_email' => true,
+        $this->mockClient->useFixture('testGetUsersMe');
+        $user = $this->twitter->get('users/me', [
+            'user.fields' => 'created_at',
         ]);
         $this->assertEquals(200, $this->twitter->getLastHttpCode());
-        $this->assertObjectHasProperty('email', $user);
+        $this->assertObjectHasProperty('created_at', $user->data);
+    }
+
+    public function testApiVersion1Unsupported()
+    {
+        $this->expectException(TwitterOAuthException::class);
+        $this->twitter->setApiVersion('1.1');
     }
 }
