@@ -258,9 +258,7 @@ class TwitterOAuth extends Config
         array $parameters = [],
         array $options = [],
     ) {
-        if (!isset($options['jsonPayload'])) {
-            $options['jsonPayload'] = $this->useJsonBody();
-        }
+        $options['jsonPayload'] ??= $this->useJsonBody();
 
         return $this->http(
             'POST',
@@ -300,9 +298,7 @@ class TwitterOAuth extends Config
         array $parameters = [],
         array $options = [],
     ) {
-        if (!isset($options['jsonPayload'])) {
-            $options['jsonPayload'] = $this->useJsonBody();
-        }
+        $options['jsonPayload'] ??= $this->useJsonBody();
 
         return $this->http('PUT', self::API_HOST, $path, $parameters, $options);
     }
