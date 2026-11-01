@@ -28,6 +28,7 @@ class TwitterOAuth extends Config
 {
     private const API_HOST = 'https://api.x.com';
     private const UPLOAD_HOST = 'https://upload.x.com';
+    private const DM_MEDIA_HOSTS = ['ton.twitter.com', 'ton.x.com'];
 
     /** @var Response details about the result of the last request */
     private ?Response $response = null;
@@ -346,6 +347,39 @@ class TwitterOAuth extends Config
     }
 
     /**
+     * Download a media file attached to a direct message.
+     *
+     * @param string $url Media URL from the DM, e.g. https://ton.twitter.com/1.1/ton/data/dm/...
+     *
+     * @return string Raw file contents
+     * @throws \InvalidArgumentException
+     */
+    public function directMessageMedia(string $url): string
+    {
+        $parts = parse_url($url);
+        // Requests are signed with the user's credentials, so never send them to other hosts.
+        if (
+            ($parts['scheme'] ?? null) !== 'https' ||
+            !in_array($parts['host'] ?? null, self::DM_MEDIA_HOSTS, true) ||
+            isset($parts['port']) ||
+            isset($parts['user'])
+        ) {
+            throw new \InvalidArgumentException(
+                'You must supply a direct message media URL',
+            );
+        }
+        $this->resetLastResponse();
+        $this->resetAttemptsNumber();
+        $this->response->setApiPath($parts['path'] ?? '');
+        return $this->makeRequests(
+            sprintf('https://%s%s', $parts['host'], $parts['path'] ?? ''),
+            'GET',
+            Util::parseParameters($parts['query'] ?? null),
+            ['jsonPayload' => false],
+        );
+    }
+
+    /**
      * Private method to upload media (not chunked) to upload.x.com.
      *
      * @param string $path
@@ -538,12 +572,16 @@ class TwitterOAuth extends Config
         if (!$options['jsonPayload']) {
             $parameters = $this->cleanUpParameters($parameters);
         }
-        return $this->makeRequests(
+        $result = $this->makeRequests(
             $this->apiUrl($host, $path),
             $method,
             $parameters,
             $options,
         );
+        $response = JsonDecoder::decode($result, $this->decodeJsonAsArray);
+        $this->response->setBody($response);
+
+        return $response;
     }
 
     /**
@@ -577,24 +615,22 @@ class TwitterOAuth extends Config
      * @param array  $parameters
      * @param array  $options
      *
-     * @return array|object
+     * @return string Raw response body
      */
     private function makeRequests(
         string $url,
         string $method,
         array $parameters,
         array $options,
-    ) {
+    ): string {
         do {
             $this->sleepIfNeeded();
             $result = $this->oAuthRequest($url, $method, $parameters, $options);
-            $response = JsonDecoder::decode($result, $this->decodeJsonAsArray);
-            $this->response->setBody($response);
             $this->attempts++;
             // Retry up to our $maxRetries number if we get errors greater than 500 (over capacity etc)
         } while ($this->requestsAvailable());
 
-        return $response;
+        return $result;
     }
 
     /**

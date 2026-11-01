@@ -1,0 +1,24 @@
+[{
+    "request": {
+        "method": "GET",
+        "url": "https://ton.twitter.com/1.1/ton/data/dm/1234567890/1234567891/abcdEFGH.jpg",
+        "headers": {
+            "Host": "ton.twitter.com",
+            "Accept": "application/json",
+            "Authorization": "OAuth oauth_version=\"1.0\", oauth_nonce=\"2b67ebbeace76543f356ba8bbd59abde\", oauth_timestamp=\"1587861062\", oauth_consumer_key=\"awJfND4zFGapGOFKfdjg\", oauth_token=\"93915746-KjE3c27dCt8awONxuUAaJ00yishXXwcH5CdLBnO1x\", oauth_signature_method=\"HMAC-SHA1\", oauth_signature=\"testSignature123=\"",
+            "Expect": null
+        }
+    },
+    "response": {
+        "status": {
+            "http_version": "2",
+            "code": "200",
+            "message": "OK"
+        },
+        "headers": {
+            "content-type": "image/jpeg",
+            "date": "Sun, 26 Apr 2020 00:31:11 GMT"
+        },
+        "body": "fake-jpeg-bytes"
+    }
+}]
