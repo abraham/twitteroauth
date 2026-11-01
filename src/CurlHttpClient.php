@@ -50,6 +50,9 @@ class CurlHttpClient implements HttpClientInterface
                 break;
             case 'DELETE':
                 $curlOptions[CURLOPT_CUSTOMREQUEST] = 'DELETE';
+                if (!empty($body)) {
+                    $curlOptions[CURLOPT_POSTFIELDS] = $body;
+                }
                 break;
             case 'PUT':
                 $curlOptions[CURLOPT_CUSTOMREQUEST] = 'PUT';
