@@ -8,7 +8,7 @@ use PHPUnit\Framework\TestCase;
 use Abraham\TwitterOAuth\TwitterOAuth;
 use Abraham\TwitterOAuth\HttpClientInterface;
 
-class TwitterOAuthMediaSubtitlesTest extends TestCase
+class TwitterOAuthMediaV2Test extends TestCase
 {
     private TwitterOAuth $twitter;
     private HttpClientInterface $client;
@@ -88,6 +88,31 @@ class TwitterOAuthMediaSubtitlesTest extends TestCase
             $request['headers'],
         );
         $this->assertSame(json_encode($parameters), $request['body']);
+    }
+
+    public function testCreateMetadata()
+    {
+        $parameters = [
+            'id' => '1',
+            'metadata' => [
+                'alt_text' => ['text' => 'A kitten sitting in a basket'],
+            ],
+        ];
+        $this->twitter->post('media/metadata', $parameters);
+        $request = $this->client->requests[0];
+        $this->assertSame('POST', $request['method']);
+        $this->assertSame(
+            'https://api.x.com/2/media/metadata',
+            $request['url'],
+        );
+        $this->assertContains(
+            'Content-type: application/json',
+            $request['headers'],
+        );
+        $this->assertSame(json_encode($parameters), $request['body']);
+        $authorization = implode("\n", $request['headers']);
+        $this->assertStringContainsString('OAuth ', $authorization);
+        $this->assertStringNotContainsString('alt_text', $authorization);
     }
 
     public function testDeleteDefaultsToQueryString()
