@@ -16,13 +16,13 @@
     "node": "26"
   },
   "scripts": {
-    "fix": "concurrently npm:fix:*",
+    "fix": "concurrently npm:fix:* npm:format",
     "fix:phpcbf": "./vendor/bin/phpcbf src tests --standard=PSR12",
-    "fix:prettier": "prettier . --write",
     "fix:rector": "vendor/bin/rector process",
-    "lint": "concurrently npm:lint:*",
+    "format": "prettier . --write",
+    "format:check": "prettier . --check",
+    "lint": "concurrently npm:lint:* npm:format:check",
     "lint:phpcs": "./vendor/bin/phpcs src tests --standard=PSR12",
-    "lint:prettier": "prettier . --check",
     "lint:rector": "vendor/bin/rector process --dry-run",
     "postinstall": "composer install --no-interaction",
     "test": "./vendor/bin/phpunit"

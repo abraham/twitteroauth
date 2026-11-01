@@ -3,11 +3,9 @@
 # Docs: https://gh.io/actions-lockfile
 version: 'v0.0.3'
 workflows:
-    '.github/workflows/lint.yaml':
+    '.github/workflows/ci.yaml':
         - 'actions/checkout@v7.0.1'
         - 'actions/setup-node@v7.1.0'
-    '.github/workflows/test.yaml':
-        - 'actions/checkout@v7.0.1'
         - 'shivammathur/setup-php@2.40.0'
 dependencies:
     'actions/checkout@v7.0.1':
