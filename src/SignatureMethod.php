@@ -59,20 +59,10 @@ abstract class SignatureMethod
         $built = $this->buildSignature($request, $consumer, $token);
 
         // Check for zero length, although unlikely here
-        if (strlen($built) == 0 || strlen($signature) == 0) {
+        if ($built === '' || $signature === '') {
             return false;
         }
 
-        if (strlen($built) != strlen($signature)) {
-            return false;
-        }
-
-        // Avoid a timing leak with a (hopefully) time insensitive compare
-        $result = 0;
-        for ($i = 0; $i < strlen($signature); $i++) {
-            $result |= ord($built[$i]) ^ ord($signature[$i]);
-        }
-
-        return $result == 0;
+        return hash_equals($built, $signature);
     }
 }

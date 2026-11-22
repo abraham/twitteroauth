@@ -43,6 +43,25 @@ abstract class AbstractSignatureMethodTestCase extends TestCase
         );
     }
 
+    public function testCheckSignature(): void
+    {
+        $method = $this->getClass();
+        $request = $this->getRequest();
+        $consumer = new Consumer('key', 'secret');
+        $token = new Token('key', 'secret');
+        $valid = $method->buildSignature($request, $consumer, $token);
+
+        $this->assertTrue(
+            $method->checkSignature($request, $consumer, $token, $valid),
+        );
+        $this->assertFalse(
+            $method->checkSignature($request, $consumer, $token, 'invalid'),
+        );
+        $this->assertFalse(
+            $method->checkSignature($request, $consumer, $token, ''),
+        );
+    }
+
     protected function getRequest()
     {
         return $this->createStub(Request::class);

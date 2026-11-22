@@ -281,6 +281,6 @@ class Request implements \Stringable
      */
     public static function generateNonce(): string
     {
-        return md5(microtime() . random_int(PHP_INT_MIN, PHP_INT_MAX));
+        return bin2hex(random_bytes(16));
     }
 }

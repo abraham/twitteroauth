@@ -28,7 +28,6 @@ class TwitterOAuthV2Test extends TestCase
             ACCESS_TOKEN_SECRET,
             $this->mockClient,
         );
-        $this->userId = explode('-', ACCESS_TOKEN)[0];
     }
 
     public function testV2GetUsers()
