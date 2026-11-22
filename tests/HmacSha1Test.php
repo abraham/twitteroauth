@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace Abraham\TwitterOAuth\Tests;
 
+use Abraham\TwitterOAuth\Consumer;
 use Abraham\TwitterOAuth\HmacSha1;
+use Abraham\TwitterOAuth\Token;
 
-class HmacSha1Test extends AbstractSignatureMethodTest
+class HmacSha1Test extends AbstractSignatureMethodTestCase
 {
     protected $name = 'HMAC-SHA1';
 
@@ -15,31 +17,27 @@ class HmacSha1Test extends AbstractSignatureMethodTest
         return new HmacSha1();
     }
 
-    public function signatureDataProvider()
+    public static function signatureDataProvider(): array
     {
         return [
             [
                 '5CoEcoq7XoKFjwYCieQvuzadeUA=',
-                $this->getRequest(),
-                $this->getConsumer(),
-                $this->getToken(),
+                new Consumer(null, null),
+                new Token(null, null),
             ],
             [
                 'EBw0gHngam3BTx8kfPfNNSyKem4=',
-                $this->getRequest(),
-                $this->getConsumer('key', 'secret'),
-                $this->getToken(),
+                new Consumer('key', 'secret'),
+                new Token(null, null),
             ],
             [
                 'kDsHFZzws2a5M6cAQjfpdNBo+v8=',
-                $this->getRequest(),
-                $this->getConsumer('key', 'secret'),
-                $this->getToken('key', 'secret'),
+                new Consumer('key', 'secret'),
+                new Token('key', 'secret'),
             ],
             [
                 'EBw0gHngam3BTx8kfPfNNSyKem4=',
-                $this->getRequest(),
-                $this->getConsumer('key', 'secret'),
+                new Consumer('key', 'secret'),
                 null,
             ],
         ];

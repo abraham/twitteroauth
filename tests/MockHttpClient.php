@@ -8,7 +8,10 @@
 
 declare(strict_types=1);
 
-namespace Abraham\TwitterOAuth;
+namespace Abraham\TwitterOAuth\Test;
+
+use Abraham\TwitterOAuth\HttpClientInterface;
+use Abraham\TwitterOAuth\TwitterOAuthException;
 
 /**
  * Mock HTTP client for testing that loads responses from VCR fixture files
@@ -38,8 +41,7 @@ class MockHttpClient implements HttpClientInterface
 
         // Load fixture if not already loaded
         if (!isset($this->fixtures[$fixtureName])) {
-            $fixturePath =
-                __DIR__ . '/../tests/fixtures/' . $fixtureName . '.json';
+            $fixturePath = __DIR__ . '/fixtures/' . $fixtureName . '.json';
             if (!file_exists($fixturePath)) {
                 throw new TwitterOAuthException(
                     "Fixture file not found: {$fixturePath}",
