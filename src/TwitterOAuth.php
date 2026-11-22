@@ -435,19 +435,36 @@ class TwitterOAuth extends Config
         }
         $segmentIndex = 0;
         $media = fopen($parameters['media'], 'rb');
-        while (($chunk = fread($media, $this->chunkSize)) !== '') {
-            $this->http(
-                'POST',
-                self::API_HOST,
-                "{$path}/{$mediaId}/append",
-                [
-                    'segment_index' => $segmentIndex++,
-                    'media' => base64_encode($chunk),
-                ],
-                ['jsonPayload' => true],
+        if ($media === false) {
+            throw new \InvalidArgumentException(
+                'You must supply a readable file',
             );
         }
-        fclose($media);
+        try {
+            while (!feof($media)) {
+                $chunk = fread($media, $this->chunkSize);
+                if ($chunk === false) {
+                    throw new TwitterOAuthException(
+                        'Failed to read media file',
+                    );
+                }
+                if ($chunk === '') {
+                    break;
+                }
+                $this->http(
+                    'POST',
+                    self::API_HOST,
+                    "{$path}/{$mediaId}/append",
+                    [
+                        'segment_index' => $segmentIndex++,
+                        'media' => base64_encode($chunk),
+                    ],
+                    ['jsonPayload' => true],
+                );
+            }
+        } finally {
+            fclose($media);
+        }
         return $this->http(
             'POST',
             self::API_HOST,

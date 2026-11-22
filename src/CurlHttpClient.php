@@ -74,10 +74,11 @@ class CurlHttpClient implements HttpClientInterface
         }
 
         $httpCode = curl_getinfo($curlHandle, CURLINFO_HTTP_CODE);
-
-        $parts = explode("\r\n\r\n", $response);
-        $responseBody = array_pop($parts);
-        $responseHeader = array_pop($parts);
+        $headerSize = curl_getinfo($curlHandle, CURLINFO_HEADER_SIZE);
+        [$responseHeader, $responseBody] = $this->parseResponse(
+            $response,
+            $headerSize,
+        );
         $headers = $this->parseHeaders($responseHeader);
 
         return [
@@ -85,6 +86,24 @@ class CurlHttpClient implements HttpClientInterface
             'headers' => $headers,
             'httpCode' => $httpCode,
         ];
+    }
+
+    /**
+     * Separate the final response header block and body using cURL's reported header size.
+     *
+     * @param string $response
+     * @param int    $headerSize
+     *
+     * @return array{0: string, 1: string}
+     */
+    private function parseResponse(string $response, int $headerSize): array
+    {
+        $rawHeaders = substr($response, 0, $headerSize);
+        $responseBody = substr($response, $headerSize);
+        $headerBlocks = explode("\r\n\r\n", rtrim($rawHeaders, "\r\n"));
+        $responseHeader = array_pop($headerBlocks);
+
+        return [$responseHeader, $responseBody];
     }
 
     /**
@@ -99,8 +118,8 @@ class CurlHttpClient implements HttpClientInterface
         $headers = [];
         foreach (explode("\r\n", $header) as $line) {
             if (str_contains($line, ':')) {
-                [$key, $value] = explode(': ', $line, 2);
-                $key = str_replace('-', '_', strtolower($key));
+                [$key, $value] = explode(':', $line, 2);
+                $key = str_replace('-', '_', strtolower(trim($key)));
                 $headers[$key] = trim($value);
             }
         }

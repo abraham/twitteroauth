@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Abraham\TwitterOAuth\Util;
 
 /**
@@ -13,17 +15,10 @@ class JsonDecoder
      * @param string $string
      * @param bool   $asArray
      *
-     * @return array|object
+     * @return array|object|null
      */
     public static function decode(string $string, bool $asArray)
     {
-        if (
-            version_compare(PHP_VERSION, '5.4.0', '>=') &&
-            !(defined('JSON_C_VERSION') && PHP_INT_SIZE > 4)
-        ) {
-            return json_decode($string, $asArray, 512, JSON_BIGINT_AS_STRING);
-        }
-
-        return json_decode($string, $asArray, 512, JSON_THROW_ON_ERROR);
+        return json_decode($string, $asArray, 512, JSON_BIGINT_AS_STRING);
     }
 }

@@ -10,12 +10,14 @@ function time()
     return MOCK_TIME;
 }
 
-function microtime()
+function random_bytes(int $length): string
 {
-    return 'FAKE_MICROTIME';
-}
-
-function random_int($_min, $_max)
-{
-    return 123_456_789;
+    return substr(
+        str_repeat(
+            hex2bin('2b67ebbeace76543f356ba8bbd59abde'),
+            (int) ceil($length / 16),
+        ),
+        0,
+        $length,
+    );
 }
