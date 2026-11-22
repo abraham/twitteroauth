@@ -11,7 +11,6 @@ namespace Abraham\TwitterOAuth\Test;
 use PHPUnit\Framework\TestCase;
 use Abraham\TwitterOAuth\TwitterOAuth;
 use Abraham\TwitterOAuth\TwitterOAuthException;
-use Abraham\TwitterOAuth\MockHttpClient;
 
 class TwitterOAuthTest extends TestCase
 {

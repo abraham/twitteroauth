@@ -8,9 +8,9 @@ declare(strict_types=1);
 
 namespace Abraham\TwitterOAuth\Test;
 
+use PHPUnit\Framework\Attributes\Depends;
 use PHPUnit\Framework\TestCase;
 use Abraham\TwitterOAuth\TwitterOAuth;
-use Abraham\TwitterOAuth\MockHttpClient;
 
 class TwitterOAuthOAuthTest extends TestCase
 {
@@ -74,9 +74,7 @@ class TwitterOAuthOAuthTest extends TestCase
         return $result;
     }
 
-    /**
-     * @depends testOauth2Token
-     */
+    #[Depends('testOauth2Token')]
     public function testOauth2BearerToken($accessToken)
     {
         $this->mockClient->useFixture('testOauth2BearerToken');
@@ -92,9 +90,7 @@ class TwitterOAuthOAuthTest extends TestCase
         return $accessToken;
     }
 
-    /**
-     * @depends testOauth2BearerToken
-     */
+    #[Depends('testOauth2BearerToken')]
     public function testOauth2TokenInvalidate($accessToken)
     {
         $this->mockClient->useFixture('testOauth2TokenInvalidate');
@@ -159,9 +155,7 @@ class TwitterOAuthOAuthTest extends TestCase
         assert($caught);
     }
 
-    /**
-     * @depends testOauthRequestToken
-     */
+    #[Depends('testOauthRequestToken')]
     public function testOauthAccessTokenTokenException(array $requestToken)
     {
         $this->mockClient->useFixture('testOauthAccessTokenTokenException');

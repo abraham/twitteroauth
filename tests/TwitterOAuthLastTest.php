@@ -8,9 +8,9 @@ declare(strict_types=1);
 
 namespace Abraham\TwitterOAuth\Test;
 
+use PHPUnit\Framework\Attributes\Depends;
 use PHPUnit\Framework\TestCase;
 use Abraham\TwitterOAuth\TwitterOAuth;
-use Abraham\TwitterOAuth\MockHttpClient;
 
 class TwitterOAuthLastTest extends TestCase
 {
@@ -40,9 +40,7 @@ class TwitterOAuthLastTest extends TestCase
         $this->assertObjectHasProperty('data', $this->twitter->getLastBody());
     }
 
-    /**
-     * @depends testLastResult
-     */
+    #[Depends('testLastResult')]
     public function testResetLastResponse()
     {
         $this->mockClient->useFixture('testResetLastResponse');

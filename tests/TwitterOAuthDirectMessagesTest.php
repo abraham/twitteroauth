@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Abraham\TwitterOAuth\Test;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Abraham\TwitterOAuth\TwitterOAuth;
-use Abraham\TwitterOAuth\MockHttpClient;
 
 class TwitterOAuthDirectMessagesTest extends TestCase
 {
@@ -37,9 +37,7 @@ class TwitterOAuthDirectMessagesTest extends TestCase
         $this->assertEquals(200, $this->twitter->getLastHttpCode());
     }
 
-    /**
-     * @dataProvider invalidDirectMessageMediaUrls
-     */
+    #[DataProvider('invalidDirectMessageMediaUrls')]
     public function testDirectMessageMediaRejectsOtherUrls(string $url)
     {
         $this->expectException(\InvalidArgumentException::class);

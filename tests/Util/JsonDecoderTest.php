@@ -2,20 +2,19 @@
 
 namespace Abraham\TwitterOAuth\Tests;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Abraham\TwitterOAuth\Util\JsonDecoder;
 
 class JsonDecoderTest extends TestCase
 {
-    /**
-     * @dataProvider jsonProvider
-     */
+    #[DataProvider('jsonProvider')]
     public function testDecode($input, $asArray, $expected)
     {
         $this->assertEquals($expected, JsonDecoder::decode($input, $asArray));
     }
 
-    public function jsonProvider()
+    public static function jsonProvider(): array
     {
         return [
             ['[]', true, []],
@@ -31,7 +30,7 @@ class JsonDecoderTest extends TestCase
                 '[{"id": 556179961825226750}]',
                 false,
                 [
-                    $this->getClass(function ($object) {
+                    self::getClass(function ($object) {
                         $object->id = 556_179_961_825_226_750;
                         return $object;
                     }),
@@ -43,9 +42,9 @@ class JsonDecoderTest extends TestCase
     /**
      * @param callable $callable
      *
-     * @return stdClass
+     * @return \stdClass
      */
-    private function getClass(\Closure $callable)
+    private static function getClass(\Closure $callable)
     {
         $object = new \stdClass();
 

@@ -10,7 +10,6 @@ namespace Abraham\TwitterOAuth\Test;
 
 use PHPUnit\Framework\TestCase;
 use Abraham\TwitterOAuth\TwitterOAuth;
-use Abraham\TwitterOAuth\MockHttpClient;
 
 class TwitterOAuthMediaTest extends TestCase
 {
