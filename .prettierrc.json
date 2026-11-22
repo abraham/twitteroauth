@@ -6,9 +6,9 @@
       "files": "*.php",
       "options": {
         "parser": "php",
-        "phpVersion": "8.0",
+        "phpVersion": "composer",
         "trailingCommaPHP": true,
-        "braceStyle": "psr-2"
+        "braceStyle": "per-cs"
       }
     }
   ]
